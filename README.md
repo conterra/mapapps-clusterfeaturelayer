@@ -1,5 +1,7 @@
 # ClusterFeatureLayer Bundle
 
+The Enhanced Selection Bundle allows you to cluster features for any point feature service.
+
 ### Sample App ###
 http://www.mapapps.de/mapapps/resources/apps/???/index.html
 
