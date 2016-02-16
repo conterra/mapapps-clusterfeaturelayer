@@ -1,0 +1,27 @@
+{
+  "Bundle-SymbolicName": "dn_clusterfeaturelayer",
+  "Bundle-Version": "1.0.0-SNAPSHOT",
+  "Bundle-Name": "${bundleName}",
+  "Bundle-Description": "${bundleDescription}",
+  "Bundle-Vendor": "con terra GmbH",
+  "Bundle-Category": [
+    "sample"
+  ],
+  "Bundle-Icon": {},
+  "Bundle-StartLevel": 10,
+  "Bundle-Activator": "Activator",
+  "Components": [
+    {
+      "name": "ClickListener",
+      "propertiesConstructor": true,
+      "properties": {
+      },
+      "references": [
+        {
+          "name": "_showGraphicContent",
+          "providing": "ct.contentviewer.ShowGraphicContent"
+        }
+      ]
+    }
+  ]
+}
