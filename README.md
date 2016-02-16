@@ -2,6 +2,9 @@
 
 The Enhanced Selection Bundle allows you to cluster features for any point feature service.
 
+###Important
+Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluster-layer-js
+
 ### Sample App ###
 http://www.mapapps.de/mapapps/resources/apps/???/index.html
 
