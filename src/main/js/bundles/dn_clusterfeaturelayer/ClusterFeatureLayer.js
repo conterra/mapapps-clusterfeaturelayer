@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
+ Changed by con terra
+ */
 define([
         'dojo/_base/declare',
         'dojo/_base/array',
@@ -647,7 +650,13 @@ define([
 
             onClick: function (e) {
                 // Don't bubble click event to map
+                /*
+                 Changed by con terra *start*
+                 */
                 //e.stopPropagation();
+                /*
+                 Changed by con terra *end*
+                 */
                 // Removed to improve performance - TODO
                 //this._onClusterClick(e);
 
@@ -674,12 +683,16 @@ define([
                         this._map.infoWindow.show(e.graphic.geometry);
                         this._map.infoWindow.show(e.graphic.geometry);
                     }
-
-
                 }
                 // Multi-cluster click, super zoom to cluster
                 else if (this._zoomOnClick && e.graphic.attributes.clusterCount > 1 && this._map.getZoom() !== this._map.getMaxZoom()) {
+                    /*
+                     Changed by con terra *start*
+                     */
                     e.stopPropagation();
+                    /*
+                     Changed by con terra *end*
+                     */
                     // Zoom to level that shows all points in cluster, not necessarily the extent
                     var extent = this._getClusterExtent(e.graphic);
                     if (extent.getWidth()) {
