@@ -8,19 +8,39 @@
     "sample"
   ],
   "Bundle-Icon": {},
-  "Bundle-StartLevel": 10,
+  "Bundle-StartLevel": 35,
   "Bundle-Activator": "Activator",
+  "Components-Create-On-Starting": true,
   "Components": [
     {
       "name": "ClickListener",
-      "propertiesConstructor": true,
+      "provides": "dn_clusterfeaturelayer.ClickListener",
+      "immediate": true,
       "properties": {
       },
       "references": [
         {
-          "name": "_showGraphicContent",
-          "providing": "ct.contentviewer.ShowGraphicContent"
+          "name": "_contentViewer",
+          "providing": "ct.contentviewer.ContentViewer"
         }
+      ]
+    },
+    {
+      "name": "ClusterFeatureLayerProperties",
+      "provides": "dn_clusterfeaturelayer.ClusterFeatureLayerProperties",
+      "immediate": true,
+      "properties": {
+        "distance": 75,
+        "labelColor": "#fff",
+        "labelOffset": "-5",
+        "useDefaultSymbol": true,
+        "zoomOnClick": true,
+        "showSingles": true,
+        "maxSingles": 1000,
+        "returnLimit": 1000,
+        "outFields": ["*"]
+      },
+      "references": [
       ]
     }
   ]

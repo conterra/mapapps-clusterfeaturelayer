@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 define([
-    ".",
-    "./ClusterFeatureLayer",
-    "./ClusterFeatureLayerProperties",
-    "./ClickListener",
-    "./Activator"
-], {});
+    "dojo/_base/declare"
+], function (declare) {
+    return declare([], {
+        activate: function () {
+        }
+    });
+});

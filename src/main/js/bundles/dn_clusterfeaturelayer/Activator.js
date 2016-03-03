@@ -18,54 +18,64 @@ define([
     "dojo/_base/array",
     "esri/InfoTemplate",
     "./ClusterFeatureLayer",
+    "./ClickListener",
     "ct/mapping/map/EsriLayerFactory",
     "ct/mapping/map/EsriService",
     "ct/mapping/mapcontent/ServiceTypes",
     "ct/_Connect"
-], function (declare, d_array, InfoTemplate, ClusterFeatureLayer, EsriLayerFactory, EsriService, ServiceTypes, _Connect) {
+], function (declare, d_array, InfoTemplate, ClusterFeatureLayer, ClickListener, EsriLayerFactory, EsriService, ServiceTypes, _Connect) {
 
     return declare([_Connect], {
         start: function (bundleContext) {
+            var clusterFeatureLayerPropertiesComponentReference = bundleContext.getServiceReferences("dn_clusterfeaturelayer.ClusterFeatureLayerProperties")[0];
+            var clusterFeatureLayerPropertiesComponent = bundleContext.getService(clusterFeatureLayerPropertiesComponentReference);
+            var properties = clusterFeatureLayerPropertiesComponent._properties;
+
             var type = ServiceTypes.CLUSTER_FEATURE_LAYER = "CLUSTER_FEATURE_LAYER";
             EsriLayerFactory.globalServiceFactories[type] = {
                 create: function (node, url, mapModel, mapState) {
                     return new EsriService({
                         mapModelNode: node,
                         createEsriLayer: function () {
-
                             var layerId = node.children[0].layer.layerId;
                             var url = node.get("url") + "/" + layerId;
                             var infoTemplate = node.get("infoTemplate");
+                            var id = "cluster_" + new Date().getTime();
 
                             // create ClusterFeatureLayer from Url with layerDefinition
                             var layer = this.layer = new ClusterFeatureLayer({
                                 "url": url,
-                                "distance": 75,
-                                "id": "clusters",
-                                "labelColor": "#fff",
-                                //"resolution": esriMap.extent.getWidth() / esriMap.width,
-                                //"singleTemplate": infoTemplate,
-                                "useDefaultSymbol": true,
-                                "zoomOnClick": true,
-                                "showSingles": true,
+                                "id": id,
                                 "disablePopup": true,
-                                "MODE_SNAPSHOT": false
+                                "MODE_SNAPSHOT": true,
+                                "singleTemplate": infoTemplate,
+                                "distance": properties.distance,
+                                "labelColor": properties.labelColor,
+                                "labelOffset": properties.labelOffset,
+                                "useDefaultSymbol": properties.useDefaultSymbol,
+                                "zoomOnClick": properties.zoomOnClick,
+                                //"maxSingles": properties.maxSingles,
+                                "showSingles": properties.showSingles,
+                                "returnLimit": properties.returnLimit,
+                                "outFields": properties.outFields
                             });
+                            this.connect(layer, "onClick", function (e) {
+                                var contentViewerReference = bundleContext.getServiceReferences("ct.contentviewer.ContentViewer")[0];
+                                var contentViewerComponent = bundleContext.getService(contentViewerReference);
 
-                            /*this.connect(layer, "onClick", function (e) {
-                                if (e.graphic.attributes.clusterCount === 1) {
-                                    var singles = [];
-                                    var layer = this.layer;
-                                    for (var i = 0, il = layer._clusterData.length; i < il; i++) {
-                                        if (e.graphic.attributes.clusterId === layer._clusterData[i].attributes.clusterId) {
-                                            singles.push(layer._clusterData[i]);
-                                        }
-                                    }
+                                if (e.graphic.attributes.clusterCount > 1) {
+
+                                } else {
+                                    var singles = this.layer._getClusterSingles(e.graphic.attributes.clusterId);
+                                    var attributes = singles[0].attributes;
+                                    var geometry = singles[0].geometry;
+                                    var content = attributes;
+                                    content["geometry"] = geometry;
+                                    contentViewerComponent.showContentInfo(content);
                                 }
-                            });*/
-
+                            }, this)
                             return layer;
-                        },
+                        }
                     });
                 }
             };
