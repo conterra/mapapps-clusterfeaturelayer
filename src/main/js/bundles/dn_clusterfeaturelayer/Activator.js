@@ -49,6 +49,7 @@ define([
                                 "disablePopup": true,
                                 "MODE_SNAPSHOT": true,
                                 "singleTemplate": infoTemplate,
+                                "objectIdField": properties.objectIdField,
                                 "distance": properties.distance,
                                 "labelColor": properties.labelColor,
                                 "labelOffset": properties.labelOffset,
@@ -59,6 +60,7 @@ define([
                                 "returnLimit": properties.returnLimit,
                                 "outFields": properties.outFields
                             });
+
                             this.connect(layer, "onClick", function (e) {
                                 var contentViewerReference = bundleContext.getServiceReferences("ct.contentviewer.ContentViewer")[0];
                                 var contentViewerComponent = bundleContext.getService(contentViewerReference);
