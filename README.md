@@ -48,3 +48,22 @@ Installation Guide
   }
 }
 ```
+
+You can configure the ClusterFeatureLayer by changing the ClusterFeatureLayerProperties
+
+##### Example:
+```
+"ClusterFeatureLayerProperties": {
+  "distance": 75,
+  "labelColor": "#fff",
+  "labelOffset": "-5",
+  "useDefaultSymbol": false,
+  "zoomOnClick": true,
+  "showSingles": true,
+  "maxSingles": 1000,
+  "returnLimit": 1000,
+  "outFields": [
+    "*"
+  ]
+}
+```
