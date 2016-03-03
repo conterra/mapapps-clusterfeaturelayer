@@ -50,7 +50,7 @@ define([
         'esri/dijit/PopupTemplate',
         'esri/layers/GraphicsLayer',
         'esri/tasks/query',
-        'esri/tasks/QueryTask',
+        'esri/tasks/QueryTask'
 
     ], function (declare, arrayUtils, lang, Color, connect, on, all,
                  SpatialReference, Point, Polygon, Multipoint, Extent, Graphic,
@@ -391,8 +391,15 @@ define([
                 // listen to extent-change so data is re-clustered when zoom level changes
                 this._extentChange = on.pausable(map, 'extent-change', lang.hitch(this, '_reCluster'));
                 // listen for popup hide/show - hide clusters when pins are shown
+
+                /*
+                 changed by con terra *start*
+                 */
                 //map.infoWindow.on('hide', lang.hitch(this, '_popupVisibilityChange'));
                 //map.infoWindow.on('show', lang.hitch(this, '_popupVisibilityChange'));
+                /*
+                 changed by con terra *end*
+                 */
 
                 var layerAdded = on(map, 'layer-add', lang.hitch(this, function (e) {
                     if (e.layer === this) {
@@ -650,13 +657,7 @@ define([
 
             onClick: function (e) {
                 // Don't bubble click event to map
-                /*
-                 Changed by con terra *start*
-                 */
-                //e.stopPropagation();
-                /*
-                 Changed by con terra *end*
-                 */
+                e.stopPropagation();
                 // Removed to improve performance - TODO
                 //this._onClusterClick(e);
 
@@ -686,13 +687,6 @@ define([
                 }
                 // Multi-cluster click, super zoom to cluster
                 else if (this._zoomOnClick && e.graphic.attributes.clusterCount > 1 && this._map.getZoom() !== this._map.getMaxZoom()) {
-                    /*
-                     Changed by con terra *start*
-                     */
-                    e.stopPropagation();
-                    /*
-                     Changed by con terra *end*
-                     */
                     // Zoom to level that shows all points in cluster, not necessarily the extent
                     var extent = this._getClusterExtent(e.graphic);
                     if (extent.getWidth()) {

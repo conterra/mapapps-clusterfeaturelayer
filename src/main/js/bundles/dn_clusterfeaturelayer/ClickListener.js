@@ -19,7 +19,7 @@ define([
 ], function (declare, d_aspect) {
     return declare([], {
         activate: function () {
-            var showGraphicContent = this._showGraphicContent;
+            /*//var showGraphicContent = this._showGraphicContent;
 
             d_aspect.before(showGraphicContent, "showContent", function (evt) {
                 var attributes = evt.graphic.attributes;
@@ -33,7 +33,7 @@ define([
 
             d_aspect.after(showGraphicContent, "showContent", function (evt) {
                 this._enabled = true;
-            });
+            });*/
         }
     });
 });
