@@ -15,7 +15,7 @@
  */
 define([
     "dojo/_base/declare",
-    "dojo/aspect",
+    "dojo/aspect"
 ], function (declare, d_aspect) {
     return declare([], {
         activate: function () {

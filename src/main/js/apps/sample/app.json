@@ -38,7 +38,9 @@
         "showSingles": true,
         "maxSingles": 1000,
         "returnLimit": 1000,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       },
       "enabled": true
     },
@@ -53,24 +55,6 @@
               "id": "default",
               "glass_pane": [],
               "operationalLayer": [
-                /*{
-                  "title": "St\u00F6rungen",
-                  "enabled": true,
-                  "service": "service_54146",
-                  "category": {
-                    "title": "St\u00F6rungen",
-                    "description": "Karte mit fiktiven St\u00F6rungsmeldungen f\u00FCr map.apps Trainings.",
-                    "imgUrl": ""
-                  },
-                  "children": [
-                    {
-                      "layer": "0",
-                      "enabled": true
-                    }
-                  ],
-                  "id": "service_54146_1455267943491",
-                  "options": {}
-                },*/
                 {
                   "title": "Cities",
                   "enabled": true,
@@ -113,10 +97,10 @@
       },
       "MapState": {
         "initialExtent": {
-          "xmin": 813859.9993657626,
-          "xmax": 887239.5465194357,
-          "ymin": 6782003.832838453,
-          "ymax": 6803444.419272417,
+          "xmin": -18298116.66061878,
+          "xmax": 19272211.482101064,
+          "ymin": -6753034.232536215,
+          "ymax": 11953858.321859706,
           "wkid": 3857
         }
       },
@@ -157,20 +141,6 @@
                   "id": "0",
                   "title": "Dark Gray Canvas Base",
                   "enabled": true
-                }
-              ],
-              "options": {}
-            },
-            {
-              "id": "service_54146",
-              "url": "http://services.conterra.de/arcgis/rest/services/training/stoerungen/FeatureServer",
-              "type": "CLUSTER_FEATURE_LAYER",
-              "title": "St\u00F6rungen",
-              "description": "Karte mit fiktiven St\u00F6rungsmeldungen f\u00FCr map.apps Trainings.",
-              "layers": [
-                {
-                  "id": "0",
-                  "title": "St\u00F6rungen"
                 }
               ],
               "options": {}
