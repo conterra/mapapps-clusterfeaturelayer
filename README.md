@@ -6,7 +6,7 @@ The ClusterFeatureLayer Bundle allows you to cluster features for any point feat
 Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluster-layer-js
 
 ### Sample App ###
-http://www.mapapps.de/mapapps/resources/apps/???/index.html
+http://www.mapapps.de/mapapps/resources/apps/downloads_clusterfeaturelayer/index.html
 
 ### Define the mapapps remote base
 Before you can run the project you have to define the mapapps.remote.base property in the pom.xml-file:
