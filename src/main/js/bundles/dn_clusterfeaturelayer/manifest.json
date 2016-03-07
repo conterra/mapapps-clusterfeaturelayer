@@ -4,6 +4,7 @@
   "Bundle-Name": "${bundleName}",
   "Bundle-Description": "${bundleDescription}",
   "Bundle-Vendor": "con terra GmbH",
+  "Product-Name": "con terra Developer Network",
   "Bundle-Category": [
     "sample"
   ],
