@@ -34,7 +34,7 @@
         "labelColor": "#fff",
         "labelOffset": "-5",
         "useDefaultSymbol": false,
-        "zoomOnClick": true,
+        "zoomOnClick": false,
         "showSingles": true,
         "maxSingles": 1000,
         "returnLimit": 1000,
