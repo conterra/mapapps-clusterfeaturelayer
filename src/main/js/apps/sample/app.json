@@ -10,6 +10,7 @@
       "toolset",
       "toolrules",
       "contentviewer",
+      "banner",
       "dn_clusterfeaturelayer"
     ],
     "skipBundles": [],
@@ -22,6 +23,13 @@
     ]
   },
   "bundles": {
+  "banner": {
+    "BannerWidget": {
+      "image": "https://conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
+      "imagePosition": "above",
+      "link": "http://conterra.de"
+    }
+  },
     "console": {
       "enabled": true
     },
