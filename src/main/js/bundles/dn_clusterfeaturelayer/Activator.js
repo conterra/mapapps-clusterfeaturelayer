@@ -55,10 +55,11 @@ define([
                                 "labelOffset": properties.labelOffset,
                                 "useDefaultSymbol": properties.useDefaultSymbol,
                                 "zoomOnClick": properties.zoomOnClick,
-                                //"maxSingles": properties.maxSingles,
+                                "maxSingles": properties.maxSingles,
                                 "showSingles": properties.showSingles,
                                 "returnLimit": properties.returnLimit,
-                                "outFields": properties.outFields
+                                "outFields": properties.outFields,
+                                "spatialReference": properties.spatialReference
                             });
 
                             this.connect(layer, "onClick", function (e) {
