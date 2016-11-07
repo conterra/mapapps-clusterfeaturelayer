@@ -11,11 +11,6 @@
   "Bundle-Icon": {},
   "Bundle-StartLevel": 35,
   "Bundle-Activator": "Activator",
-  "Require-Bundle": [
-    {
-      "name": "contentviewer"
-    }
-  ],
   "Components-Create-On-Starting": true,
   "Components": [
     {
