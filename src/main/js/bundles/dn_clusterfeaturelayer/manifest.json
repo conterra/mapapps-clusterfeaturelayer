@@ -11,6 +11,11 @@
   "Bundle-Icon": {},
   "Bundle-StartLevel": 35,
   "Bundle-Activator": "Activator",
+  "Require-Bundle": [
+    {
+      "name": "contentviewer"
+    }
+  ],
   "Components-Create-On-Starting": true,
   "Components": [
     {
@@ -39,7 +44,9 @@
         "showSingles": true,
         "maxSingles": 1000,
         "returnLimit": 1000,
-        "outFields": ["*"]
+        "outFields": [
+          "*"
+        ]
       },
       "references": [
       ]
