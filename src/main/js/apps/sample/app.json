@@ -1,16 +1,19 @@
 {
+  "properties": {
+    "amdPackages": "apprt@^3.3.0"
+  },
   "load": {
     "allowedBundles": [
-      "system",
-      "map",
-      "themes",
-      "templates",
-      "templatelayout",
-      "windowmanager",
-      "toolset",
-      "toolrules",
-      "contentviewer",
-      "banner",
+      "system@^3.3.0",
+      "map@^3.3.0",
+      "themes@^3.3.0",
+      "templates@^3.3.0",
+      "templatelayout@^3.3.0",
+      "windowmanager@^3.3.0",
+      "toolset@^3.3.0",
+      "toolrules@^3.3.0",
+      "contentviewer@^3.3.0",
+      "banner@^3.3.0",
       "dn_clusterfeaturelayer"
     ],
     "skipBundles": [],

@@ -38,6 +38,9 @@
         </script>
         <script type="text/javascript" src="@@client.config.initjs@@"></script>
         <script type="text/javascript">
+            $apprt.changeConfig({ct: {
+                amdPackages: ["apprt@^3.3.0"]
+            }});  
             // add local bundles directory as amd package
             $apprt.load(function (Launcher) {
                 new Launcher({configLocation: "localapps"}).launchAppFromParam({
