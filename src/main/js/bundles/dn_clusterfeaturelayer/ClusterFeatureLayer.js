@@ -129,6 +129,28 @@ define([
             return points;
         }
 
+        /*
+         changed by con terra *start*
+         */
+        function toPoints2(features) {
+            var len = features.length;
+            var points = [];
+            while (len--) {
+                var g = features[len];
+                points.push(
+                    new Graphic(
+                        g.geometry.getPoint(0),
+                        g.symbol, g.attributes,
+                        g.infoTemplate
+                    ));
+            }
+            return points;
+        }
+
+        /*
+         changed by con terra *end*
+         */
+
         // Handle non-console supporting browsers
         (function () {
             if (!window.console) {
@@ -559,11 +581,22 @@ define([
 
                 var inExtent = this._inExtent();
                 var features;
+                /*
+                 changed by con terra *start*
+                 */
+                if (results.features.length > 0)
+                    var geometryType = results.features && results.features[0].geometry.type;
                 if (this.native_geometryType === 'esriGeometryPolygon') {
                     features = toPoints(results.features);
+                } else if (geometryType === "multipoint") {
+                    features = toPoints2(results.features);
                 } else {
                     features = results.features;
                 }
+                /*
+                 changed by con terra *end*
+                 */
+
                 var len = features.length;
                 //this._clusterData.length = 0;
                 //this.clear();
