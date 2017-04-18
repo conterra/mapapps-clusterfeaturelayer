@@ -45,6 +45,16 @@
       },
       "references": [
       ]
+    },
+    {
+      "name": "ClusterFeatureLayerExtension",
+      "propertiesConstructor": true,
+      "properties": {
+      },
+      "provides": [
+      ],
+      "references": [
+      ]
     }
   ]
 }

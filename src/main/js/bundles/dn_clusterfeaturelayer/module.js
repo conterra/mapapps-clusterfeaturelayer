@@ -16,6 +16,7 @@
 define([
     ".",
     "./ClusterFeatureLayer",
+    "./ClusterFeatureLayerExtension",
     "./ClusterFeatureLayerProperties",
     "./ClickListener",
     "./Activator"
