@@ -13,6 +13,7 @@
       "toolset@^3.3.0",
       "toolrules@^3.3.0",
       "contentviewer@^3.3.0",
+      "custominfo@^3.3.0",
       "banner@^3.3.0",
       "dn_clusterfeaturelayer"
     ],
@@ -26,19 +27,35 @@
     ]
   },
   "bundles": {
-  "banner": {
-    "BannerWidget": {
-      "label": "Developer Network",
-      "image": "https://www.conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
-      "imagePosition": "above",
-      "link": "http://developernetwork.conterra.de"
-    }
-  },
-    "console": {
-      "enabled": true
-    },
-    "contentviewer": {
-      "enabled": true
+    "custominfo": {
+      "CustomInfoToggleTool": [
+        {
+          "id": "customInfoTool",
+          "activateOnStartup": true,
+          "title": "Information",
+          "tooltip": "Information",
+          "iconClass": "icon-custom-info-info",
+          "toolClass": "ctInfo",
+          "togglable": true,
+          "widgetSettings": {
+            "title": "Information",
+            "content": "This app shows the functionality of the ClusterFeatureLayer Bundle which allows you to cluster features for any point feature service.",
+            "window": {
+              "marginBox": {
+                "w": 300,
+                "h": 100,
+                "l": 25,
+                "b": 70
+              },
+              "draggable": true,
+              "closable": true,
+              "modal": false,
+              "maximizable": false,
+              "resizable": false
+            }
+          }
+        }
+      ]
     },
     "dn_clusterfeaturelayer": {
       "ClusterFeatureLayerProperties": {
@@ -56,8 +73,13 @@
       },
       "enabled": true
     },
-    "featureinfo": {
-      "enabled": true
+    "banner": {
+      "BannerWidget": {
+        "label": "Developer Network",
+        "image": "https://www.conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
+        "imagePosition": "above",
+        "link": "http://developernetwork.conterra.de"
+      }
     },
     "map": {
       "MapModelFactory": {
@@ -177,9 +199,6 @@
       },
       "enabled": true
     },
-    "templatelayout": {
-      "enabled": true
-    },
     "templates": {
       "TemplateModel": {
         "_selectedTemplate": "seasons",
@@ -191,20 +210,11 @@
       },
       "enabled": true
     },
-    "themes": {
-      "enabled": true
-    },
-    "toolrules": {
-      "enabled": true
-    },
     "toolset": {
       "ToolsetManager": {
         "toolsets": [
         ]
       },
-      "enabled": true
-    },
-    "windowmanager": {
       "enabled": true
     }
   }
