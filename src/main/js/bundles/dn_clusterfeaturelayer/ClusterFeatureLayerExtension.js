@@ -58,9 +58,6 @@ define([
             return points;
         }
 
-        /*
-         added by con terra *start*
-         */
         function toPoints2(features) {
             var len = features.length;
             var points = [];
@@ -75,9 +72,6 @@ define([
             }
             return points;
         }
-        /*
-         added by con terra *end*
-         */
 
         return declare([], {
             activate: function () {

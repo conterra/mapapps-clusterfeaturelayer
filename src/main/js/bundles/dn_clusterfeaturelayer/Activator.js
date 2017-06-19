@@ -62,17 +62,15 @@ define([
                                 "spatialReference": properties.spatialReference
                             });
 
-                            this.connect(layer, "onClick", function (e) {
+                            this.connect(layer, "onClick", function (event) {
                                 var contentViewerReference = bundleContext.getServiceReferences("ct.contentviewer.ContentViewer")[0];
                                 var contentViewerComponent = bundleContext.getService(contentViewerReference);
 
-                                if (e.graphic.attributes.clusterCount > 1) {
-
-                                } else {
-                                    var singles = this.layer._getClusterSingles(e.graphic.attributes.clusterId);
-                                    var attributes = singles[0].attributes;
-                                    var geometry = singles[0].geometry;
+                                if (!event.graphic.attributes.hasOwnProperty('clusterCount')) {
+                                    var attributes = event.graphic.attributes;
+                                    var geometry = event.graphic.geometry;
                                     var content = attributes;
+
                                     content["geometry"] = geometry;
                                     contentViewerComponent.showContentInfo(content);
                                 }
