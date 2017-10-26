@@ -9,6 +9,8 @@ Sample App
 ------------------
 https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer/index.html?lang=de
 
+![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/master/clustering.JPG)
+
 Installation Guide
 ------------------
 1. First, you need to add the bundle "dn_clusterfeaturelayer" to your app.
