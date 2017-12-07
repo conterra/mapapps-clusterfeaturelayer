@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2017 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,8 @@
  */
 define({
     root: {
-        bundleName: "ClusterFeatureLayer",
-        bundleDescription: "This bundle draws a cluster feature layer."
+        bundleName: "ClusterFeatureLayer and Spiderfying",
+        bundleDescription: "This bundle draws a Cluster Feature Layer and activates a Spiderfying."
     },
     de: true
 });

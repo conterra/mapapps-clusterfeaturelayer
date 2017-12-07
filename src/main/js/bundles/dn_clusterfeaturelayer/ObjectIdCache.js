@@ -14,14 +14,26 @@
  * limitations under the License.
  */
 define([
-    ".",
-    "./ClusterFeatureLayer",
-    "./ClusterFeatureLayerFactory",
-    "./ClusterFeatureLayerRegistrator",
-    "./ClusterSymbolProvider",
-    "./FeatureSymbolProvider",
-    "./ZoomController",
-    "./ContentInfoController",
-    "./MapTipController",
-    "ct/Stateful"
-], {});
+        "dojo/_base/declare"
+    ],
+    function (declare) {
+        return declare([], {
+            _cache: null,
+
+            constructor: function () {
+                this._cache = {};
+            },
+
+            get: function (layerId) {
+                var cache = this._cache;
+                if (!cache[layerId]) {
+                    cache[layerId] = [];
+                }
+                return cache[layerId];
+            },
+
+            set: function (layerId, value) {
+                this._cache[layerId] = value;
+            }
+        });
+    });

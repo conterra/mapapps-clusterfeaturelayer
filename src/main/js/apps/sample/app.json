@@ -3,8 +3,13 @@
     "amdPackages": "apprt@^3.3.0"
   },
   "load": {
+    "bundleLocations": [
+      "localbundles",
+      "bundles"
+    ],
     "allowedBundles": [
       "system@^3.3.0",
+      "splashscreen@^3.3.0",
       "map@^3.3.0",
       "themes@^3.3.0",
       "templates@^3.3.0",
@@ -13,20 +18,96 @@
       "toolset@^3.3.0",
       "toolrules@^3.3.0",
       "contentviewer@^3.3.0",
-      "custominfo@^3.3.0",
+      "coordinateviewer@^3.3.0",
+      "mapflow@^3.3.0",
       "banner@^3.3.0",
+      "custominfo@^3.3.0",
       "dn_clusterfeaturelayer"
     ],
-    "skipBundles": [],
-    "bundleLocations": [
-      "localbundles",
-      "bundles"
-    ],
-    "i18n": [
-      "bundle"
-    ]
+    "skipBundles": []
   },
   "bundles": {
+    "dn_clusterfeaturelayer": {
+      "ClusterSymbolProvider": {
+        "clusterSymbolSize": 25,
+        "clusterBackgroundSymbolColor": [
+          200,
+          200,
+          200,
+          0.5
+        ],
+        "clusterBackgroundBorderColor": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "clusterBackgroundBorderSize": 0.5,
+        "clusterAreaSymbolColor": [
+          255,
+          255,
+          0,
+          0.25
+        ],
+        "clusterAreaSymbolBorderColor": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "clusterAreaSymbolBorderSize": 0.5,
+        "clusterSingleSymbolColor": [
+          140,
+          177,
+          210,
+          0.75
+        ],
+        "clusterSingleSymbolBorderColor": [
+          140,
+          177,
+          210,
+          0.35
+        ],
+        "clusterSingleSymbolBorderSize": 20,
+        "spiderfyingLineSize": 0.5,
+        "spiderfyingLineColor": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "spiderfyingCenterColor": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "spiderfyingCenterSize": 5,
+        "labelColor": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "labelHaloColor": [
+          255,
+          255,
+          255,
+          1
+        ],
+        "labelFontSize": "10pt",
+        "labelHaloSize": "1",
+        "labelFontFamily": "Arial"
+      }
+    },
+    "banner": {
+      "BannerWidget": {
+        "label": "Developer Network",
+        "image": "https://www.conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
+        "imagePosition": "above",
+        "link": "http://developernetwork.conterra.de"
+      }
+    },
     "custominfo": {
       "CustomInfoToggleTool": [
         {
@@ -57,31 +138,32 @@
         }
       ]
     },
-    "dn_clusterfeaturelayer": {
-      "ClusterFeatureLayerProperties": {
-        "distance": 75,
-        "labelColor": "#fff",
-        "labelOffset": "-5",
-        "useDefaultSymbol": false,
-        "zoomOnClick": false,
-        "showSingles": true,
-        "maxSingles": 1000,
-        "returnLimit": 1000,
-        "outFields": [
-          "*"
-        ]
-      },
-      "enabled": true
-    },
-    "banner": {
-      "BannerWidget": {
-        "label": "Developer Network",
-        "image": "https://www.conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
-        "imagePosition": "above",
-        "link": "http://developernetwork.conterra.de"
+    "mapflow": {
+      "MapFlow": {
+        "rootNodeId": "",
+        "nodeDepth": 3,
+        "showScrollBar": true,
+        "singleSelectionMode": true,
+        "contentFlowProperties": {
+          "useAddOns": false,
+          "circularFlow": true,
+          "reflectionHeight": 0,
+          "maxItemHeight": 200,
+          "relativeItemPosition": "top center",
+          "visibleItems": 2
+        }
       }
     },
     "map": {
+      "MapState": {
+        "initialExtent": {
+          "xmin": 703235.75317484,
+          "xmax": 849994.8474821807,
+          "ymin": 6567970.369656878,
+          "ymax": 6646776.945818787,
+          "wkid": 3857
+        }
+      },
       "MapModelFactory": {
         "_configData": {
           "maps": [
@@ -90,74 +172,33 @@
               "glass_pane": [],
               "operationalLayer": [
                 {
-                  "title": "Cities",
-                  "enabled": true,
-                  "service": "service_21925",
-                  "category": {
-                    "title": "Cities",
-                    "description": "",
-                    "imgUrl": ""
+                  "title": "ClusterLayer",
+                  "id": "clusterLayerNode",
+                  "service": "clusterservice",
+                  "maptip": {
+                    "content": "{NAME}",
+                    "dimensions": {
+                      "width": 250,
+                      "height": 50
+                    }
                   },
                   "layers": [
                     "*"
-                  ],
-                  "id": "service_21925_1456925141769",
-                  "opacity": 1
+                  ]
                 }
               ],
               "baseLayer": [
                 {
-                  "title": "Canvas Base",
-                  "enabled": true,
-                  "service": "service_96192",
-                  "category": {
-                    "title": "Canvas Base",
-                    "description": "This map draws attention to your thematic content by providing a neutral background with minimal colors, labels, and features. Only key information is represented to provide geographic context, allowing your data to come to the foreground. This dark gray map supports bright colors, creating a visually compelling map graphic which helps your reader see the patterns intended. \n\nThis map was developed by Esri using HERE data, DeLorme basemap layers, OpenStreetMap contributors, Esri basemap data, and select data from the GIS user community. Worldwide coverage is provided from Level 0 (1:591M scale) through Level 10 (1:577k scale). In North America, Central and South America, Africa, India, Australia & New Zealand, Pacific Islands, and select countries in the Middle East from Level 11 (1:288k scale) through Level 16 (1:9k scale).\n\nFor more information on this map, visit us online at http://goto.arcgisonline.com/maps/World_Dark_Gray_Base",
-                    "imgUrl": ""
-                  },
-                  "id": "service_96192_1453276320938",
-                  "opacity": 1,
-                  "children": [
-                    {
-                      "layer": "0",
-                      "enabled": true
-                    }
-                  ]
+                  "id": "background",
+                  "title": "Streets",
+                  "service": "streets",
+                  "layers": [
+                    "*"
+                  ],
+                  "enabled": true
                 }
               ]
             }
-          ]
-        }
-      },
-      "MapState": {
-        "initialExtent": {
-          "xmin": -18298116.66061878,
-          "xmax": 19272211.482101064,
-          "ymin": -6753034.232536215,
-          "ymax": 11953858.321859706,
-          "wkid": 3857
-        }
-      },
-      "MapWidgetFactory": {
-        "esriMapOpts": {
-          "slider": true,
-          "nav": false,
-          "logo": true,
-          "sliderStyle": "small",
-          "doubleClickZoom": true,
-          "clickRecenter": true,
-          "pan": true,
-          "rubberBandZoom": true,
-          "keyboardNavigation": true,
-          "scrollWheelZoom": true,
-          "sliderPosition": "top-right",
-          "displayGraphicsOnPan": true,
-          "navigationMode": "css-transforms",
-          "fadeOnZoom": true,
-          "showAttribution": true,
-          "sliderOrientation": "vertical",
-          "sliderLabels": [
-            ""
           ]
         }
       },
@@ -165,57 +206,104 @@
         "_knownServices": {
           "services": [
             {
-              "id": "service_96192",
-              "url": "http://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer",
+              "id": "worldTopo",
               "type": "AGS_TILED",
-              "title": "Canvas Base",
-              "description": "This map draws attention to your thematic content by providing a neutral background with minimal colors, labels, and features. Only key information is represented to provide geographic context, allowing your data to come to the foreground. This dark gray map supports bright colors, creating a visually compelling map graphic which helps your reader see the patterns intended. \n\nThis map was developed by Esri using HERE data, DeLorme basemap layers, OpenStreetMap contributors, Esri basemap data, and select data from the GIS user community. Worldwide coverage is provided from Level 0 (1:591M scale) through Level 10 (1:577k scale). In North America, Central and South America, Africa, India, Australia & New Zealand, Pacific Islands, and select countries in the Middle East from Level 11 (1:288k scale) through Level 16 (1:9k scale).\n\nFor more information on this map, visit us online at http://goto.arcgisonline.com/maps/World_Dark_Gray_Base",
-              "layers": [
-                {
-                  "id": "0",
-                  "title": "Dark Gray Canvas Base",
-                  "enabled": true
-                }
-              ],
-              "options": {}
+              "url": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"
             },
             {
-              "id": "service_21925",
-              "url": "http://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/World_Cities/FeatureServer",
+              "id": "streets",
+              "type": "AGS_TILED",
+              "url": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
+            },
+            {
+              "id": "clusterservice",
+              "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
               "type": "CLUSTER_FEATURE_LAYER",
-              "title": "Cities",
+              "title": "AdressDB",
               "description": "",
+              "minScale": 9999999,
+              "maxScale": 500,
+              "options": {
+                "objectIdField": "OBJECTID",
+                "clusterDistance": 100,
+                "spiderfyingDistance": 1,
+                "returnLimit": 1000,
+                "maxClusterScale": 500,
+                "symbolBaseSize": 30,
+                "showClusterGrid": true,
+                "showClusterGridCounts": true,
+                "showClusterGridBackground": false,
+                "showClusterArea": false,
+                "showClusterSize": false,
+                "useDefaultSymbolForFeatures": false,
+                "clusterLabelOffset": -10
+              },
               "layers": [
                 {
-                  "id": "0",
-                  "title": "World_Cities",
-                  "enabled": true
+                  "id": "1",
+                  "title": "Veranstaltungsorte"
+                },
+                {
+                  "id": "2",
+                  "title": "Spiel- und Sportplätze"
+                },
+                {
+                  "id": "3",
+                  "title": "Sehenswürdigkeiten"
+                },
+                {
+                  "id": "5",
+                  "title": "Schulen"
+                },
+                {
+                  "id": "6",
+                  "title": "Museen"
+                },
+                {
+                  "id": "7",
+                  "title": "Bibliotheken"
+                },
+                {
+                  "id": "9",
+                  "title": "Stadtbezirke"
+                },
+                {
+                  "id": "10",
+                  "title": "Stadtteile"
+                },
+                {
+                  "id": "11",
+                  "title": "Stadtviertel"
                 }
-              ],
-              "options": {}
+              ]
             }
           ]
         }
-      },
-      "enabled": true
+      }
     },
-    "templates": {
-      "TemplateModel": {
-        "_selectedTemplate": "seasons",
-        "_templates": [
-          {
-            "name": "seasons"
-          }
-        ]
-      },
-      "enabled": true
+    "themes": {
+      "ThemeModel": {
+        "_selectedTheme": "everlasting"
+      }
     },
     "toolset": {
       "ToolsetManager": {
         "toolsets": [
+          {
+            "id": "tools",
+            "title": "Tools",
+            "tooltip": "Tools",
+            "tools": [
+              "customInfoTool"
+            ],
+            "container": "map",
+            "max_horizontal": 1,
+            "windowType": "css_positioned",
+            "cssClass": "notitle muted mapview_tools",
+            "deactivateToolsOnHide": true
+          }
         ]
-      },
-      "enabled": true
+      }
     }
   }
 }
