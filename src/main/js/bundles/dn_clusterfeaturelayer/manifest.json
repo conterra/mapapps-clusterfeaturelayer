@@ -59,14 +59,14 @@
           210,
           0.35
         ],
-        "clusterSingleSymbolBorderSize": 3,
-        "spiderfyingLineSize": 0.5,
+        "clusterSingleSymbolBorderSize": 20,
         "spiderfyingLineColor": [
           0,
           0,
           0,
           1
         ],
+        "spiderfyingLineSize": 0.5,
         "spiderfyingCenterColor": [
           0,
           0,
@@ -80,6 +80,7 @@
           0,
           1
         ],
+        "labelHaloSize": "1",
         "labelHaloColor": [
           255,
           255,
@@ -87,7 +88,6 @@
           1
         ],
         "labelFontSize": "10pt",
-        "labelHaloSize": "1",
         "labelFontFamily": "Arial"
       }
     },

@@ -49,7 +49,7 @@ define([
                 this.labelColor = options.labelColor;
                 this.labelHaloColor = options.labelHaloColor;
                 this.labelFontSize = options.labelFontSize || "10pt";
-                this.labelHaloSize = options.labelHaloSize || "10pt";
+                this.labelHaloSize = options.labelHaloSize;
                 this.labelFontFamily = options.labelFontFamily || "Arial";
             },
 

@@ -69,13 +69,13 @@
           0.35
         ],
         "clusterSingleSymbolBorderSize": 20,
-        "spiderfyingLineSize": 0.5,
         "spiderfyingLineColor": [
           0,
           0,
           0,
           1
         ],
+        "spiderfyingLineSize": 0.5,
         "spiderfyingCenterColor": [
           0,
           0,
@@ -95,8 +95,8 @@
           255,
           1
         ],
-        "labelFontSize": "10pt",
         "labelHaloSize": "1",
+        "labelFontSize": "10pt",
         "labelFontFamily": "Arial"
       }
     },
@@ -221,19 +221,17 @@
               "type": "CLUSTER_FEATURE_LAYER",
               "title": "AdressDB",
               "description": "",
-              "minScale": 9999999,
-              "maxScale": 500,
               "options": {
                 "objectIdField": "OBJECTID",
                 "clusterDistance": 100,
                 "spiderfyingDistance": 1,
                 "returnLimit": 1000,
-                "maxClusterScale": 500,
+                "maxClusterScale": 0,
                 "symbolBaseSize": 30,
                 "showClusterGrid": true,
                 "showClusterGridCounts": true,
                 "showClusterGridBackground": false,
-                "showClusterArea": false,
+                "showClusterArea": true,
                 "showClusterSize": false,
                 "useDefaultSymbolForFeatures": false,
                 "clusterLabelOffset": -10
