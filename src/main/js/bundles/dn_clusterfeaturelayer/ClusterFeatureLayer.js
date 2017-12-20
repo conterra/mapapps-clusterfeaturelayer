@@ -185,10 +185,10 @@ define([
                 var layerAddedSignal = on(map, 'layer-add', function (e) {
                     if (e.layer === that) {
                         layerAddedSignal.remove();
-                        that._reCluster();
+                        that._reCluster({forceReinit: true});
 
                         that._connect.connect(that._mapModel, "onModelNodeStateChanged", that, function () {
-                            that._reCluster({forceReinit: true});
+                            that._reCluster();
                         });
                     }
                 });
