@@ -29,7 +29,6 @@
   "bundles": {
     "dn_clusterfeaturelayer": {
       "ClusterSymbolProvider": {
-        "clusterSymbolSize": 25,
         "clusterBackgroundSymbolColor": [
           200,
           200,
@@ -230,7 +229,7 @@
                 "symbolBaseSize": 30,
                 "showClusterGrid": true,
                 "showClusterGridCounts": true,
-                "showClusterGridBackground": false,
+                "showClusterGridBackground": true,
                 "showClusterArea": true,
                 "showClusterSize": false,
                 "useDefaultSymbolForFeatures": false,

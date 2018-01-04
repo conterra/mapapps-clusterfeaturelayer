@@ -26,9 +26,6 @@ define([
     function (declare, d_string, Color, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, Font, TextSymbol) {
         return declare([], {
             constructor: function (options) {
-
-                this.clusterSymbolSize = options.clusterSymbolSize || 25;
-
                 this.clusterBackgroundSymbolColor = options.clusterBackgroundSymbolColor;
                 this.clusterBackgroundBorderColor = options.clusterBackgroundBorderColor;
                 this.clusterBackgroundBorderSize = options.clusterBackgroundBorderSize;
@@ -80,12 +77,14 @@ define([
                 return new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterAreaSymbolBorderColor), this.clusterAreaSymbolBorderSize), new Color(this.clusterAreaSymbolColor));
             },
 
-            getClusterSymbolsBackground: function (width, height, transparent) {
+            getClusterSymbolsBackground: function (columnsCount, rowsCount, baseSize, transparent) {
+                var width = columnsCount * baseSize;
+                var height = rowsCount * baseSize;
                 var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterBackgroundBorderColor), this.clusterBackgroundBorderSize);
-                var symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, this.clusterSymbolSize, lineSymbol, new Color(this.clusterBackgroundSymbolColor));
+                var symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color(this.clusterBackgroundSymbolColor));
                 if (transparent) {
                     lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 0, 0]), 0);
-                    symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, this.clusterSymbolSize, lineSymbol, new Color([0, 0, 0, 0]));
+                    symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color([0, 0, 0, 0]));
                 }
 
                 var pathString = d_string.substitute("M 0 0 L ${width} 0 L ${width} ${height} L 0 ${height} z", {

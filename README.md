@@ -108,7 +108,6 @@ Installation Guide
 ##### ClusterSymbolProvider:
 ```
 "ClusterSymbolProvider": {
-    "clusterSymbolSize": 25,
     "clusterBackgroundSymbolColor": [
         200,
         200,
@@ -183,7 +182,6 @@ Installation Guide
 ###### Properties
 | Property                       | Type    | Possible Values                 | Default    | Description                          |
 |--------------------------------|---------|---------------------------------|------------|--------------------------------------|
-| clusterSymbolSize              | number  |                                 | ```25```   | Symbol size of the cluster           |
 | clusterBackgroundSymbolColor   | Array   |                                 |            | Cluster grid background color        |
 | clusterBackgroundBorderColor   | Array   |                                 |            | Cluster grid background border color |
 | clusterBackgroundBorderSize    | number  |                                 | ```0.5```  | Cluster grid background border size  |

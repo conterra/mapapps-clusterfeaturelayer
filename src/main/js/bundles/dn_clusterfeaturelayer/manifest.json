@@ -20,7 +20,6 @@
       ],
       "propertiesConstructor": true,
       "properties": {
-        "clusterSymbolSize": 25,
         "clusterBackgroundSymbolColor": [
           200,
           200,

@@ -133,7 +133,27 @@ define([
                 if (!featureSymbol) {
                     return this.featureSymbolProvider.getFeatureSymbol();
                 }
+
+                this._setSymbolSize(featureSymbol);
+
                 return featureSymbol;
+            },
+
+            _setSymbolSize: function (symbol) {
+                var baseSize = this.symbolBaseSize;
+                if (symbol.setHeight) {
+                    var w = baseSize / symbol.width;
+                    var h = baseSize / symbol.height;
+                    if (w > h) {
+                        symbol.setWidth((symbol.width * w) - 2);
+                        symbol.setHeight((symbol.height * w) - 2);
+                    } else {
+                        symbol.setWidth((symbol.width * h) - 2);
+                        symbol.setHeight((symbol.height * h) - 2);
+                    }
+                } else if (symbol.setSize) {
+                    symbol.setSize(this.symbolBaseSize - 2);
+                }
             },
 
             _getSymbolsForCluster: function (cluster, clusters) {
@@ -176,7 +196,7 @@ define([
 
                 if (this.showClusterGrid && this.showClusterGridBackground) {
                     var maxClusterSize = 3 * baseSize;
-                    var clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount * baseSize, rowsCount * baseSize, false);
+                    var clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, false);
                     clusterSymbolsBackground.setSize(Math.min(maxClusterSize, gridSize * baseSize));
                     //transparentClusterSymbol = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount * baseSize, rowsCount * baseSize, true);
                     //transparentClusterSymbol.setSize(Math.min(maxClusterSize, gridSize * baseSize));

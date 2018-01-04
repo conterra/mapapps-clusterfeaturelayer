@@ -24,17 +24,17 @@ define([
               SimpleMarkerSymbol, SimpleLineSymbol) {
         return declare([], {
             constructor: function (options) {
-                this.symbolColor = options.symbolColor || [255, 170, 0, 0.8];
-                this.borderColor = options.borderColor || [255, 170, 0, 0.4];
-                this.symbolSize = options.symbolSize || 25;
-                this.borderSize = options.borderSize || 10;
+                this.symbolColor = options.symbolColor;
+                this.borderColor = options.borderColor;
+                this.symbolSize = options.symbolSize;
+                this.borderSize = options.borderSize;
             },
 
             getFeatureSymbol: function () {
-                var singleSymbolColor = this.symbolColor || [255, 255, 255];
-                var singleBorderColor = this.borderColor || [255, 255, 255];
-                var singleSymbolSize = this.symbolSize || 6;
-                var singleBorderSize = this.borderSize || 1;
+                var singleSymbolColor = this.symbolColor;
+                var singleBorderColor = this.borderColor;
+                var singleSymbolSize = this.symbolSize;
+                var singleBorderSize = this.borderSize;
 
                 var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(singleBorderColor), singleBorderSize);
                 return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, singleSymbolSize, lineSymbol, new Color(singleSymbolColor));
