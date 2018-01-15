@@ -359,7 +359,7 @@ define([
                 var clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
                 var clusterResolution = this._mapState.getExtent().getWidth() / this._map.width;
 
-                if (!ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance, clusterResolution)) {
+                if (!ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance)) {
                     return;
                 }
                 if (features.length > 1) {
