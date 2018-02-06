@@ -22,7 +22,7 @@
       "mapflow@^3.3.0",
       "banner@^3.3.0",
       "custominfo@^3.3.0",
-      "dn_clusterfeaturelayer"
+      "dn_clusterfeaturelayer@2.x"
     ],
     "skipBundles": []
   },
