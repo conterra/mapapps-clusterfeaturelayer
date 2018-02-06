@@ -34,7 +34,9 @@ define([
                     return url === detail.url;
                 });
                 var id = layerId.split("/")[layerId.split("/").length - 1];
-                return details.layers[id] && details.layers[id].drawingInfo.renderer;
+                return ct_array.arraySearchFirst(details.layers, function (metadata) {
+                    return metadata.id.toString() === id;
+                }).drawingInfo.renderer;
             }
         });
     });
