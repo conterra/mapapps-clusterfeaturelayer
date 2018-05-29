@@ -9,7 +9,9 @@ testConfig({
         {
             root: "@@mapapps.remote.base@@/resources/jsregistry/root",
             packages: [
-                "apprt@3.x"
+                "apprt@4.x",
+                "apprt-vue@4.x",
+                "vuetify@~0.14.7"
             ]
         }
     ]

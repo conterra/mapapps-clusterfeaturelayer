@@ -13,10 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ".";
-import "./ClusterFeatureLayer";
-import "./ClusterFeatureLayerTypeFactory";
-import "./ClusterSymbolProvider";
-import "./ClusterGeometryFunctions";
-import "./FeatureSymbolProvider";
-import "ct/Stateful";
+const gulp = require("gulp");
+const run_sequence = require('run-sequence');
+const mapapps = require('ct-mapapps-gulp-js');
+
+mapapps.registerTasks({
+    themes: [/*sample_theme*/],
+    hasVuetify: true,
+    hasBaseThemes: true,
+    forceTranspile: true/*,
+    themeChangeTargets:{
+        "vuetify":[
+            "sample_theme"
+        ]
+    }*/
+});
+
+gulp.task("default", function(callback) {
+    run_sequence(
+            "copy-resources",
+            "themes-copy",
+            ["js-transpile", "themes-compile"],
+            callback);
+});

@@ -1,6 +1,6 @@
 {
   "properties": {
-    "amdPackages": "apprt@^3.3.0"
+    "title": "${apptitle}"
   },
   "load": {
     "bundleLocations": [
@@ -8,27 +8,37 @@
       "bundles"
     ],
     "allowedBundles": [
-      "system@^3.3.0",
-      "splashscreen@^3.3.0",
-      "map@^3.3.0",
-      "themes@^3.3.0",
-      "templates@^3.3.0",
-      "templatelayout@^3.3.0",
-      "windowmanager@^3.3.0",
-      "toolset@^3.3.0",
-      "toolrules@^3.3.0",
-      "contentviewer@^3.3.0",
-      "coordinateviewer@^3.3.0",
-      "mapflow@^3.3.0",
-      "banner@^3.3.0",
-      "custominfo@^3.3.0",
-      "dn_clusterfeaturelayer@2.x"
+      "system",
+      "banner",
+      "basemaptoggler",
+      "console",
+      "notifier",
+      "splashscreen",
+      "templatelayout",
+      "template-seasons",
+      "theme-everlasting",
+      "theme-winter",
+      "theme-spring",
+      "theme-summer",
+      "theme-autumn",
+      "map-init",
+      "toolset",
+      "viewmodeswitcher",
+      "mapnavigation",
+      "mapflow",
+      "dn_clusterfeaturelayer"
     ],
-    "skipBundles": []
+    "require": [
+      "${app}.app"
+    ],
+    "i18n": [
+      "bundle"
+    ]
   },
   "bundles": {
     "dn_clusterfeaturelayer": {
       "ClusterSymbolProvider": {
+        "clusterSymbolSize": 25,
         "clusterBackgroundSymbolColor": [
           200,
           200,
@@ -68,13 +78,13 @@
           0.35
         ],
         "clusterSingleSymbolBorderSize": 20,
+        "spiderfyingLineSize": 0.5,
         "spiderfyingLineColor": [
           0,
           0,
           0,
           1
         ],
-        "spiderfyingLineSize": 0.5,
         "spiderfyingCenterColor": [
           0,
           0,
@@ -94,8 +104,8 @@
           255,
           1
         ],
-        "labelHaloSize": "1",
         "labelFontSize": "10pt",
+        "labelHaloSize": 1,
         "labelFontFamily": "Arial"
       }
     },
@@ -107,197 +117,150 @@
         "link": "http://developernetwork.conterra.de"
       }
     },
-    "custominfo": {
-      "CustomInfoToggleTool": [
-        {
-          "id": "customInfoTool",
-          "activateOnStartup": true,
-          "title": "Information",
-          "tooltip": "Information",
-          "iconClass": "icon-custom-info-info",
-          "toolClass": "ctInfo",
-          "togglable": true,
-          "widgetSettings": {
-            "title": "Information",
-            "content": "This app shows the functionality of the ClusterFeatureLayer Bundle which allows you to cluster features for any point feature service.",
-            "window": {
-              "marginBox": {
-                "w": 300,
-                "h": 100,
-                "l": 25,
-                "b": 70
-              },
-              "draggable": true,
-              "closable": true,
-              "modal": false,
-              "maximizable": false,
-              "resizable": false
-            }
-          }
-        }
-      ]
-    },
-    "mapflow": {
-      "MapFlow": {
-        "rootNodeId": "",
-        "nodeDepth": 3,
-        "showScrollBar": true,
-        "singleSelectionMode": true,
-        "contentFlowProperties": {
-          "useAddOns": false,
-          "circularFlow": true,
-          "reflectionHeight": 0,
-          "maxItemHeight": 200,
-          "relativeItemPosition": "top center",
-          "visibleItems": 2
-        }
+    "basemaptoggler": {
+      "Config": {
+        "nextBasemap": "hybrid"
       }
     },
-    "map": {
-      "MapState": {
-        "initialExtent": {
-          "xmin": 703235.75317484,
-          "xmax": 849994.8474821807,
-          "ymin": 6567970.369656878,
-          "ymax": 6646776.945818787,
-          "wkid": 3857
-        }
-      },
-      "MapModelFactory": {
-        "_configData": {
-          "maps": [
+    "map-init": {
+      "Config": {
+        "map": {
+          "layers": [
             {
-              "id": "default",
-              "glass_pane": [],
-              "operationalLayer": [
-                {
-                  "title": "ClusterLayer",
-                  "id": "clusterLayerNode",
-                  "service": "clusterservice",
-                  "maptip": {
-                    "content": "{NAME}",
-                    "dimensions": {
-                      "width": 250,
-                      "height": 50
-                    }
-                  },
-                  "layers": [
-                    "*"
-                  ]
-                }
-              ],
-              "baseLayer": [
-                {
-                  "id": "background",
-                  "title": "Streets",
-                  "service": "streets",
-                  "layers": [
-                    "*"
-                  ],
-                  "enabled": true
-                }
-              ]
-            }
-          ]
-        }
-      },
-      "MappingResourceRegistryFactory": {
-        "_knownServices": {
-          "services": [
-            {
-              "id": "worldTopo",
-              "type": "AGS_TILED",
-              "url": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer"
-            },
-            {
-              "id": "streets",
-              "type": "AGS_TILED",
-              "url": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer"
-            },
-            {
-              "id": "clusterservice",
-              "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
+              "id": "clusterlayer",
+              "title": "Clusterlayer",
               "type": "CLUSTER_FEATURE_LAYER",
-              "title": "AdressDB",
-              "description": "",
-              "options": {
-                "objectIdField": "OBJECTID",
-                "clusterDistance": 100,
-                "spiderfyingDistance": 1,
-                "returnLimit": 1000,
-                "maxClusterScale": 0,
-                "symbolBaseSize": 30,
-                "showClusterGrid": true,
-                "showClusterGridCounts": true,
-                "showClusterGridBackground": true,
-                "showClusterArea": true,
-                "showClusterSize": false,
-                "useDefaultSymbolForFeatures": false,
-                "clusterLabelOffset": -10
+              "elevationInfo": {
+                "mode": "on-the-ground"
               },
               "layers": [
                 {
-                  "id": "1",
-                  "title": "Veranstaltungsorte"
+                  "id": "borken",
+                  "title": "Borken",
+                  "url": "https://maps.kreis-borken.de/arcgis/rest/services/Geobasisdaten/Geobasisdaten_Typo3AdressDB/MapServer",
+                  "sublayers": [
+                    {
+                      "id": "247"
+                    },
+                    {
+                      "id": "263"
+                    },
+                    {
+                      "id": "262"
+                    },
+                    {
+                      "id": "261"
+                    },
+                    {
+                      "id": "260"
+                    }
+                  ]
                 },
                 {
-                  "id": "2",
-                  "title": "Spiel- und Sportplätze"
-                },
-                {
-                  "id": "3",
-                  "title": "Sehenswürdigkeiten"
-                },
-                {
-                  "id": "5",
-                  "title": "Schulen"
-                },
-                {
-                  "id": "6",
-                  "title": "Museen"
-                },
-                {
-                  "id": "7",
-                  "title": "Bibliotheken"
-                },
-                {
-                  "id": "9",
-                  "title": "Stadtbezirke"
-                },
-                {
-                  "id": "10",
-                  "title": "Stadtteile"
-                },
-                {
-                  "id": "11",
-                  "title": "Stadtviertel"
+                  "id": "koeln",
+                  "title": "Köln",
+                  "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
+                  "sublayers": [
+                    {
+                      "id": "1"
+                    },
+                    {
+                      "id": "2"
+                    },
+                    {
+                      "id": "3"
+                    },
+                    {
+                      "id": "5"
+                    },
+                    {
+                      "id": "6"
+                    },
+                    {
+                      "id": "7"
+                    },
+                    {
+                      "id": "9"
+                    },
+                    {
+                      "id": "10"
+                    },
+                    {
+                      "id": "11"
+                    }
+                  ]
                 }
-              ]
+              ],
+              "visible": true,
+              "popupEnabled": true,
+              "popupTemplate": {
+                "title": "{SUBJECT}",
+                "content": "<p>{ADDITIONAL1}</p><div>{STREET} {HOUSENUMBER}, {ZIPCODE} {CITY}</div><div>{INTERNET}</div><div>{PHONE1_NUMBER}</div>"
+              },
+              "outFields": [
+                "*"
+              ],
+              "options": {
+                "objectIdField": "objectid",
+                "clusterDistance": 100,
+                "spiderfyingDistance": 1,
+                "returnLimit": 1000,
+                "maxClusterScale": 500,
+                "symbolBaseSize": 25,
+                "showClusterGrid": true,
+                "showClusterGridCounts": true,
+                "showClusterGridBackground": false,
+                "showClusterArea": false,
+                "showClusterSize": true,
+                "useDefaultSymbolForFeatures": false,
+                "clusterLabelOffset": -4
+              }
             }
-          ]
+          ],
+          "basemap": "streets-vector",
+          "ground": {
+            "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
+            "type": "ELEVATION"
+          }
+        },
+        "view": {
+          "viewmode": "2D",
+          "extent": {
+            "xmin": 695821.3614310705,
+            "ymin": 6735558.554171801,
+            "xmax": 831573.5236655955,
+            "ymax": 6848838.230090475,
+            "spatialReference": 3857
+          }
         }
       }
     },
     "themes": {
       "ThemeModel": {
         "_selectedTheme": "everlasting"
+      },
+      "ThemeSelector": {
+        "componentEnabled": true
       }
     },
     "toolset": {
       "ToolsetManager": {
         "toolsets": [
           {
-            "id": "tools",
-            "title": "Tools",
-            "tooltip": "Tools",
+            "id": "mapview_tools",
             "tools": [
-              "customInfoTool"
+              "zoomInTool",
+              "zoomOutTool",
+              "compassTool",
+              "restoreInitialViewTool",
+              "viewmodeSwitcherTool"
             ],
-            "container": "map",
-            "max_horizontal": 1,
-            "windowType": "css_positioned",
-            "cssClass": "notitle muted mapview_tools",
-            "deactivateToolsOnHide": true
+            "registerWidget": {
+              "widgetRole": "mapview_tools"
+            },
+            "container": "ignore",
+            "windowType": "container",
+            "cssClass": "muted"
           }
         ]
       }

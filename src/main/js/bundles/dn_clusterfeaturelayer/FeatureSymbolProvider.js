@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2018 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([
-        "dojo/_base/declare",
-        "dojo/_base/Color",
+import Color from "dojo/_base/Color";
+import SimpleMarkerSymbol from "esri/symbols/SimpleMarkerSymbol";
+import SimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
 
-        "esri/symbols/SimpleMarkerSymbol",
-        "esri/symbols/SimpleLineSymbol"
-    ],
-    function (declare, Color,
-              SimpleMarkerSymbol, SimpleLineSymbol) {
-        return declare([], {
-            constructor: function (options) {
-                this.symbolColor = options.symbolColor;
-                this.borderColor = options.borderColor;
-                this.symbolSize = options.symbolSize;
-                this.borderSize = options.borderSize;
-            },
+class FeatureSymbolProvider {
+    constructor(options) {
+        this.symbolColor = options.symbolColor;
+        this.borderColor = options.borderColor;
+        this.symbolSize = options.symbolSize;
+        this.borderSize = options.borderSize;
+    }
 
-            getFeatureSymbol: function () {
-                var singleSymbolColor = this.symbolColor;
-                var singleBorderColor = this.borderColor;
-                var singleSymbolSize = this.symbolSize;
-                var singleBorderSize = this.borderSize;
+    getFeatureSymbol() {
+        let singleSymbolColor = this.symbolColor;
+        let singleBorderColor = this.borderColor;
+        let singleSymbolSize = this.symbolSize;
+        let singleBorderSize = this.borderSize;
+        let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(singleBorderColor), singleBorderSize);
+        return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, singleSymbolSize, lineSymbol, new Color(singleSymbolColor));
+    }
+}
 
-                var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(singleBorderColor), singleBorderSize);
-                return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, singleSymbolSize, lineSymbol, new Color(singleSymbolColor));
-            }
-        });
-    });
+module.exports = FeatureSymbolProvider;

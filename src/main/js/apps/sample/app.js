@@ -13,10 +13,4 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ".";
-import "./ClusterFeatureLayer";
-import "./ClusterFeatureLayerTypeFactory";
-import "./ClusterSymbolProvider";
-import "./ClusterGeometryFunctions";
-import "./FeatureSymbolProvider";
-import "ct/Stateful";
+import i18n from "dojo/i18n!./nls/bundle";

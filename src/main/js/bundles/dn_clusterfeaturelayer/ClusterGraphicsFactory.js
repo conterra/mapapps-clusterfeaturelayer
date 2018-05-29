@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2018 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,368 +13,368 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([
-        "dojo/_base/declare",
-        "dojo/_base/lang",
-        "dojo/_base/array",
+import d_array from "dojo/_base/array";
+import Point from "esri/geometry/Point";
+import Polyline from "esri/geometry/Polyline";
+import Graphic from "esri/Graphic";
+import rendererJsonUtil from "esri/renderers/support/jsonUtils";
 
-        "esri/geometry/Point",
-        "esri/geometry/Polyline",
-        "esri/graphic",
-        "esri/renderers/jsonUtils"
-    ],
-    function (declare, d_lang, d_array,
-              Point, Polyline, Graphic, rendererJsonUtil) {
-        return declare([], {
-            clusterSymbolProvider: null,
-            featureSymbolProvider: null,
-            mapState: null,
+class ClusterGraphicsFactory {
+    constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapWidgetModel, popupTemplate, options) {
+        this.clusterSymbolProvider = clusterSymbolProvider;
+        this.featureSymbolProvider = featureSymbolProvider;
+        this.rendererProvider = rendererProvider || {};
+        this.mapWidgetModel = mapWidgetModel;
+        this.clusterLabelOffset = options.clusterLabelOffset;
+        this.symbolBaseSize = options.symbolBaseSize;
+        this.showClusterSize = options.showClusterSize;
+        this.showClusterGrid = options.showClusterGrid;
+        this.showClusterGridCounts = options.showClusterGridCounts;
+        this.showClusterGridBackground = options.showClusterGridBackground;
+        this.useDefaultSymbolForFeatures = options.useDefaultSymbolForFeatures;
+        this.spiderfyingDistanceMultiplier = options.spiderfyingDistanceMultiplier || 1;
+        this.spiralLengthStart = options.spiralLengthStart || 20;
+        this.spiralLengthFactor = options.spiralLengthFactor || 3;
+        this.popupTemplate = popupTemplate;
+    }
 
-            constructor: function (clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapState, options) {
-                this.clusterSymbolProvider = clusterSymbolProvider;
-                this.featureSymbolProvider = featureSymbolProvider;
-                this.rendererProvider = rendererProvider || {};
-                this.mapState = mapState;
-                this.clusterLabelOffset = options.clusterLabelOffset;
-                this.symbolBaseSize = options.symbolBaseSize;
-                this.showClusterSize = options.showClusterSize;
-                this.showClusterGrid = options.showClusterGrid;
-                this.showClusterGridCounts = options.showClusterGridCounts;
-                this.showClusterGridBackground = options.showClusterGridBackground;
-                this.useDefaultSymbolForFeatures = options.useDefaultSymbolForFeatures;
-                this.spiderfyDistanceMultiplier = options.spiderfyDistanceMultiplier || 1;
-                this.spiralLengthStart = options.spiralLengthStart || 20;
-                this.spiralLengthFactor = options.spiralLengthFactor || 3;
-            },
+    getAreaGraphic(area) {
+        return new Graphic(area, this.clusterSymbolProvider.getAreaSymbol(), {clusterArea: true});
+    }
 
-            getAreaGraphic: function (area) {
-                var areaGraphic = new Graphic(area);
-                areaGraphic.setSymbol(this.clusterSymbolProvider.getAreaSymbol());
-                return areaGraphic;
-            },
+    getClusterGraphics(cluster, clusters) {
+        let point = new Point(cluster.x, cluster.y, cluster.spatialReference);
+        let clusterAttributes = cluster.attributes;
+        // create graphics for single feature
+        if (clusterAttributes.features.length === 1) {
+            let singleFeature = clusterAttributes.features[0];
+            let singleFeatureSymbol = this.getSymbolForFeature(singleFeature);
 
-            getClusterGraphics: function (cluster, clusters) {
-                var point = new Point(cluster.x, cluster.y, cluster.spatialReference);
-                var clusterAttributes = cluster.attributes;
-                var returnGraphics = [];
+            // The symbols from the features are reused, so they might be still offset for the cluster layout.
+            return [new Graphic(point, singleFeatureSymbol, singleFeature.attributes, this.popupTemplate)];
+        }
+        // create graphics for cluster
+        let returnGraphics = [];
+        let allFeatures = cluster.attributes.features;
 
-                // create graphics for single feature
-                if (clusterAttributes.features.length === 1) {
-                    var singleFeature = clusterAttributes.features[0];
-                    var singleFeatureSymbol = this.getSymbolForFeature(singleFeature);
-
-                    // The symbols from the features are reused, so they might be still offset for the cluster layout.
-                    singleFeatureSymbol.setOffset(0, 0);
-
-                    returnGraphics.push(new Graphic(point, singleFeatureSymbol, singleFeature.attributes));
-                    return returnGraphics;
+        // simple circle clusters
+        if (!this.showClusterGrid) {
+            let maxSize = clusters[0].attributes.clusterCount;
+            clusters.forEach((c) => {
+                if (c.attributes.clusterCount > maxSize) {
+                    maxSize = c.attributes.clusterCount;
                 }
+            });
+            let clusterSymbol = this.clusterSymbolProvider.getClusterSymbolCircle(cluster.attributes.clusterCount, 0.2 * maxSize, 0.4 * maxSize, 0.6 * maxSize, 0.8 * maxSize, maxSize);
+            returnGraphics.push(new Graphic(point, clusterSymbol, clusterAttributes));
+            // show number of points in the cluster
+            if (this.showClusterSize) {
+                let label = this.clusterSymbolProvider.getClusterLabel(clusterAttributes.clusterCount.toString(), 0);
+                label.set("angle", this._getRotation());
+                returnGraphics.push(new Graphic(point, label, clusterAttributes));
+            }
+            return returnGraphics;
+        }
 
-                // create graphics for cluster
-                var clusterSymbols = this._getSymbolsForCluster(cluster, clusters);
-                d_array.forEach(clusterSymbols, function (symbol) {
-                    returnGraphics.push(new Graphic(point, symbol, clusterAttributes));
-                }, this);
+        // grid layout
+        let mostFeatures = this._getMostFeatures(allFeatures, 9);
+        let baseSize = this.symbolBaseSize;
+        let pointsCount = mostFeatures.length;
+        // calculate grid
+        // 1 feature -> gridSize = 1; 2-4 features -> gridSize = 2; >4 features -> gridSize= 3
+        let gridSize = Math.ceil(Math.sqrt(pointsCount));
+        let columnsCount = gridSize;
+        let rowsCount = Math.ceil(pointsCount / gridSize);
 
-                // show number of points in the cluster
-                if (!this.showClusterGrid && this.showClusterSize) {
-                    var label = this.clusterSymbolProvider.getClusterLabel(clusterAttributes.clusterCount.toString());
-                    returnGraphics.push(new Graphic(point, label, clusterAttributes));
-                }
+        if (this.showClusterGridBackground) {
+            let maxClusterSize = 3 * baseSize;
+            let backGroundSize = baseSize / 1.1;
+            let clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, false);
+            clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * backGroundSize)));
+            clusterSymbolsBackground.set("angle", this._getRotation());
+            returnGraphics.push(new Graphic(point, clusterSymbolsBackground, clusterAttributes));
+        }
 
-                return returnGraphics;
-            },
+        // add symbols
+        let differentSymbolPoints = mostFeatures.map(() => {
+            return point.clone();
+        });
+        this._alignPointsInGrid(differentSymbolPoints, gridSize, baseSize);
+        let differentFeatureSymbols = this._getSymbolsForGrid(allFeatures, mostFeatures);
 
-            getSpiderfyingGraphics: function (cluster) {
-                var point = new Point(cluster.x, cluster.y, cluster.spatialReference);
-                var clusterAttributes = cluster.attributes;
-                var returnGraphics = [];
+        differentSymbolPoints.forEach((symbolPoint, i) => {
+            returnGraphics.push(new Graphic(symbolPoint, differentFeatureSymbols[i], clusterAttributes));
+        });
 
-                // create graphics for cluster
-                var clusterSymbols = this._getSymbolsForSpiderfying(cluster);
-                d_array.forEach(clusterSymbols, function (symbol) {
-                    if (symbol.featureAttributes) {
-                        // add line symbol
-                        var xOffset = this.offsetToDistance(symbol.xoffset);
-                        var yOffset = this.offsetToDistance(symbol.yoffset);
-                        var offsettedPoint = point.offset(xOffset, yOffset);
-                        var line = new Polyline({
-                            paths: [[[cluster.x, cluster.y], [offsettedPoint.x, offsettedPoint.y]]],
-                            spatialReference: cluster.spatialReference
-                        });
-                        returnGraphics.push(new Graphic(line, this.clusterSymbolProvider.getSpiderfyingLineSymbol()));
-                        // add symbol
-                        returnGraphics.push(new Graphic(point, symbol, symbol.featureAttributes));
-                    } else {
-                        returnGraphics.push(new Graphic(point, symbol, null));
-                    }
-                }, this);
-                return returnGraphics;
-            },
+        // add labels
+        if (this.showClusterGridCounts) {
+            let differentLabelPoints = mostFeatures.map(() => {
+                return point.clone();
+            });
+            this._alignPointsInGrid(differentLabelPoints, gridSize, baseSize);
+            let differentFeatureLabels = this._getLabelsForGrid(mostFeatures);
 
-            offsetToDistance: function (value) {
-                var screenExtent = this.mapState.getViewPort().getScreen();
-                var mapExtent = this.mapState.getExtent();
-                var m = mapExtent.getWidth() / screenExtent.getWidth();
-                return value * m;
-            },
+            differentLabelPoints.forEach((labelPoint, i) => {
+                returnGraphics.push(new Graphic(labelPoint, differentFeatureLabels[i], clusterAttributes));
+            });
+        }
 
-            getSymbolForFeature: function (feature) {
-                if (this.useDefaultSymbolForFeatures) {
-                    return this.featureSymbolProvider.getFeatureSymbol();
-                }
+        return returnGraphics;
+    }
 
-                var featureSymbol = feature.symbol;
-                if (!featureSymbol) {
-                    var tmpRenderer = rendererJsonUtil.fromJson(this.rendererProvider.getRendererForLayer(feature.layerId));
-                    featureSymbol = tmpRenderer.getSymbol(feature);
-                }
-
-                if (!featureSymbol) {
-                    return this.featureSymbolProvider.getFeatureSymbol();
-                }
-
-                this._setSymbolSize(featureSymbol);
-
-                return featureSymbol;
-            },
-
-            _setSymbolSize: function (symbol) {
-                var baseSize = this.symbolBaseSize;
-                if (symbol.setHeight) {
-                    var w = baseSize / symbol.width;
-                    var h = baseSize / symbol.height;
-                    if (w > h) {
-                        symbol.setWidth((symbol.width * w) - 2);
-                        symbol.setHeight((symbol.height * w) - 2);
-                    } else {
-                        symbol.setWidth((symbol.width * h) - 2);
-                        symbol.setHeight((symbol.height * h) - 2);
-                    }
-                } else if (symbol.setSize) {
-                    symbol.setSize(this.symbolBaseSize - 2);
-                }
-            },
-
-            _getSymbolsForCluster: function (cluster, clusters) {
-                var allFeatures = cluster.attributes.features;
-                var results = [];
-
-                if (!this.showClusterGrid) {
-                    var maxSize = clusters[0].attributes.clusterCount;
-                    d_array.forEach(clusters, function (c) {
-                        if (c.attributes.clusterCount > maxSize) {
-                            maxSize = c.attributes.clusterCount;
-                        }
-                    });
-                    var clusterSymbol = this.clusterSymbolProvider.getClusterSymbolCircle(cluster.attributes.clusterCount, 0.2 * maxSize, 0.4 * maxSize, 0.6 * maxSize, 0.8 * maxSize, maxSize);
-                    results.push(clusterSymbol);
-                    return results;
-                }
-
-                var mostFeatures = this._getMostFeatures(allFeatures, 9);
-                var differentFeatureSymbols = this._getSymbolsForGrid(allFeatures, mostFeatures);
-                var differentFeatureLabels;
-                if (this.showClusterGridCounts) {
-                    differentFeatureLabels = this._getLabelsForGrid(mostFeatures);
-                } else {
-                    differentFeatureLabels = [];
-                }
-
-                var baseSize = this.symbolBaseSize;
-                var symbolsCount = differentFeatureSymbols.length;
-                // 1 feature -> gridSize = 1; 2-4 features -> gridSize = 2; >4 features -> gridSize= 3
-                var gridSize = Math.ceil(Math.sqrt(symbolsCount));
-
-                var columnsCount = gridSize;
-                var rowsCount = Math.ceil(symbolsCount / gridSize);
-
-                this._alignSymbolsInGrid(differentFeatureSymbols, gridSize, baseSize, 0);
-                if (this.showClusterGrid && this.showClusterGridCounts) {
-                    this._alignSymbolsInGrid(differentFeatureLabels, gridSize, baseSize, this.clusterLabelOffset);
-                }
-
-                if (this.showClusterGrid && this.showClusterGridBackground) {
-                    var maxClusterSize = 3 * baseSize;
-                    var clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, false);
-                    clusterSymbolsBackground.setSize(Math.min(maxClusterSize, gridSize * baseSize));
-                    //transparentClusterSymbol = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount * baseSize, rowsCount * baseSize, true);
-                    //transparentClusterSymbol.setSize(Math.min(maxClusterSize, gridSize * baseSize));
-                    results.push(clusterSymbolsBackground);
-                }
-
-                return results.concat(differentFeatureSymbols).concat(differentFeatureLabels);
-            },
-
-            _getSymbolsForSpiderfying: function (cluster) {
-                var allFeatures = cluster.attributes.features;
-                var baseSize = this.symbolBaseSize;
-                var backgroundSymbols = [];
-                var symbols = [];
-                var symbol;
-                d_array.some(allFeatures, function (feature) {
-                    symbol = d_lang.clone(this.getSymbolForFeature(feature));
-                    symbol.featureAttributes = feature.attributes;
-                    symbols.push(symbol);
-                }, this);
-
-                this._alignSymbolsInSpiderfying(symbols, baseSize);
-                this._alignSymbolsInSpiderfying(backgroundSymbols, baseSize);
-
-                var centerSymbol = this.clusterSymbolProvider.getSpiderfyingSymbolCircle();
-
-                return [centerSymbol].concat(backgroundSymbols).concat(symbols);
-            },
-
-            _getMostFeatures: function (allFeatures, maxNumberOfFeatures) {
-                var count = {};
-                d_array.forEach(allFeatures, function (feature) {
-                    if (!count[feature.layerId]) {
-                        count[feature.layerId] = 1;
-                    } else {
-                        count[feature.layerId]++;
-                    }
+    getSpiderfyingGraphics(cluster) {
+        let point = new Point(cluster.x, cluster.y, cluster.spatialReference);
+        let returnGraphics = [];
+        // create graphics for cluster
+        let baseSize = this.symbolBaseSize;
+        let spiderfyingSymbols = this._getSymbolsForSpiderfying(cluster);
+        let spiderfyingPoints = spiderfyingSymbols.map(() => {
+            return point.clone();
+        });
+        this._alignPointsInSpiderfying(spiderfyingPoints, baseSize);
+        spiderfyingSymbols.forEach((symbol, i) => {
+            if (symbol.featureAttributes) {
+                // add line symbol
+                let offsetPoint = spiderfyingPoints[i];
+                let line = new Polyline({
+                    paths: [[
+                        [
+                            point.x,
+                            point.y
+                        ],
+                        [
+                            offsetPoint.x,
+                            offsetPoint.y
+                        ]
+                    ]],
+                    hasZ: false,
+                    hasM: true,
+                    spatialReference: cluster.spatialReference
                 });
+                returnGraphics.push(new Graphic(line, this.clusterSymbolProvider.getSpiderfyingLineSymbol()));
+                // add symbol
+                returnGraphics.push(new Graphic(offsetPoint, symbol, symbol.featureAttributes, this.popupTemplate));
 
-                var sortableCounts = [];
-                for (var layerId in count) {
-                    sortableCounts.push([layerId, count[layerId]]);
-                }
+                let center = new Graphic(point, this.clusterSymbolProvider.getSpiderfyingSymbolCircle(), symbol.featureAttributes, this.popupTemplate);
+                returnGraphics.push(center);
+            }
+        }, this);
+        return returnGraphics;
+    }
 
-                sortableCounts.sort(function (a, b) {
-                    return b[1] - a[1];
-                });
+    offsetToDistance(value) {
+        let clusterResolution = this.mapWidgetModel.get("view").extent.width / this.mapWidgetModel.width;
+        return value * clusterResolution;
+    }
 
-                var result = [];
-                d_array.some(sortableCounts, function (count) {
-                    if (result.length >= maxNumberOfFeatures)
-                        return false;
-                    result.push(count);
-                });
-                return result;
-            },
+    getSymbolForFeature(feature) {
+        let featureSymbol;
+        if (this.useDefaultSymbolForFeatures) {
+            featureSymbol = this.featureSymbolProvider.getFeatureSymbol();
+        } else {
+            featureSymbol = feature.symbol;
+            if (!featureSymbol) {
+                let tmpRenderer = rendererJsonUtil.fromJSON(this.rendererProvider.getRendererForLayer(feature.layerId));
+                featureSymbol = tmpRenderer.getSymbol(feature);
+            }
+            if (!featureSymbol) {
+                featureSymbol = this.featureSymbolProvider.getFeatureSymbol();
+            }
+        }
+        this._setSymbolSize(featureSymbol);
+        featureSymbol.set("angle", this._getRotation());
+        return featureSymbol;
+    }
 
-            _getSymbolsForGrid: function (allFeatures, mostFeatures) {
-                var featuresFromDifferentLayers = this._getFeaturesFromDifferentLayers(allFeatures, mostFeatures);
-                return d_array.map(featuresFromDifferentLayers, function (feature) {
-                    var symbol = d_lang.clone(this.getSymbolForFeature(feature));
-                    symbol.featureAttributes = feature.attributes;
-                    return symbol;
-                }, this);
-            },
+    _setSymbolSize(symbol) {
+        let baseSize = this.symbolBaseSize;
+        if (symbol.height) {
+            let w = baseSize / symbol.width;
+            let h = baseSize / symbol.height;
+            if (w > h) {
+                symbol.set("width", (symbol.width * w) - 2);
+                symbol.set("height", (symbol.height * w) - 2);
+            } else {
+                symbol.set("width", (symbol.width * h) - 2);
+                symbol.set("height", (symbol.height * h) - 2);
+            }
+        } else if (symbol.size) {
+            symbol.set("size", this.symbolBaseSize - 2);
+        }
+    }
 
-            _getLabelsForGrid: function (mostFeatures) {
-                var that = this;
-                return d_array.map(mostFeatures, function (layerInfos) {
-                    return that.clusterSymbolProvider.getClusterLabel(layerInfos[1]);
-                });
-            },
+    _getSymbolsForSpiderfying(cluster) {
+        let allFeatures = cluster.attributes.features;
+        let symbols = [];
+        let symbol;
+        d_array.some(allFeatures, (feature) => {
+            symbol = this.getSymbolForFeature(feature).clone();
+            symbol.featureAttributes = feature.attributes;
+            symbols.push(symbol);
+        }, this);
+        return symbols;
+    }
 
-            /**
-             * Returns for the specified features, that might originate from different layers, one feature for each
-             * of the layers.
-             * @param allFeatures
-             * @param mostFeatures
-             * @private
-             */
-            _getFeaturesFromDifferentLayers: function (allFeatures, mostFeatures) {
-                var layerIds = [];
-                d_array.forEach(mostFeatures, function (layerInfos) {
-                    layerIds.push(layerInfos[0]);
-                });
-                var hash = {};
-                d_array.forEach(allFeatures, function (feature) {
-                    if (layerIds.indexOf(feature.layerId) !== -1)
-                        hash[feature.layerId] = feature;
-                });
-
-                var featuresFromDifferentLayers = [];
-                d_array.forEach(layerIds, function (layerId) {
-                    featuresFromDifferentLayers.push(hash[layerId]);
-                });
-                return featuresFromDifferentLayers;
-            },
-
-            /**
-             *
-             * @param symbols The symbols to display and align within the grid.
-             * @param gridSize An integer that specifies whether it's a 1x1, 2x2, 3x3, etc. grid.
-             * @param baseSize The distance between two symbols within the cluster.
-             * @param yOffsetAddition An additional yOffset.
-             * @private
-             */
-            _alignSymbolsInGrid: function (symbols, gridSize, baseSize, yOffsetAddition) {
-                // This calculates how many columns and rows are needed to display the symbols in the cluster.
-                var gridSizeX = Math.min(gridSize, symbols.length);
-                var gridSizeY = Math.ceil(symbols.length / gridSize);
-
-                var offsetOriginX = (gridSizeX - 1) * baseSize;
-                var offsetOriginY = (gridSizeY - 1) * baseSize;
-
-                d_array.forEach(symbols, function (symbol, index) {
-                    // This calculates the offset of the current symbol within the cluster.
-                    var xOffset = -offsetOriginX / 2 + (index % gridSize) * baseSize;
-                    var yOffset = offsetOriginY / 2 - Math.floor(index / gridSize) * baseSize;
-
-                    symbol.setOffset(xOffset, yOffset + yOffsetAddition);
-                });
-            },
-
-            /**
-             *
-             * @param symbols The symbols to display and align within the grid.
-             * @private
-             */
-            _alignSymbolsInSpiderfying: function (symbols) {
-                if (symbols.length <= 9) {
-                    this._allignSymbolsInCircle(symbols);
-                } else {
-                    this._allignSymbolsInSpiral(symbols);
-                }
-            },
-
-            _allignSymbolsInCircle: function (symbols) {
-                var baseSize = this.symbolBaseSize;
-                var spiderfyDistanceMultiplier = this.spiderfyDistanceMultiplier;
-                var spiderfyCount = symbols.length;
-                //if there's an even amount of flares, position the first flare to the left, minus 180 from degree to do this.
-                //for an add amount position the first flare on top, -90 to do this. Looks more symmetrical this way.
-                var circleStartAngle = (spiderfyCount % 2 === 0) ? -180 * (Math.PI / 180) : -90 * (Math.PI / 180);
-                var circumference = spiderfyDistanceMultiplier * baseSize * (3 + spiderfyCount);
-                var radius = circumference / (2 * Math.PI);  //radius from circumference
-                var angleStep = (2 * Math.PI) / spiderfyCount;
-                var i;
-                var angle;
-
-                for (i = spiderfyCount - 1; i >= 0; i--) {
-                    angle = circleStartAngle + i * angleStep;
-                    var xOffset = radius * Math.cos(angle);
-                    var yOffset = radius * Math.sin(angle);
-
-                    symbols[i].setOffset(xOffset, yOffset);
-                }
-            },
-
-            _allignSymbolsInSpiral: function (symbols) {
-                var baseSize = this.symbolBaseSize;
-                var spiderfyDistanceMultiplier = this.spiderfyDistanceMultiplier;
-                var spiderfyCount = symbols.length;
-                var radius = spiderfyDistanceMultiplier * this.spiralLengthStart;
-                var separation = /*spiderfyDistanceMultiplier * */baseSize;
-                var lengthFactor = spiderfyDistanceMultiplier * this.spiralLengthFactor * (2 * Math.PI);
-                var angle = 0;
-                var i;
-
-                // Higher index, closer position to cluster center.
-                for (i = spiderfyCount - 1; i >= 0; i--) {
-                    angle += separation / radius + i * 0.0005;
-                    var xOffset = radius * Math.cos(angle);
-                    var yOffset = radius * Math.sin(angle);
-
-                    symbols[i].setOffset(xOffset, yOffset);
-
-                    radius += lengthFactor / angle;
-                }
+    _getMostFeatures(allFeatures, maxNumberOfFeatures) {
+        let count = {};
+        allFeatures.forEach((feature) => {
+            if (!count[feature.layerId]) {
+                count[feature.layerId] = 1;
+            } else {
+                count[feature.layerId]++;
             }
         });
-    });
+        let sortableCounts = [];
+        for (let layerId in count) {
+            sortableCounts.push([
+                layerId,
+                count[layerId]
+            ]);
+        }
+        sortableCounts.sort((a, b) => {
+            return b[1] - a[1];
+        });
+        let result = [];
+        d_array.some(sortableCounts, (count) => {
+            if (result.length >= maxNumberOfFeatures)
+                return false;
+            result.push(count);
+        });
+        return result;
+    }
+
+    _getSymbolsForGrid(allFeatures, mostFeatures) {
+        let featuresFromDifferentLayers = this._getFeaturesFromDifferentLayers(allFeatures, mostFeatures);
+        return featuresFromDifferentLayers.map((feature) => {
+            let symbol = this.getSymbolForFeature(feature).clone();
+            symbol.featureAttributes = feature.attributes;
+            return symbol;
+        }, this);
+    }
+
+    _getLabelsForGrid(mostFeatures) {
+        let that = this;
+        let rotation = this._getRotation();
+        return mostFeatures.map((layerInfos) => {
+            let label = that.clusterSymbolProvider.getClusterLabel(layerInfos[1], that.clusterLabelOffset);
+            label.angle = rotation;
+            return label;
+        });
+    }
+
+    /**
+     * Returns for the specified features, that might originate from different layers, one feature for each
+     * of the layers.
+     * @param allFeatures
+     * @param mostFeatures
+     * @private
+     */
+    _getFeaturesFromDifferentLayers(allFeatures, mostFeatures) {
+        let layerIds = [];
+        mostFeatures.forEach((layerInfos) => {
+            layerIds.push(layerInfos[0]);
+        });
+        let hash = {};
+        allFeatures.forEach((feature) => {
+            if (layerIds.indexOf(feature.layerId) !== -1)
+                hash[feature.layerId] = feature;
+        });
+        let featuresFromDifferentLayers = [];
+        layerIds.forEach((layerId) => {
+            featuresFromDifferentLayers.push(hash[layerId]);
+        });
+        return featuresFromDifferentLayers;
+    }
+
+    /**
+     *
+     * @param points The points to display and align within the grid.
+     * @param gridSize An integer that specifies whether it's a 1x1, 2x2, 3x3, etc. grid.
+     * @param baseSize The distance between two symbols within the cluster.
+     * @private
+     */
+    _alignPointsInGrid(points, gridSize, baseSize) {
+        let size = baseSize * 1.1;
+        // This calculates how many columns and rows are needed to display the symbols in the cluster.
+        let gridSizeX = Math.min(gridSize, points.length);
+        let gridSizeY = Math.ceil(points.length / gridSize);
+        let offsetOriginX = (gridSizeX - 1) * size;
+        let offsetOriginY = (gridSizeY - 1) * size;
+        points.forEach((point, index) => {
+            let rotation = this._getRotation();
+            // This calculates the offset of the current symbol within the cluster.
+            let rho = (180 / Math.PI);
+            let xOffset = -offsetOriginX / 2 + index % gridSize * size;
+            let yOffset = offsetOriginY / 2 - Math.floor(index / gridSize) * size;
+            let xOffsetRotated = xOffset * Math.cos(rotation / rho) + yOffset * Math.sin(rotation / rho);
+            let yOffsetRotated = -xOffset * Math.sin(rotation / rho) + yOffset * Math.cos(rotation / rho);
+            point.offset(this.offsetToDistance(xOffsetRotated), this.offsetToDistance(yOffsetRotated));
+        });
+    }
+
+    /**
+     *
+     * @param points The points to display and align within the grid.
+     * @param baseSize The distance between two symbols within the cluster.
+     * @private
+     */
+    _alignPointsInSpiderfying(points, baseSize) {
+        if (points.length <= 9) {
+            this._allignPointsInCircle(points, baseSize);
+        } else {
+            this._allignPointsInSpiral(points, baseSize);
+        }
+    }
+
+    _allignPointsInCircle(points, baseSize) {
+        let spiderfyingDistanceMultiplier = this.spiderfyingDistanceMultiplier;
+        let spiderfyingCount = points.length;
+        //if there's an even amount of flares, position the first flare to the left, minus 180 from degree to do this.
+        //for an add amount position the first flare on top, -90 to do this. Looks more symmetrical this way.
+        let circleStartAngle = spiderfyingCount % 2 === 0 ? -180 * (Math.PI / 180) : -90 * (Math.PI / 180);
+        let circumference = spiderfyingDistanceMultiplier * baseSize * (3 + spiderfyingCount);
+        let radius = circumference / (2 * Math.PI);
+        //radius from circumference
+        let angleStep = 2 * Math.PI / spiderfyingCount;
+        let i;
+        let angle;
+        for (i = spiderfyingCount - 1; i >= 0; i--) {
+            angle = circleStartAngle + i * angleStep;
+            let xOffset = radius * Math.cos(angle);
+            let yOffset = radius * Math.sin(angle);
+            points[i].offset(this.offsetToDistance(xOffset), this.offsetToDistance(yOffset));
+        }
+    }
+
+    _allignPointsInSpiral(points, baseSize) {
+        let spiderfyingDistanceMultiplier = this.spiderfyingDistanceMultiplier;
+        let spiderfyingCount = points.length;
+        let radius = spiderfyingDistanceMultiplier * this.spiralLengthStart;
+        let separation = /*spiderfyingDistanceMultiplier * */ baseSize;
+        let lengthFactor = spiderfyingDistanceMultiplier * this.spiralLengthFactor * (2 * Math.PI);
+        let angle = 0;
+        let i;
+        // Higher index, closer position to cluster center.
+        for (i = spiderfyingCount - 1; i >= 0; i--) {
+            angle += separation / radius + i * 0.0005;
+            let xOffset = radius * Math.cos(angle);
+            let yOffset = radius * Math.sin(angle);
+            points[i].offset(this.offsetToDistance(xOffset), this.offsetToDistance(yOffset));
+            radius += lengthFactor / angle;
+        }
+    }
+
+    _getRotation() {
+        let rotation = 0;
+        let viewmode = this.mapWidgetModel.get("viewmode");
+        if (viewmode === "2D") {
+            rotation = this.mapWidgetModel.get("rotation") * -1;
+        } else {
+            let camera = this.mapWidgetModel.get("camera");
+            rotation = camera && camera.get("heading");
+        }
+        return rotation;
+    }
+}
+
+module.exports = ClusterGraphicsFactory;

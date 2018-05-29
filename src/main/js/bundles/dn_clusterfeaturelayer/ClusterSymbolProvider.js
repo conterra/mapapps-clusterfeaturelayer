@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2018 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,100 +13,98 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([
-        "dojo/_base/declare",
-        "dojo/string",
-        "dojo/_base/Color",
-        "esri/symbols/SimpleMarkerSymbol",
-        "esri/symbols/SimpleLineSymbol",
-        "esri/symbols/SimpleFillSymbol",
-        "esri/symbols/Font",
-        "esri/symbols/TextSymbol"
-    ],
-    function (declare, d_string, Color, SimpleMarkerSymbol, SimpleLineSymbol, SimpleFillSymbol, Font, TextSymbol) {
-        return declare([], {
-            constructor: function (options) {
-                this.clusterBackgroundSymbolColor = options.clusterBackgroundSymbolColor;
-                this.clusterBackgroundBorderColor = options.clusterBackgroundBorderColor;
-                this.clusterBackgroundBorderSize = options.clusterBackgroundBorderSize;
+import d_string from "dojo/string";
+import Color from "dojo/_base/Color";
+import SimpleMarkerSymbol from "esri/symbols/SimpleMarkerSymbol";
+import SimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
+import SimpleFillSymbol from "esri/symbols/SimpleFillSymbol";
+import Font from "esri/symbols/Font";
+import TextSymbol from "esri/symbols/TextSymbol";
 
-                this.clusterAreaSymbolColor = options.clusterAreaSymbolColor;
-                this.clusterAreaSymbolBorderColor = options.clusterAreaSymbolBorderColor;
-                this.clusterAreaSymbolBorderSize = options.clusterAreaSymbolBorderSize;
+class ClusterSymbolProvider {
+    constructor(options) {
+        this.clusterBackgroundSymbolColor = options.clusterBackgroundSymbolColor;
+        this.clusterBackgroundBorderColor = options.clusterBackgroundBorderColor;
+        this.clusterBackgroundBorderSize = options.clusterBackgroundBorderSize;
+        this.clusterAreaSymbolColor = options.clusterAreaSymbolColor;
+        this.clusterAreaSymbolBorderColor = options.clusterAreaSymbolBorderColor;
+        this.clusterAreaSymbolBorderSize = options.clusterAreaSymbolBorderSize;
+        this.clusterSingleSymbolColor = options.clusterSingleSymbolColor;
+        this.clusterSingleSymbolBorderColor = options.clusterSingleSymbolBorderColor;
+        this.clusterSingleSymbolBorderSize = options.clusterSingleSymbolBorderSize;
+        this.spiderfyingLineSize = options.spiderfyingLineSize;
+        this.spiderfyingLineColor = options.spiderfyingLineColor;
+        this.spiderfyingCenterColor = options.spiderfyingCenterColor;
+        this.spiderfyingCenterSize = options.spiderfyingCenterSize;
+        this.labelColor = options.labelColor;
+        this.labelHaloColor = options.labelHaloColor;
+        this.labelFontSize = options.labelFontSize || "10pt";
+        this.labelHaloSize = options.labelHaloSize || "10pt";
+        this.labelFontFamily = options.labelFontFamily || "Arial";
+    }
 
-                this.clusterSingleSymbolColor = options.clusterSingleSymbolColor;
-                this.clusterSingleSymbolBorderColor = options.clusterSingleSymbolBorderColor;
-                this.clusterSingleSymbolBorderSize = options.clusterSingleSymbolBorderSize;
+    getClusterSymbolCircle(clusterCount, small, medium, xl, xxl, max) {
+        let size = 25;
 
-                this.spiderfyingLineSize = options.spiderfyingLineSize;
-                this.spiderfyingLineColor = options.spiderfyingLineColor;
-                this.spiderfyingCenterColor = options.spiderfyingCenterColor;
-                this.spiderfyingCenterSize = options.spiderfyingCenterSize;
+        if (0 <= clusterCount && clusterCount < small) {
+            size = 25;
+        } else if (small <= clusterCount && clusterCount < medium) {
+            size = 25;
+        } else if (medium <= clusterCount && clusterCount < xl) {
+            size = 75;
+        } else if (xl <= clusterCount && clusterCount < xxl) {
+            size = 100;
+        } else if (xxl <= clusterCount && clusterCount <= max) {
+            size = 125;
+        }
 
-                this.labelColor = options.labelColor;
-                this.labelHaloColor = options.labelHaloColor;
-                this.labelFontSize = options.labelFontSize || "10pt";
-                this.labelHaloSize = options.labelHaloSize;
-                this.labelFontFamily = options.labelFontFamily || "Arial";
-            },
+        let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterSingleSymbolBorderColor), this.clusterSingleSymbolBorderSize);
+        return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, size, lineSymbol, new Color(this.clusterSingleSymbolColor));
+    }
 
-            getClusterSymbolCircle: function (clusterCount, small, medium, xl, xxl, max) {
-                var size = 25;
+    getSpiderfyingSymbolCircle() {
+        return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, this.spiderfyingCenterSize, null, new Color(this.spiderfyingCenterColor));
+    }
 
-                if (0 <= clusterCount && clusterCount < small) {
-                    size = 25;
-                } else if (small <= clusterCount && clusterCount < medium) {
-                    size = 25;
-                } else if (medium <= clusterCount && clusterCount < xl) {
-                    size = 75;
-                } else if (xl <= clusterCount && clusterCount < xxl) {
-                    size = 100;
-                } else if (xxl <= clusterCount && clusterCount <= max) {
-                    size = 125;
-                }
+    getAreaSymbol() {
+        return new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterAreaSymbolBorderColor), this.clusterAreaSymbolBorderSize), new Color(this.clusterAreaSymbolColor));
+    }
 
-                var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterSingleSymbolBorderColor), this.clusterSingleSymbolBorderSize);
-                return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, size, lineSymbol, new Color(this.clusterSingleSymbolColor));
-            },
+    getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, transparent) {
+        let width = columnsCount * baseSize;
+        let height = rowsCount * baseSize;
+        let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterBackgroundBorderColor), this.clusterBackgroundBorderSize);
+        let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color(this.clusterBackgroundSymbolColor));
+        if (transparent) {
+            lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 0, 0]), 0);
+            symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color([0, 0, 0, 0]));
+        }
 
-            getSpiderfyingSymbolCircle: function () {
-                return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, this.spiderfyingCenterSize, null, new Color(this.spiderfyingCenterColor));
-            },
-
-            getAreaSymbol: function () {
-                return new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterAreaSymbolBorderColor), this.clusterAreaSymbolBorderSize), new Color(this.clusterAreaSymbolColor));
-            },
-
-            getClusterSymbolsBackground: function (columnsCount, rowsCount, baseSize, transparent) {
-                var width = columnsCount * baseSize;
-                var height = rowsCount * baseSize;
-                var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterBackgroundBorderColor), this.clusterBackgroundBorderSize);
-                var symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color(this.clusterBackgroundSymbolColor));
-                if (transparent) {
-                    lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 0, 0]), 0);
-                    symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color([0, 0, 0, 0]));
-                }
-
-                var pathString = d_string.substitute("M 0 0 L ${width} 0 L ${width} ${height} L 0 ${height} z", {
-                    width: width,
-                    height: height
-                });
-                symbol.setPath(pathString);
-                return symbol;
-            },
-
-            getSpiderfyingLineSymbol: function () {
-                return new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.spiderfyingLineColor), this.spiderfyingLineSize);
-            },
-
-            getClusterLabel: function (labelText) {
-                var font = new Font(this.labelFontSize).setFamily(this.labelFontFamily);
-                return new TextSymbol(labelText)
-                    .setColor(new Color(this.labelColor))
-                    .setHaloColor(new Color(this.labelHaloColor))
-                    .setHaloSize(this.labelHaloSize)
-                    .setVerticalAlignment("middle")
-                    .setFont(font);
-            }
+        let pathString = d_string.substitute("M 0 0 L ${width} 0 L ${width} ${height} L 0 ${height} z", {
+            width: width,
+            height: height
         });
-    });
+        symbol.setPath(pathString);
+        return symbol;
+    }
+
+    getSpiderfyingLineSymbol() {
+        return new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.spiderfyingLineColor), this.spiderfyingLineSize);
+    }
+
+    getClusterLabel(labelText, offset) {
+        let font = new Font({size: this.labelFontSize, family: this.labelFontFamily});
+        return new TextSymbol({
+            text: labelText,
+            color: new Color(this.labelColor),
+            haloColor: new Color(this.labelHaloColor),
+            haloSize: this.labelHaloSize,
+            verticalAlignment: "middle",
+            xoffset: 0,
+            yoffset: offset || 0,
+            font: font
+        });
+    }
+}
+
+module.exports = ClusterSymbolProvider;

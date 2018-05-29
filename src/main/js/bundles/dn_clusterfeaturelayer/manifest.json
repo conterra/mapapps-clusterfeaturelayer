@@ -1,18 +1,49 @@
 {
-  "Bundle-SymbolicName": "dn_clusterfeaturelayer",
-  "Bundle-Version": "2.0.3-SNAPSHOT",
-  "Bundle-Name": "${bundleName}",
-  "Bundle-Description": "${bundleDescription}",
-  "Bundle-Vendor": "con terra GmbH",
-  "Product-Name": "devnet-mapapps-clusterfeaturelayer",
-  "Bundle-Category": [
+  "name": "dn_clusterfeaturelayer",
+  "version": "3.0.0-SNAPSHOT",
+  "title": "${bundleName}",
+  "description": "${bundleDescription}",
+  "vendor": "con terra GmbH",
+  "productName": "devnet-mapapps-clusterfeaturelayer",
+  "keywords": [
     "sample"
   ],
-  "Bundle-Icon": {},
-  "Bundle-StartLevel": 35,
-  "Bundle-Activator": "ClusterFeatureLayerRegistrator",
-  "Components-Create-On-Starting": true,
-  "Components": [
+  //"startLevel": 50,
+  "icon": {},
+  "dependencies": {
+    "map-widget": "^4.2.0"
+  },
+  "main": "main",
+  "components": [
+    {
+      "name": "ClusterFeatureLayerTypeFactory",
+      "provides": [
+        "map-config-api.LayerTypeFactory",
+        "dn_clusterfeaturelayer.ClusterFeatureLayerTypeFactory"
+      ],
+      "properties": {
+        "layerType": "CLUSTER_FEATURE_LAYER"
+      },
+      "references": [
+        {
+          "name": "mapWidgetModel",
+          "providing": "map-widget.MapWidgetModel",
+          "cardinality": "0..1"
+        },
+        {
+          "name": "clusterSymbolProvider",
+          "providing": "dn_clusterfeaturelayer.ClusterSymbolProvider"
+        },
+        {
+          "name": "featureSymbolProvider",
+          "providing": "dn_clusterfeaturelayer.FeatureSymbolProvider"
+        },
+        {
+          "name": "eventService",
+          "providing": "ct.framework.api.EventService"
+        }
+      ]
+    },
     {
       "name": "ClusterSymbolProvider",
       "provides": [
@@ -58,28 +89,27 @@
           210,
           0.35
         ],
-        "clusterSingleSymbolBorderSize": 20,
+        "clusterSingleSymbolBorderSize": 3,
+        "spiderfyingLineSize": 1,
         "spiderfyingLineColor": [
           0,
           0,
           0,
           1
         ],
-        "spiderfyingLineSize": 0.5,
         "spiderfyingCenterColor": [
           0,
           0,
           0,
           1
         ],
-        "spiderfyingCenterSize": 5,
+        "spiderfyingCenterSize": 3,
         "labelColor": [
           0,
           0,
           0,
           1
         ],
-        "labelHaloSize": "1",
         "labelHaloColor": [
           255,
           255,
@@ -87,6 +117,7 @@
           1
         ],
         "labelFontSize": "10pt",
+        "labelHaloSize": 1,
         "labelFontFamily": "Arial"
       }
     },
@@ -109,115 +140,9 @@
           0,
           1
         ],
-        "symbolSize": 10,
+        "symbolSize": 20,
         "borderSize": 1
       }
-    },
-    {
-      "name": "ClusterFeatureLayerFactory",
-      "provides": [
-        "ct.framework.api.EventHandler",
-        "dn_clusterfeaturelayer.ClusterFeatureLayerFactory"
-      ],
-      "references": [
-        {
-          "name": "clusterSymbolProvider",
-          "providing": "dn_clusterfeaturelayer.ClusterSymbolProvider"
-        },
-        {
-          "name": "featureSymbolProvider",
-          "providing": "dn_clusterfeaturelayer.FeatureSymbolProvider"
-        },
-        {
-          "name": "_eventService",
-          "providing": "ct.framework.api.EventService"
-        }
-      ]
-    },
-    {
-      "name": "ZoomController",
-      "provides": [
-        "ct.framework.api.EventHandler"
-      ],
-      "properties": {
-        "Event-Topics": [
-          {
-            "topic": "ct/dn_clusterfeaturelayer/cluster-click",
-            "method": "zoom"
-          }
-        ],
-        "zoomOnClick": true
-      },
-      "references": [
-        {
-          "name": "mapState",
-          "providing": "ct.mapping.map.MapState"
-        },
-        {
-          "name": "_eventService",
-          "providing": "ct.framework.api.EventService"
-        }
-      ]
-    },
-    {
-      "name": "ContentInfoController",
-      "provides": [
-        "ct.framework.api.EventHandler"
-      ],
-      "properties": {
-        "Event-Topics": [
-          {
-            "topic": "ct/dn_clusterfeaturelayer/single-feature-click",
-            "method": "showContentInfo"
-          }
-        ]
-      },
-      "references": [
-        {
-          "name": "_eventService",
-          "providing": "ct.framework.api.EventService"
-        },
-        {
-          "name": "contentViewer",
-          "providing": "ct.contentviewer.ContentViewer"
-        }
-      ]
-    },
-    {
-      "name": "MapTipController",
-      "provides": [
-        "ct.framework.api.EventHandler"
-      ],
-      "properties": {
-        "Event-Topics": [
-          {
-            "topic": "ct/dn_clusterfeaturelayer/single-feature-mouseover",
-            "method": "fireOnGraphicMouseOver"
-          },
-          {
-            "topic": "ct/dn_clusterfeaturelayer/no-feature-mouseover",
-            "method": "fireOnGraphicMouseOut"
-          },
-          {
-            "topic": "ct/dn_clusterfeaturelayer/single-feature-mouseout",
-            "method": "fireOnGraphicMouseOut"
-          },
-          {
-            "topic": "ct/dn_clusterfeaturelayer/cluster-mouseover",
-            "method": "fireOnGraphicMouseOut"
-          }
-        ]
-      },
-      "references": [
-        {
-          "name": "_eventService",
-          "providing": "ct.framework.api.EventService"
-        },
-        {
-          "name": "_mapState",
-          "providing": "ct.mapping.map.MapState"
-        }
-      ]
     }
   ]
 }

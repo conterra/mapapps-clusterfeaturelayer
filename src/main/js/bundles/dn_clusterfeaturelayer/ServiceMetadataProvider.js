@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2018 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define([
-        "dojo/_base/declare",
-        "ct/array"
-    ],
-    function (declare, ct_array) {
-        return declare([], {
-            _serviceMetadata: null,
+class ServiceMetadataProvider {
+    constructor(serviceMetadata) {
+        this._serviceMetadata = serviceMetadata;
+    }
 
-            constructor: function (serviceMetadata) {
-                this._serviceMetadata = serviceMetadata;
-            },
-
-            getRendererForLayer: function (layerId) {
-                var metadata = this._serviceMetadata;
-                var url = ct_array.arraySearchFirst(metadata.urls, function (url) {
-                    return layerId === url.id;
-                }).url;
-                var details = ct_array.arraySearchFirst(metadata.details, function (detail) {
-                    return url === detail.url;
-                });
-                var id = layerId.split("/")[layerId.split("/").length - 1];
-                var detail = ct_array.arraySearchFirst(details.layers, function (metadata) {
-                    return metadata.id.toString() === id;
-                });
-                return detail && detail.drawingInfo && detail.drawingInfo.renderer;
-            }
+    getRendererForLayer(layerId) {
+        let metadata = this._serviceMetadata;
+        let url = metadata.sublayers.find((layer) => {
+            return layerId === layer.id;
+        }).layerUrl;
+        let details = metadata.details.find((detail) => {
+            return url === detail.url;
         });
-    });
+        let id = layerId.split("/")[layerId.split("/").length - 1];
+        let detail = details.layers.find((layer) => {
+            return layer.id.toString() === id;
+        });
+        return detail && detail.drawingInfo && detail.drawingInfo.renderer;
+    }
+}
+
+module.exports = ServiceMetadataProvider;

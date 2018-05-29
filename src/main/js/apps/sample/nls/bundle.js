@@ -13,10 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ".";
-import "./ClusterFeatureLayer";
-import "./ClusterFeatureLayerTypeFactory";
-import "./ClusterSymbolProvider";
-import "./ClusterGeometryFunctions";
-import "./FeatureSymbolProvider";
-import "ct/Stateful";
+module.exports = {
+    root: {
+        apptitle: "map.apps 4 Clustering Sample",
+        map: {
+            esrisites: {
+                title: "Esri Germany Group Sites",
+                popup: {
+                    address: "Address",
+                    contact: "Contact",
+                    tel: "Telephone:",
+                    mail: "Email:",
+                    link: "Internet:"
+                }
+            }
+        }
+    },
+    "de": true
+};
