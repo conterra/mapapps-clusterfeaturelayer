@@ -1,6 +1,6 @@
 <!--
 
-    Copyright (C) 2017 con terra GmbH (info@conterra.de)
+    Copyright (C) 2015 con terra GmbH (info@conterra.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -16,22 +16,22 @@
 
 -->
 <assembly>
-<id>makeZip</id>
-<includeBaseDirectory>false</includeBaseDirectory>
-<formats>
-    <format>zip</format>
-</formats>
-<fileSets>
-    <fileSet>
-        <directory>src/main/js</directory>
-        <includes>
-            <include>**/*</include>
-        </includes>
-        <excludes>
-            <exclude>apps/**</exclude>
-            <exclude>**/tests/**</exclude>
-        </excludes>
-        <outputDirectory>.</outputDirectory>
-    </fileSet>
-</fileSets>
+    <id>makeZip</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>${js.build.outputPath}</directory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>apps/**</exclude>
+                <exclude>**/tests/**</exclude>
+            </excludes>
+            <outputDirectory>.</outputDirectory>
+        </fileSet>
+    </fileSets>
 </assembly>
