@@ -31,7 +31,8 @@ class ClusterFeatureLayerTypeFactory {
             options.layers.forEach((layer) => {
                 layer.sublayers.forEach((children) => {
                     let sublayer = new Sublayer({
-                        id: layer.id + "/" + children.id,
+                        layerId: layer.id,
+                        sublayerId: children.id,
                         layerUrl: layer.url,
                         title: children.title || "",
                         visible: children.visible || true

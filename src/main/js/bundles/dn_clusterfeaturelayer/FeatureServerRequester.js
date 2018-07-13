@@ -183,10 +183,12 @@ class FeatureServerRequester {
         if (this._queryTasks[layerId]) {
             return this._queryTasks[layerId];
         }
-        let url = this.sublayers.find((layer) => {
+        let sublayer = this.sublayers.find((layer) => {
             return layerId === layer.id;
-        }).layerUrl;
-        let queryUrl = url + "/" + layerId.split("/")[layerId.split("/").length - 1];
+        });
+        let url = sublayer.layerUrl;
+        let id = sublayer.sublayerId;
+        let queryUrl = url + "/" + id;
         let newQueryTask = new QueryTask(queryUrl);
         this._queryTasks[layerId] = newQueryTask;
         return newQueryTask;

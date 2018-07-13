@@ -20,13 +20,14 @@ class ServiceMetadataProvider {
 
     getRendererForLayer(layerId) {
         let metadata = this._serviceMetadata;
-        let url = metadata.sublayers.find((layer) => {
+        let sublayer = metadata.sublayers.find((layer) => {
             return layerId === layer.id;
-        }).layerUrl;
+        });
+        let url = sublayer.layerUrl;
         let details = metadata.details.find((detail) => {
             return url === detail.url;
         });
-        let id = layerId.split("/")[layerId.split("/").length - 1];
+        let id = sublayer.sublayerId;
         let detail = details.layers.find((layer) => {
             return layer.id.toString() === id;
         });
