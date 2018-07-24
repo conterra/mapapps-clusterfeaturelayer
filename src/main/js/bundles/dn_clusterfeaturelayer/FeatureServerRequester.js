@@ -73,7 +73,7 @@ class FeatureServerRequester {
         let queryPromises = [];
 
         sublayers.forEach((layer) => {
-            let layerId = layer.id;
+            let layerId = layer.layerId + "/" + layer.sublayerId;
             let singleQueryDeferred = new Deferred();
             let query = that._getQueryForLayer(layerId);
             query.objectIds = null;
@@ -184,7 +184,7 @@ class FeatureServerRequester {
             return this._queryTasks[layerId];
         }
         let sublayer = this.sublayers.find((layer) => {
-            return layerId === layer.id;
+            return layerId === layer.layerId + "/" + layer.sublayerId;
         });
         let url = sublayer.layerUrl;
         let id = sublayer.sublayerId;

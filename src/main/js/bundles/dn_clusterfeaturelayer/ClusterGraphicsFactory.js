@@ -227,7 +227,7 @@ class ClusterGraphicsFactory {
         let sortableCounts = [];
         for (let layerId in count) {
             sortableCounts.push([
-                Number.parseInt(layerId),
+                layerId,
                 count[layerId]
             ]);
         }

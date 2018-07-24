@@ -131,7 +131,7 @@ const ClusterFeatureLayer = GraphicsLayer.createSubclass({
 
     _initDataStructures: function (sublayers) {
         sublayers.forEach((layer) => {
-            let layerId = layer.id;
+            let layerId = layer.layerId + "/" + layer.sublayerId;
             this._clusterCache[layerId] = {};
             this._clusterData[layerId] = [];
         });
@@ -314,7 +314,7 @@ const ClusterFeatureLayer = GraphicsLayer.createSubclass({
         let testExtent = this._getNormalizedExtentsPolygon();
         // first time through, loop through the points
         this.sublayers.forEach((layerObject) => {
-            let layerId = layerObject.id;
+            let layerId = layerObject.layerId + "/" + layerObject.sublayerId;
             let nodeAndParentsEnabledTemp = this.nodeAndParentsEnabled(layerId);
             let clusterData = this._clusterData;
             let currentLength = clusterData[layerId].length;
@@ -581,7 +581,7 @@ const ClusterFeatureLayer = GraphicsLayer.createSubclass({
     nodeAndParentsEnabled: function (layerId) {
         let that = this;
         let layer = that.sublayers.find((layer) => {
-            return layer.id === layerId;
+            return layer.layerId + "/" + layer.sublayerId === layerId;
         });
         return that.visible && layer.visible;
     },
