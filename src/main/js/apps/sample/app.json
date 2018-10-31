@@ -140,19 +140,19 @@
                   "url": "https://maps.kreis-borken.de/arcgis/rest/services/Geobasisdaten/Geobasisdaten_Typo3AdressDB/MapServer",
                   "sublayers": [
                     {
-                      "id": "247"
+                      "id": "403"
                     },
                     {
-                      "id": "263"
+                      "id": "404"
                     },
                     {
-                      "id": "262"
+                      "id": "405"
                     },
                     {
-                      "id": "261"
+                      "id": "406"
                     },
                     {
-                      "id": "260"
+                      "id": "444"
                     }
                   ]
                 },
