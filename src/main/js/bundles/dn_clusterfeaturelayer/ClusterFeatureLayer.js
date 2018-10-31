@@ -35,7 +35,7 @@ import FeatureServerRequester from "./FeatureServerRequester";
 import ServiceMetadataProvider from "./ServiceMetadataProvider";
 import ClusterGraphicsFactory from "./ClusterGraphicsFactory";
 
-const ClusterFeatureLayer = GraphicsLayer.createSubclass({
+export default GraphicsLayer.createSubclass({
     declaredClass: "esri.layers.GraphicsLayer",
     properties: {},
     constructor: function (args) {
@@ -595,5 +595,3 @@ const ClusterFeatureLayer = GraphicsLayer.createSubclass({
         return new ServiceMetadataProvider(serviceDetails);
     }
 });
-
-module.exports = ClusterFeatureLayer;

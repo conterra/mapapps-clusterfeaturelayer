@@ -17,7 +17,7 @@ import ClusterFeatureLayer from "./ClusterFeatureLayer";
 import Collection from "esri/core/Collection";
 import Sublayer from "esri/layers/support/Sublayer";
 
-class ClusterFeatureLayerTypeFactory {
+export default class ClusterFeatureLayerTypeFactory {
 
     constructor() {
         this._clusterLayers = [];
@@ -68,5 +68,3 @@ class ClusterFeatureLayerTypeFactory {
         })
     }
 }
-
-module.exports = ClusterFeatureLayerTypeFactory;

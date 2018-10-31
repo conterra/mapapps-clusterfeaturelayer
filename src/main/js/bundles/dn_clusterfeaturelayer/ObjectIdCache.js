@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-class ObjectIdCache {
+export default class ObjectIdCache {
     constructor() {
         this._cache = {};
     }
@@ -30,5 +30,3 @@ class ObjectIdCache {
         this._cache[layerId] = value;
     }
 }
-
-module.exports = ObjectIdCache;

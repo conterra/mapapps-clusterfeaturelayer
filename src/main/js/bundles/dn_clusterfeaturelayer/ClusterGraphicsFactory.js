@@ -19,7 +19,7 @@ import Polyline from "esri/geometry/Polyline";
 import Graphic from "esri/Graphic";
 import * as jsonUtils from "esri/renderers/support/jsonUtils";
 
-class ClusterGraphicsFactory {
+export default class ClusterGraphicsFactory {
     constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapWidgetModel, popupTemplate, options) {
         this.clusterSymbolProvider = clusterSymbolProvider;
         this.featureSymbolProvider = featureSymbolProvider;
@@ -377,5 +377,3 @@ class ClusterGraphicsFactory {
         return rotation;
     }
 }
-
-module.exports = ClusterGraphicsFactory;

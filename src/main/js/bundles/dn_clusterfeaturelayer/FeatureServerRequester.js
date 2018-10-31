@@ -22,7 +22,7 @@ import Query from "esri/tasks/support/Query";
 import QueryTask from "esri/tasks/QueryTask";
 import ObjectIdCache from "./ObjectIdCache";
 
-class FeatureServerRequester {
+export default class FeatureServerRequester {
     constructor(sublayers, spatialReference, returnLimit) {
         this.sublayers = sublayers;
         this.spatialReference = spatialReference;
@@ -265,5 +265,3 @@ class FeatureServerRequester {
         return target;
     }
 }
-
-module.exports = FeatureServerRequester;

@@ -17,7 +17,7 @@ import Color from "dojo/_base/Color";
 import SimpleMarkerSymbol from "esri/symbols/SimpleMarkerSymbol";
 import SimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
 
-class FeatureSymbolProvider {
+export default class FeatureSymbolProvider {
     constructor(options) {
         this.symbolColor = options.symbolColor;
         this.borderColor = options.borderColor;
@@ -34,5 +34,3 @@ class FeatureSymbolProvider {
         return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, singleSymbolSize, lineSymbol, new Color(singleSymbolColor));
     }
 }
-
-module.exports = FeatureSymbolProvider;

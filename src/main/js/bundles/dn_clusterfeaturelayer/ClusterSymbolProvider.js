@@ -21,7 +21,7 @@ import SimpleFillSymbol from "esri/symbols/SimpleFillSymbol";
 import Font from "esri/symbols/Font";
 import TextSymbol from "esri/symbols/TextSymbol";
 
-class ClusterSymbolProvider {
+export default class ClusterSymbolProvider {
     constructor(options) {
         this.clusterBackgroundSymbolColor = options.clusterBackgroundSymbolColor;
         this.clusterBackgroundBorderColor = options.clusterBackgroundBorderColor;
@@ -106,5 +106,3 @@ class ClusterSymbolProvider {
         });
     }
 }
-
-module.exports = ClusterSymbolProvider;
