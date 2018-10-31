@@ -17,7 +17,7 @@ import d_array from "dojo/_base/array";
 import Point from "esri/geometry/Point";
 import Polyline from "esri/geometry/Polyline";
 import Graphic from "esri/Graphic";
-import rendererJsonUtil from "esri/renderers/support/jsonUtils";
+import * as jsonUtils from "esri/renderers/support/jsonUtils";
 
 class ClusterGraphicsFactory {
     constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapWidgetModel, popupTemplate, options) {
@@ -174,7 +174,8 @@ class ClusterGraphicsFactory {
         } else {
             featureSymbol = feature.symbol;
             if (!featureSymbol) {
-                let tmpRenderer = rendererJsonUtil.fromJSON(this.rendererProvider.getRendererForLayer(feature.layerId));
+                let rendererJson = this.rendererProvider.getRendererForLayer(feature.layerId);
+                let tmpRenderer = jsonUtils.fromJSON(rendererJson);
                 featureSymbol = tmpRenderer.getSymbol(feature);
             }
             if (!featureSymbol) {
