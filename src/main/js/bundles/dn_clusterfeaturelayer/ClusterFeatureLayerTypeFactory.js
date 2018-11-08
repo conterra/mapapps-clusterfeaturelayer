@@ -34,15 +34,17 @@ export default class ClusterFeatureLayerTypeFactory {
                         layerId: layer.id,
                         sublayerId: children.id,
                         layerUrl: layer.url,
-                        title: children.title || "",
+                        title: children.title || children.id,
                         visible: children.visible || true
                     });
                     this.layers.push(sublayer);
                 });
-            })
+            });
         }
         let layer = this.layer = new ClusterFeatureLayer({
+            title: options.title,
             sublayers: new Collection(this.layers),
+            legendEnabled: false,
             _layerId: "clusterlayer",
             _objectIdField: opt.objectIdField || "objectid",
             _clusterDistance: opt.clusterDistance || 50,
