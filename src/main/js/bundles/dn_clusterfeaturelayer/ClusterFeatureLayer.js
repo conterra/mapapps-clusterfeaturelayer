@@ -24,6 +24,7 @@
  */
 import Deferred from "dojo/_base/Deferred";
 import all from "dojo/promise/all";
+import ct_lang from "ct/_lang";
 import geometryEngine from "esri/geometry/geometryEngine";
 import Point from "esri/geometry/Point";
 import Polygon from "esri/geometry/Polygon";
@@ -304,6 +305,7 @@ export default GraphicsLayer.createSubclass({
                 this._clusterData[layerId] = newFeaturesInExtent.concat(cachedFeaturesInExtent);
             }
         }
+        this._setLayerExtent();
     },
 
     /**
@@ -350,6 +352,24 @@ export default GraphicsLayer.createSubclass({
             }
         });
         this._addGraphicsToLayer(this._clusters);
+    },
+
+    _setLayerExtent: function () {
+        let clusterData = this._clusterData;
+        let extent = null;
+        ct_lang.forEachOwnProp(clusterData, (v, n) => {
+            if (v.length) {
+                v.forEach((feature) => {
+                    let e = feature.geometry.extent;
+                    if (!extent) {
+                        extent = e;
+                    } else {
+                        extent.union(e);
+                    }
+                });
+            }
+        });
+        this.set("fullExtent", extent);
     },
 
     _addGraphicsToLayer: function () {
