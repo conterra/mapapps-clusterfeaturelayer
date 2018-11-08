@@ -1,269 +1,270 @@
 {
-  "properties": {
-    "title": "${apptitle}"
-  },
-  "load": {
-    "bundleLocations": [
-      "localbundles",
-      "bundles"
-    ],
-    "allowedBundles": [
-      "system",
-      "banner",
-      "basemaptoggler",
-      "console",
-      "notifier",
-      "splashscreen",
-      "templatelayout",
-      "template-seasons",
-      "theme-everlasting",
-      "theme-winter",
-      "theme-spring",
-      "theme-summer",
-      "theme-autumn",
-      "map-init",
-      "toolset",
-      "viewmodeswitcher",
-      "mapnavigation",
-      "mapflow",
-      "dn_clusterfeaturelayer"
-    ],
-    "require": [
-      "${app}.app"
-    ],
-    "i18n": [
-      "bundle"
-    ]
-  },
-  "bundles": {
-    "dn_clusterfeaturelayer": {
-      "ClusterSymbolProvider": {
-        "clusterSymbolSize": 25,
-        "clusterBackgroundSymbolColor": [
-          200,
-          200,
-          200,
-          0.5
-        ],
-        "clusterBackgroundBorderColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "clusterBackgroundBorderSize": 0.5,
-        "clusterAreaSymbolColor": [
-          255,
-          255,
-          0,
-          0.25
-        ],
-        "clusterAreaSymbolBorderColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "clusterAreaSymbolBorderSize": 0.5,
-        "clusterSingleSymbolColor": [
-          140,
-          177,
-          210,
-          0.75
-        ],
-        "clusterSingleSymbolBorderColor": [
-          140,
-          177,
-          210,
-          0.35
-        ],
-        "clusterSingleSymbolBorderSize": 20,
-        "spiderfyingLineSize": 0.5,
-        "spiderfyingLineColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "spiderfyingCenterColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "spiderfyingCenterSize": 5,
-        "labelColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "labelHaloColor": [
-          255,
-          255,
-          255,
-          1
-        ],
-        "labelFontSize": "10pt",
-        "labelHaloSize": 1,
-        "labelFontFamily": "Arial"
-      }
+    "properties": {
+        "title": "${apptitle}"
     },
-    "banner": {
-      "BannerWidget": {
-        "label": "Developer Network",
-        "image": "https://www.conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
-        "imagePosition": "above",
-        "link": "http://developernetwork.conterra.de"
-      }
-    },
-    "basemaptoggler": {
-      "Config": {
-        "nextBasemap": "hybrid"
-      }
-    },
-    "map-init": {
-      "Config": {
-        "map": {
-          "layers": [
-            {
-              "id": "clusterlayer",
-              "title": "Clusterlayer",
-              "type": "CLUSTER_FEATURE_LAYER",
-              "elevationInfo": {
-                "mode": "on-the-ground"
-              },
-              "layers": [
-                {
-                  "id": "borken",
-                  "title": "Borken",
-                  "url": "https://maps.kreis-borken.de/arcgis/rest/services/Geobasisdaten/Geobasisdaten_Typo3AdressDB/MapServer",
-                  "sublayers": [
-                    {
-                      "id": "403"
-                    },
-                    {
-                      "id": "404"
-                    },
-                    {
-                      "id": "405"
-                    },
-                    {
-                      "id": "406"
-                    },
-                    {
-                      "id": "444"
-                    }
-                  ]
-                },
-                {
-                  "id": "koeln",
-                  "title": "Köln",
-                  "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
-                  "sublayers": [
-                    {
-                      "id": "1"
-                    },
-                    {
-                      "id": "2"
-                    },
-                    {
-                      "id": "3"
-                    },
-                    {
-                      "id": "5"
-                    },
-                    {
-                      "id": "6"
-                    },
-                    {
-                      "id": "7"
-                    },
-                    {
-                      "id": "9"
-                    },
-                    {
-                      "id": "10"
-                    },
-                    {
-                      "id": "11"
-                    }
-                  ]
-                }
-              ],
-              "visible": true,
-              "popupEnabled": true,
-              "popupTemplate": {
-                "title": "{SUBJECT}",
-                "content": "<p>{ADDITIONAL1}</p><div>{STREET} {HOUSENUMBER}, {ZIPCODE} {CITY}</div><div>{INTERNET}</div><div>{PHONE1_NUMBER}</div>"
-              },
-              "outFields": [
-                "*"
-              ],
-              "options": {
-                "objectIdField": "objectid",
-                "clusterDistance": 100,
-                "spiderfyingDistance": 1,
-                "returnLimit": 1000,
-                "maxClusterScale": 500,
-                "symbolBaseSize": 25,
-                "showClusterGrid": true,
-                "showClusterGridCounts": true,
-                "showClusterGridBackground": false,
-                "showClusterArea": false,
-                "showClusterSize": true,
-                "useDefaultSymbolForFeatures": false,
-                "clusterLabelOffset": -4
-              }
-            }
-          ],
-          "basemap": "streets-vector",
-          "ground": {
-            "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
-            "type": "ELEVATION"
-          }
-        },
-        "view": {
-          "viewmode": "2D",
-          "extent": {
-            "xmin": 695821.3614310705,
-            "ymin": 6735558.554171801,
-            "xmax": 831573.5236655955,
-            "ymax": 6848838.230090475,
-            "spatialReference": 3857
-          }
-        }
-      }
-    },
-    "themes": {
-      "ThemeModel": {
-        "_selectedTheme": "everlasting"
-      },
-      "ThemeSelector": {
-        "componentEnabled": true
-      }
-    },
-    "toolset": {
-      "ToolsetManager": {
-        "toolsets": [
-          {
-            "id": "mapview_tools",
-            "tools": [
-              "zoomInTool",
-              "zoomOutTool",
-              "compassTool",
-              "restoreInitialViewTool",
-              "viewmodeSwitcherTool"
-            ],
-            "registerWidget": {
-              "widgetRole": "mapview_tools"
-            },
-            "container": "ignore",
-            "windowType": "container",
-            "cssClass": "muted"
-          }
+    "load": {
+        "bundleLocations": [
+            "localbundles",
+            "bundles"
+        ],
+        "allowedBundles": [
+            "system",
+            "banner",
+            "basemaptoggler",
+            "console",
+            "notifier",
+            "splashscreen",
+            "templatelayout",
+            "template-seasons",
+            "theme-everlasting",
+            "theme-winter",
+            "theme-spring",
+            "theme-summer",
+            "theme-autumn",
+            "map-init",
+            "toolset",
+            "viewmodeswitcher",
+            "mapnavigation",
+            "mapflow",
+            "dn_clusterfeaturelayer",
+            "dn_vuetoc"
+        ],
+        "require": [
+            "${app}.app"
+        ],
+        "i18n": [
+            "bundle"
         ]
-      }
+    },
+    "bundles": {
+        "dn_clusterfeaturelayer": {
+            "ClusterSymbolProvider": {
+                "clusterSymbolSize": 25,
+                "clusterBackgroundSymbolColor": [
+                    200,
+                    200,
+                    200,
+                    0.5
+                ],
+                "clusterBackgroundBorderColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "clusterBackgroundBorderSize": 0.5,
+                "clusterAreaSymbolColor": [
+                    255,
+                    255,
+                    0,
+                    0.25
+                ],
+                "clusterAreaSymbolBorderColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "clusterAreaSymbolBorderSize": 0.5,
+                "clusterSingleSymbolColor": [
+                    140,
+                    177,
+                    210,
+                    0.75
+                ],
+                "clusterSingleSymbolBorderColor": [
+                    140,
+                    177,
+                    210,
+                    0.35
+                ],
+                "clusterSingleSymbolBorderSize": 20,
+                "spiderfyingLineSize": 0.5,
+                "spiderfyingLineColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "spiderfyingCenterColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "spiderfyingCenterSize": 5,
+                "labelColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "labelHaloColor": [
+                    255,
+                    255,
+                    255,
+                    1
+                ],
+                "labelFontSize": "10pt",
+                "labelHaloSize": 1,
+                "labelFontFamily": "Arial"
+            }
+        },
+        "banner": {
+            "BannerWidget": {
+                "label": "Developer Network",
+                "image": "https://www.conterra.de/~/media/conterra/images/site_logos/conterra-logo.ashx",
+                "imagePosition": "above",
+                "link": "http://developernetwork.conterra.de"
+            }
+        },
+        "basemaptoggler": {
+            "Config": {
+                "nextBasemap": "hybrid"
+            }
+        },
+        "map-init": {
+            "Config": {
+                "map": {
+                    "layers": [
+                        {
+                            "id": "clusterlayer",
+                            "title": "Clusterlayer",
+                            "type": "CLUSTER_FEATURE_LAYER",
+                            "elevationInfo": {
+                                "mode": "on-the-ground"
+                            },
+                            "layers": [
+                                {
+                                    "id": "borken",
+                                    "title": "Borken",
+                                    "url": "https://maps.kreis-borken.de/arcgis/rest/services/Geobasisdaten/Geobasisdaten_Typo3AdressDB/MapServer",
+                                    "sublayers": [
+                                        {
+                                            "id": "403"
+                                        },
+                                        {
+                                            "id": "404"
+                                        },
+                                        {
+                                            "id": "405"
+                                        },
+                                        {
+                                            "id": "406"
+                                        },
+                                        {
+                                            "id": "444"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "koeln",
+                                    "title": "Köln",
+                                    "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
+                                    "sublayers": [
+                                        {
+                                            "id": "1"
+                                        },
+                                        {
+                                            "id": "2"
+                                        },
+                                        {
+                                            "id": "3"
+                                        },
+                                        {
+                                            "id": "5"
+                                        },
+                                        {
+                                            "id": "6"
+                                        },
+                                        {
+                                            "id": "7"
+                                        },
+                                        {
+                                            "id": "9"
+                                        },
+                                        {
+                                            "id": "10"
+                                        },
+                                        {
+                                            "id": "11"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "visible": true,
+                            "popupEnabled": true,
+                            "popupTemplate": {
+                                "title": "{SUBJECT}",
+                                "content": "<p>{ADDITIONAL1}</p><div>{STREET} {HOUSENUMBER}, {ZIPCODE} {CITY}</div><div>{INTERNET}</div><div>{PHONE1_NUMBER}</div>"
+                            },
+                            "outFields": [
+                                "*"
+                            ],
+                            "options": {
+                                "objectIdField": "objectid",
+                                "clusterDistance": 100,
+                                "spiderfyingDistance": 1,
+                                "returnLimit": 1000,
+                                "maxClusterScale": 500,
+                                "symbolBaseSize": 25,
+                                "showClusterGrid": true,
+                                "showClusterGridCounts": true,
+                                "showClusterGridBackground": false,
+                                "showClusterArea": false,
+                                "showClusterSize": true,
+                                "useDefaultSymbolForFeatures": false,
+                                "clusterLabelOffset": -4
+                            }
+                        }
+                    ],
+                    "basemap": "streets-vector",
+                    "ground": {
+                        "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer",
+                        "type": "ELEVATION"
+                    }
+                },
+                "view": {
+                    "viewmode": "2D",
+                    "extent": {
+                        "xmin": 695821.3614310705,
+                        "ymin": 6735558.554171801,
+                        "xmax": 831573.5236655955,
+                        "ymax": 6848838.230090475,
+                        "spatialReference": 3857
+                    }
+                }
+            }
+        },
+        "themes": {
+            "ThemeModel": {
+                "_selectedTheme": "everlasting"
+            },
+            "ThemeSelector": {
+                "componentEnabled": true
+            }
+        },
+        "toolset": {
+            "ToolsetManager": {
+                "toolsets": [
+                    {
+                        "id": "mapview_tools",
+                        "tools": [
+                            "zoomInTool",
+                            "zoomOutTool",
+                            "compassTool",
+                            "restoreInitialViewTool",
+                            "viewmodeSwitcherTool"
+                        ],
+                        "registerWidget": {
+                            "widgetRole": "mapview_tools"
+                        },
+                        "container": "ignore",
+                        "windowType": "container",
+                        "cssClass": "muted"
+                    }
+                ]
+            }
+        }
     }
-  }
 }
