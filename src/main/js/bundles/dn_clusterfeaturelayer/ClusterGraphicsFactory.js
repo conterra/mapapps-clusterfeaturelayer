@@ -277,7 +277,7 @@ export default class ClusterGraphicsFactory {
         });
         let hash = {};
         allFeatures.forEach((feature) => {
-            if (layerIds.indexOf(feature.layerId) !== -1)
+            if (layerIds.indexOf(feature.layerId.toString()) !== -1)
                 hash[feature.layerId] = feature;
         });
         let featuresFromDifferentLayers = [];
