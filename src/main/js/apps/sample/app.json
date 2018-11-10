@@ -26,6 +26,7 @@
             "viewmodeswitcher",
             "mapnavigation",
             "mapflow",
+            "custominfo",
             "dn_clusterfeaturelayer",
             "dn_vuetoc"
         ],
@@ -122,6 +123,36 @@
             "Config": {
                 "nextBasemap": "hybrid"
             }
+        },
+        "custominfo": {
+            "CustomInfoToggleTool": [
+                {
+                    "id": "customInfoTool",
+                    "activateOnStartup": true,
+                    "title": "Information",
+                    "tooltip": "Information",
+                    "iconClass": "icon-custom-info-info",
+                    "toolClass": "ctInfo",
+                    "togglable": true,
+                    "widgetSettings": {
+                        "content": "This app shows the functionality of the Cluster Feature Layer bundle that draws a Cluster Feature Layer and activates a Spiderfying.",
+                        "window": {
+                            "title": "Information",
+                            "marginBox": {
+                                "w": 300,
+                                "h": 100,
+                                "l": 20,
+                                "b": 120
+                            },
+                            "draggable": true,
+                            "closable": true,
+                            "modal": false,
+                            "maximizable": false,
+                            "resizable": false
+                        }
+                    }
+                }
+            ]
         },
         "map-init": {
             "Config": {
