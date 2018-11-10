@@ -517,7 +517,6 @@ export default GraphicsLayer.createSubclass({
                         "easing": "ease-in-out"
                     });
                 }
-
             }
         });
     },
