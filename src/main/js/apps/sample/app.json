@@ -167,28 +167,6 @@
                             },
                             "layers": [
                                 {
-                                    "id": "borken",
-                                    "title": "Borken",
-                                    "url": "https://maps.kreis-borken.de/arcgis/rest/services/Geobasisdaten/Geobasisdaten_Typo3AdressDB/MapServer",
-                                    "sublayers": [
-                                        {
-                                            "id": "403"
-                                        },
-                                        {
-                                            "id": "404"
-                                        },
-                                        {
-                                            "id": "405"
-                                        },
-                                        {
-                                            "id": "406"
-                                        },
-                                        {
-                                            "id": "444"
-                                        }
-                                    ]
-                                },
-                                {
                                     "id": "koeln",
                                     "title": "Köln",
                                     "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
@@ -257,12 +235,13 @@
                 },
                 "view": {
                     "viewmode": "2D",
-                    "extent": {
-                        "xmin": 695821.3614310705,
-                        "ymin": 6735558.554171801,
-                        "xmax": 831573.5236655955,
-                        "ymax": 6848838.230090475,
-                        "spatialReference": 3857
+                    "scale": 288895.277144,
+                    "center": {
+                        "x": 780591.7692457888,
+                        "y": 6610262.2893272545,
+                        "spatialReference": {
+                            "wkid": 3857
+                        }
                     }
                 }
             }
