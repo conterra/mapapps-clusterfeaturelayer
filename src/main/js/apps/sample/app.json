@@ -27,8 +27,7 @@
             "mapnavigation",
             "mapflow",
             "custominfo",
-            "dn_clusterfeaturelayer",
-            "dn_vuetoc"
+            "dn_clusterfeaturelayer"
         ],
         "require": [
             "${app}.app"
@@ -142,7 +141,7 @@
                                 "w": 300,
                                 "h": 160,
                                 "l": 20,
-                                "b": 120
+                                "b": 60
                             },
                             "draggable": true,
                             "closable": true,
