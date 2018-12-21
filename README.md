@@ -7,9 +7,9 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 
 Sample App
 ------------------
-https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer/index.html?lang=de
+https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer4/index.html?lang=de
 
-![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/master/clustering.JPG)
+![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/master/screenshot.JPG)
 
 Installation Guide
 ------------------
