@@ -14,74 +14,86 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer4/
 Installation Guide
 ------------------
 1. First, you need to add the bundle "dn_clusterfeaturelayer" to your app.
-2. After that, you can change the type of any service to "CLUSTER_FEATURE_LAYER".
+2. After that, you can change the type of any Map- or FeatureService to "CLUSTER_FEATURE_LAYER".
 
 #### Example:
 ```
-"MappingResourceRegistryFactory": {
-    "_knownServices": {
-        "services": [
-            {
-                "id": "clusterservice",
-                "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
-                "type": "CLUSTER_FEATURE_LAYER",
-                "title": "AdressDB",
-                "description": "",
-                "options": {
-                    "objectIdField": "OBJECTID",
-                    "clusterDistance": 100,
-                    "spiderfyingDistance": 1,
-                    "returnLimit": 1000,
-                    "maxClusterScale": 0,
-                    "symbolBaseSize": 30,
-                    "showClusterGrid": true,
-                    "showClusterGridCounts": true,
-                    "showClusterGridBackground": false,
-                    "showClusterArea": true,
-                    "showClusterSize": false,
-                    "useDefaultSymbolForFeatures": false,
-                    "clusterLabelOffset": -10
-                },
-                "layers": [
-                    {
-                        "id": "1",
-                        "title": "Veranstaltungsorte"
+"map-init": {
+    "Config": {
+        "map": {
+            "layers": [
+                {
+                    "id": "clusterlayer",
+                    "title": "Clusterlayer",
+                    "type": "CLUSTER_FEATURE_LAYER",
+                    "elevationInfo": {
+                        "mode": "on-the-ground"
                     },
-                    {
-                        "id": "2",
-                        "title": "Spiel- und Sportplätze"
+                    "layers": [
+                        {
+                            "id": "koeln",
+                            "title": "Köln",
+                            "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
+                            "sublayers": [
+                                {
+                                    "id": "1"
+                                },
+                                {
+                                    "id": "2"
+                                },
+                                {
+                                    "id": "3"
+                                },
+                                {
+                                    "id": "5"
+                                },
+                                {
+                                    "id": "6"
+                                },
+                                {
+                                    "id": "7"
+                                },
+                                {
+                                    "id": "9"
+                                },
+                                {
+                                    "id": "10"
+                                },
+                                {
+                                    "id": "11"
+                                }
+                            ]
+                        }
+                    ],
+                    "visible": true,
+                    "popupEnabled": true,
+                    "popupTemplate": {
+                        "title": "{SUBJECT}",
+                        "content": "<p>{ADDITIONAL1}</p><div>{STREET} {HOUSENUMBER}, {ZIPCODE} {CITY}</div><div>{INTERNET}</div><div>{PHONE1_NUMBER}</div>"
                     },
-                    {
-                        "id": "3",
-                        "title": "Sehenswürdigkeiten"
-                    },
-                    {
-                        "id": "5",
-                        "title": "Schulen"
-                    },
-                    {
-                        "id": "6",
-                        "title": "Museen"
-                    },
-                    {
-                        "id": "7",
-                        "title": "Bibliotheken"
-                    },
-                    {
-                        "id": "9",
-                        "title": "Stadtbezirke"
-                    },
-                    {
-                        "id": "10",
-                        "title": "Stadtteile"
-                    },
-                    {
-                        "id": "11",
-                        "title": "Stadtviertel"
+                    "outFields": [
+                        "*"
+                    ],
+                    "options": {
+                        "objectIdField": "objectid",
+                        "clusterDistance": 100,
+                        "spiderfyingDistance": 1,
+                        "returnLimit": 1000,
+                        "maxClusterScale": 500,
+                        "symbolBaseSize": 25,
+                        "showClusterGrid": true,
+                        "showClusterGridCounts": true,
+                        "showClusterGridBackground": false,
+                        "showClusterArea": false,
+                        "showClusterSize": true,
+                        "useDefaultSymbolForFeatures": false,
+                        "clusterLabelOffset": -4
                     }
-                ]
-            }
-        ]
+                }
+            ],
+            ...
+        },
+        ...
     }
 }
 ```
