@@ -47,7 +47,7 @@ define([
                     }
                 });
 
-                var requester = new FeatureServerRequester(layerObjects, mapState.getSpatialReference());
+                var requester = new FeatureServerRequester(layerObjects, mapState, node.options.returnLimit);
 
                 var layer = this.layer = new ClusterFeatureLayer({
                     id: "clusterlayer",
