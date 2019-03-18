@@ -35,9 +35,10 @@ define([
         return declare([], {
             url: null,
 
-            constructor: function (urls, spatialReference, returnLimit) {
+            constructor: function (urls, mapState, returnLimit) {
                 this.urls = urls;
-                this.spatialReference = spatialReference;
+                this.spatialReference = mapState.getSpatialReference();
+                this.mapState = mapState;
 
                 this._queryTasks = {};
                 this._queries = {};
@@ -97,6 +98,8 @@ define([
                     var singleQueryDeferred = new Deferred();
                     var query = that._getQueryForLayer(layerId);
                     query.objectIds = null;
+                    query.geometry = this.mapState.getExtent();
+                    query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
 
                     if (whereExpression) {
                         query.where = whereExpression;
