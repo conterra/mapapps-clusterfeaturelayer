@@ -1,22 +1,21 @@
 # ClusterFeatureLayer Bundle
-The ClusterFeatureLayer Bundle allows you to cluster features for any point feature service.
+The ClusterFeatureLayer bundle allows you to cluster features for any point feature service.
 
-Important
-------------------
+## Important
 Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluster-layer-js
 
-Sample App
-------------------
+## Sample App
 https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer4/index.html?lang=de
 
 ![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/master/screenshot.JPG)
 
-Installation Guide
-------------------
+## Installation Guide
 1. First, you need to add the bundle "dn_clusterfeaturelayer" to your app.
 2. After that, you can change the type of any Map- or FeatureService to "CLUSTER_FEATURE_LAYER".
 
-#### Example:
+### Configuration of dn_clusterfeaturelayer:
+
+#### Layer-Config-Sample:
 ```
 "map-init": {
     "Config": {
@@ -98,7 +97,7 @@ Installation Guide
 }
 ```
 
-###### Properties
+##### Properties
 | Property                       | Type    | Possible Values               | Default        | Description                          |
 |--------------------------------|---------|-------------------------------|----------------|--------------------------------------|
 | objectIdField                  | String  |                               | ```objectid``` | Object id field                      |
