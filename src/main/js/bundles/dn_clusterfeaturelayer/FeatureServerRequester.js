@@ -23,7 +23,7 @@ import QueryTask from "esri/tasks/QueryTask";
 import ObjectIdCache from "./ObjectIdCache";
 
 export default class FeatureServerRequester {
-    constructor(sublayers, spatialReference, returnLimit) {
+    constructor(sublayers, spatialReference, returnLimit, mapWidgetModel) {
         this.sublayers = sublayers;
         this.spatialReference = spatialReference;
         this._queryTasks = {};
@@ -32,6 +32,7 @@ export default class FeatureServerRequester {
         // holds IDs of cached features. Is written in _onIdsReturned -> difference() call
         this.objectIdCache = new ObjectIdCache();
         this.returnLimit = returnLimit;
+        this.mapWidgetModel = mapWidgetModel;
     }
 
     getServiceMetadata() {
@@ -76,7 +77,10 @@ export default class FeatureServerRequester {
             let layerId = layer.layerId + "/" + layer.sublayerId;
             let singleQueryDeferred = new Deferred();
             let query = that._getQueryForLayer(layerId);
+            let view = that.mapWidgetModel.get("view");
             query.objectIds = null;
+            query.geometry = view && view.get("extent");
+            query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
 
             if (whereExpression) {
                 query.where = whereExpression;

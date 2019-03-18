@@ -91,7 +91,7 @@ export default GraphicsLayer.createSubclass({
     _initListener: function () {
         let that = this;
         let mapWidgetModel = this._mapWidgetModel;
-        let requester = that._serverRequester = new FeatureServerRequester(that.sublayers, {wkid: that.wkid}, that._returnLimit);
+        let requester = that._serverRequester = new FeatureServerRequester(that.sublayers, {wkid: that.wkid}, that._returnLimit, mapWidgetModel);
         requester.getServiceMetadata().then((serviceDetails) => {
             if (that.events && that.events.length > 0) {
                 that.events.forEach((event) => {
