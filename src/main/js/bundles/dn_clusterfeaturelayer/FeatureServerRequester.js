@@ -31,7 +31,7 @@ export default class FeatureServerRequester {
         this._objectIdHash = {};    // holds IDs of cached features. Is written in _onIdsReturned -> difference() call
         // holds IDs of cached features. Is written in _onIdsReturned -> difference() call
         this.objectIdCache = new ObjectIdCache();
-        this.returnLimit = returnLimit || 1000;
+        this.returnLimit = returnLimit;
     }
 
     getServiceMetadata() {

@@ -54,6 +54,7 @@ export default GraphicsLayer.createSubclass({
         this._spiderfyingDistance = args._spiderfyingDistance;
         this._maxClusterScale = args._maxClusterScale;
         this._showClusterArea = args._showClusterArea;
+        this._returnLimit = args._returnLimit;
         this._serverRequester = args._serverRequester;
         this._mapWidgetModel = args._mapWidgetModel;
         this._clusterGraphicsFactory = args._clusterGraphicsFactory;
@@ -90,7 +91,7 @@ export default GraphicsLayer.createSubclass({
     _initListener: function () {
         let that = this;
         let mapWidgetModel = this._mapWidgetModel;
-        let requester = that._serverRequester = new FeatureServerRequester(that.sublayers, {wkid: that.wkid});
+        let requester = that._serverRequester = new FeatureServerRequester(that.sublayers, {wkid: that.wkid}, that._returnLimit);
         requester.getServiceMetadata().then((serviceDetails) => {
             if (that.events && that.events.length > 0) {
                 that.events.forEach((event) => {

@@ -51,6 +51,7 @@ export default class ClusterFeatureLayerTypeFactory {
             _spiderfyingDistance: opt.spiderfyingDistance || 5,
             _maxClusterScale: opt.maxClusterScale || 1,
             _showClusterArea: opt.showClusterArea || false,
+            _returnLimit: opt.returnLimit || 1000,
             _options: opt,
             _serverRequester: this._serverRequester,
             _mapWidgetModel: this.mapWidgetModel,
