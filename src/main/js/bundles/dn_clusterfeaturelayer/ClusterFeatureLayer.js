@@ -48,7 +48,6 @@ export default GraphicsLayer.createSubclass({
         this._visitedExtent = null;
 
         this._options = args._options;
-        this._layerId = args._layerId;
         this._objectIdField = args._objectIdField;
         this._clusterDistance = args._clusterDistance;
         this._spiderfyingDistance = args._spiderfyingDistance;

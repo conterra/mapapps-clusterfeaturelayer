@@ -42,10 +42,11 @@ export default class ClusterFeatureLayerTypeFactory {
             });
         }
         let layer = this.layer = new ClusterFeatureLayer({
+            id: options.id,
             title: options.title,
+            visible: options.visible,
             sublayers: new Collection(this.layers),
             legendEnabled: false,
-            _layerId: "clusterlayer",
             _objectIdField: opt.objectIdField || "objectid",
             _clusterDistance: opt.clusterDistance || 50,
             _spiderfyingDistance: opt.spiderfyingDistance || 5,
