@@ -45,6 +45,8 @@ export default class ClusterFeatureLayerTypeFactory {
             id: options.id,
             title: options.title,
             visible: options.visible,
+            minScale: options.minScale,
+            maxScale: options.maxScale,
             sublayers: new Collection(this.layers),
             legendEnabled: false,
             _objectIdField: opt.objectIdField || "objectid",
