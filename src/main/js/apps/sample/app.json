@@ -22,10 +22,14 @@
             "theme-summer",
             "theme-autumn",
             "map-init",
+            "map-preload-2D",
+            "map-preload-3D",
+            "coordinateviewer",
             "toolset",
             "viewmodeswitcher",
             "mapnavigation",
             "mapflow",
+            "toc",
             "custominfo",
             "dn_clusterfeaturelayer"
         ],
@@ -159,11 +163,11 @@
                 "map": {
                     "layers": [
                         {
-                            "id": "clusterlayer",
-                            "title": "Clusterlayer",
+                            "id": "clusterfeaturelayer",
+                            "title": "ClusterFeatureLayer",
                             "type": "CLUSTER_FEATURE_LAYER",
                             "elevationInfo": {
-                                "mode": "on-the-ground"
+                                "mode": "relative-to-scene"
                             },
                             "layers": [
                                 {
@@ -202,10 +206,13 @@
                                 }
                             ],
                             "visible": true,
-                            "popupEnabled": true,
+                            "minScale": 500000,
+                            "maxScale": 0,
+                            "listMode": "show",
+                            "opacity": 1,
                             "popupTemplate": {
-                                "title": "{SUBJECT}",
-                                "content": "<p>{ADDITIONAL1}</p><div>{STREET} {HOUSENUMBER}, {ZIPCODE} {CITY}</div><div>{INTERNET}</div><div>{PHONE1_NUMBER}</div>"
+                                "title": "{NAME}",
+                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
                             },
                             "outFields": [
                                 "*"
