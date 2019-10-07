@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-clusterfeaturelayer</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -295,7 +295,7 @@
                     <!-- add here properties which are used in plugin configuration resolution -->
                     <properties>
                         <!-- deployment of map.apps installation -->
-                        <mapapps.remote.base/>
+                        <mapapps.remote.base />
                     </properties>
                 </configuration>
             </plugin>
@@ -380,7 +380,7 @@
                                     <!-- remove bundleLocations from app.json -->
                                     <token>\s*"bundleLocations"\s*:\s*\[\s*"localbundles"\s*,\s*"bundles"\s*\]\s*,\s*
                                     </token>
-                                    <value/>
+                                    <value />
                                 </replacement>
                             </replacements>
                         </configuration>
@@ -511,7 +511,7 @@
         <developerConnection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git
         </developerConnection>
         <url>https://github.com/conterra/mapapps-clusterfeaturelayer</url>
-        <tag>HEAD</tag>
+        <tag>3.0.1</tag>
     </scm>
     <distributionManagement>
         <repository>
@@ -544,10 +544,10 @@
         <!-- don't do this in production configuration! This allows to go any http traffic over the /proxy endpoint -->
         <proxy.allowedServerUrls>http,*;</proxy.allowedServerUrls>
         <proxy.allowedSSLDNs>*</proxy.allowedSSLDNs>
-        <proxy.use.rules></proxy.use.rules>
+        <proxy.use.rules />
         <jetty.port>9090</jetty.port>
         <mvn.cmd>mvn</mvn.cmd>
-        <gulp.task></gulp.task>
+        <gulp.task />
 
         <!-- required for release build -->
         <scm.push>false</scm.push>
