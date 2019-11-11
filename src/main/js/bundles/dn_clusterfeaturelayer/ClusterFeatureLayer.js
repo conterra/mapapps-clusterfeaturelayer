@@ -376,10 +376,16 @@ export default GraphicsLayer.createSubclass({
         // This avoids flickering of the cluster graphics.
         this.removeAll();
         this._clusters.forEach((cluster) => {
-            // refresh cluster graphics
-            this._addClusterGraphics(cluster);
-            // check for spiderfying
-            this._addSpiderfyingGraphics(cluster);
+            let features = cluster.attributes.features;
+            let clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
+            let clusterResolution = this._mapWidgetModel.extent.width / this._mapWidgetModel.width;
+            if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance) && features.length > 1) {
+                // check for spiderfying
+                this._addSpiderfyingGraphics(cluster);
+            } else {
+                // refresh cluster graphics
+                this._addClusterGraphics(cluster);
+            }
         });
     },
 
@@ -389,17 +395,9 @@ export default GraphicsLayer.createSubclass({
     },
 
     _addSpiderfyingGraphics: function (cluster) {
-        let features = cluster.attributes.features;
-        let clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
-        let clusterResolution = this._mapWidgetModel.extent.width / this._mapWidgetModel.width;
-        if (!ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance)) {
-            return;
-        }
-        if (features.length > 1) {
-            cluster.attributes.spiderfying = true;
-            let spiderfyingGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
-            this.addMany(spiderfyingGraphics);
-        }
+        cluster.attributes.spiderfying = true;
+        let spiderfyingGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
+        this.addMany(spiderfyingGraphics);
     },
 
     /**
