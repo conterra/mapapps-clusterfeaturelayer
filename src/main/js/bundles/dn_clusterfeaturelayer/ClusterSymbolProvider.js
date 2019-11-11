@@ -84,7 +84,7 @@ export default class ClusterSymbolProvider {
             width: width,
             height: height
         });
-        symbol.setPath(pathString);
+        symbol.path = pathString;
         return symbol;
     }
 

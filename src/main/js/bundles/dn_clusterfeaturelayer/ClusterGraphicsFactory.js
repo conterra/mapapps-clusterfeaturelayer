@@ -88,9 +88,8 @@ export default class ClusterGraphicsFactory {
 
         if (this.showClusterGridBackground) {
             let maxClusterSize = 3 * baseSize;
-            let backGroundSize = baseSize / 1.1;
             let clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, false);
-            clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * backGroundSize)));
+            clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * baseSize)));
             clusterSymbolsBackground.set("angle", this._getRotation());
             returnGraphics.push(new Graphic(point, clusterSymbolsBackground, clusterAttributes));
         }
