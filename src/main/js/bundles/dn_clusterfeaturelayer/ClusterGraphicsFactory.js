@@ -99,8 +99,8 @@ export default class ClusterGraphicsFactory {
         let differentSymbolPoints = mostFeatures.map(() => {
             return point.clone();
         });
-        this._alignPointsInGrid(differentSymbolPoints, gridSize, baseSize);
         let differentFeatureSymbols = this._getSymbolsForGrid(allFeatures, mostFeatures);
+        this._alignSymbolsInGrid(differentFeatureSymbols, gridSize, baseSize);
 
         differentSymbolPoints.forEach((symbolPoint, i) => {
             returnGraphics.push(new Graphic(symbolPoint, differentFeatureSymbols[i], clusterAttributes));
@@ -111,8 +111,8 @@ export default class ClusterGraphicsFactory {
             let differentLabelPoints = mostFeatures.map(() => {
                 return point.clone();
             });
-            this._alignPointsInGrid(differentLabelPoints, gridSize, baseSize);
             let differentFeatureLabels = this._getLabelsForGrid(mostFeatures);
+            this._alignSymbolsInGrid(differentFeatureLabels, gridSize, baseSize);
 
             differentLabelPoints.forEach((labelPoint, i) => {
                 returnGraphics.push(new Graphic(labelPoint, differentFeatureLabels[i], clusterAttributes));
@@ -163,7 +163,7 @@ export default class ClusterGraphicsFactory {
     }
 
     offsetToDistance(value) {
-        let clusterResolution = this.mapWidgetModel.get("view").extent.width / this.mapWidgetModel.width;
+        let clusterResolution = this.mapWidgetModel.get("view").resolution || 1;
         return value * clusterResolution;
     }
 
@@ -289,19 +289,19 @@ export default class ClusterGraphicsFactory {
 
     /**
      *
-     * @param points The points to display and align within the grid.
+     * @param symbols The symbols to display and align within the grid.
      * @param gridSize An integer that specifies whether it's a 1x1, 2x2, 3x3, etc. grid.
      * @param baseSize The distance between two symbols within the cluster.
      * @private
      */
-    _alignPointsInGrid(points, gridSize, baseSize) {
-        let size = baseSize * 1.1;
+    _alignSymbolsInGrid(symbols, gridSize, baseSize) {
+        let size = baseSize;
         // This calculates how many columns and rows are needed to display the symbols in the cluster.
-        let gridSizeX = Math.min(gridSize, points.length);
-        let gridSizeY = Math.ceil(points.length / gridSize);
+        let gridSizeX = Math.min(gridSize, symbols.length);
+        let gridSizeY = Math.ceil(symbols.length / gridSize);
         let offsetOriginX = (gridSizeX - 1) * size;
         let offsetOriginY = (gridSizeY - 1) * size;
-        points.forEach((point, index) => {
+        symbols.forEach((symbol, index) => {
             let rotation = this._getRotation();
             // This calculates the offset of the current symbol within the cluster.
             let rho = (180 / Math.PI);
@@ -309,7 +309,8 @@ export default class ClusterGraphicsFactory {
             let yOffset = offsetOriginY / 2 - Math.floor(index / gridSize) * size;
             let xOffsetRotated = xOffset * Math.cos(rotation / rho) + yOffset * Math.sin(rotation / rho);
             let yOffsetRotated = -xOffset * Math.sin(rotation / rho) + yOffset * Math.cos(rotation / rho);
-            point.offset(this.offsetToDistance(xOffsetRotated), this.offsetToDistance(yOffsetRotated));
+            symbol.xoffset = xOffsetRotated;
+            symbol.yoffset = yOffsetRotated;
         });
     }
 
