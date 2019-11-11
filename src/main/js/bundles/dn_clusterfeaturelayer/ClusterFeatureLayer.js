@@ -162,7 +162,7 @@ export default GraphicsLayer.createSubclass({
         if (mapExtent) {
             let scale = this._mapWidgetModel.get("scale");
             if (scale) {
-                if (scale <= this.maxClusterScale) {
+                if (scale <= this._maxClusterScale) {
                     this._clusterTolerance = 0;
                 } else {
                     this._clusterTolerance = this._clusterDistance;
