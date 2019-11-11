@@ -140,7 +140,8 @@ export default GraphicsLayer.createSubclass({
 
     setData: function (objectIds) {
         this._predefinedObjectIds = objectIds;
-        this.clearClusters();
+        // clear array with calculated clusters
+        this._clusters = [];
         this._initDataStructures(this.sublayers);
         this._reCluster({forceReinit: true});
     },
@@ -172,10 +173,6 @@ export default GraphicsLayer.createSubclass({
             }
             let visitedExtent = this._visitedExtent;
             let beenThereBefore = visitedExtent && visitedExtent.contains(mapExtent);
-
-            // When zooming remove the graphics before the timeout and the server request is started.
-            // This avoids flickering of the cluster graphics.
-            this.clearClusters();
 
             // reclustering is started asynchronously to prevent UI freeze and some displaying bugs
             let that = this;
@@ -312,6 +309,8 @@ export default GraphicsLayer.createSubclass({
      * Method to build new cluster array from features and draw graphics.
      */
     _clusterGraphics: function () {
+        // clear array with calculated clusters
+        this._clusters = [];
         // test against a modified/scrubbed map extent polygon geometry
         let testExtent = this._getNormalizedExtentsPolygon();
         // first time through, loop through the points
@@ -373,6 +372,9 @@ export default GraphicsLayer.createSubclass({
     },
 
     _addGraphicsToLayer: function () {
+        // When zooming remove the graphics before the timeout and the server request is started.
+        // This avoids flickering of the cluster graphics.
+        this.removeAll();
         this._clusters.forEach((cluster) => {
             // refresh cluster graphics
             this._addClusterGraphics(cluster);
@@ -382,12 +384,7 @@ export default GraphicsLayer.createSubclass({
     },
 
     _addClusterGraphics: function (cluster) {
-        if (cluster.clusterGraphics) {
-            cluster.clusterGraphics.forEach((graphic) => {
-                this.remove(graphic);
-            });
-        }
-        let clusterGraphics = cluster.clusterGraphics = this._clusterGraphicsFactory.getClusterGraphics(cluster, this._clusters);
+        let clusterGraphics = this._clusterGraphicsFactory.getClusterGraphics(cluster, this._clusters);
         this.addMany(clusterGraphics);
     },
 
@@ -400,12 +397,7 @@ export default GraphicsLayer.createSubclass({
         }
         if (features.length > 1) {
             cluster.attributes.spiderfying = true;
-            if (cluster.clusterGraphics) {
-                cluster.clusterGraphics.forEach((clusterGraphic) => {
-                    this.remove(clusterGraphic);
-                });
-            }
-            let spiderfyingGraphics = cluster.clusterGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
+            let spiderfyingGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
             this.addMany(spiderfyingGraphics);
         }
     },
@@ -589,12 +581,6 @@ export default GraphicsLayer.createSubclass({
             masterPolygon.addRing(polygon.rings[0]);
         });
         return masterPolygon;
-    },
-
-    clearClusters: function () {
-        this.removeAll();
-        // clear array with calculated clusters
-        this._clusters = [];
     },
 
     nodeAndParentsEnabled: function (layerId) {
