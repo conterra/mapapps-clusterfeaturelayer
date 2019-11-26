@@ -19,7 +19,7 @@ export default class ObjectIdCache {
     }
 
     get(layerId) {
-        let cache = this._cache;
+        const cache = this._cache;
         if (!cache[layerId]) {
             cache[layerId] = [];
         }

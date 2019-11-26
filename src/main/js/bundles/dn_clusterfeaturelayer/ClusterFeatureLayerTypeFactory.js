@@ -24,13 +24,13 @@ export default class ClusterFeatureLayerTypeFactory {
     }
 
     create(options) {
-        let opt = options.options;
-        let popupTemplate = options.popupTemplate;
+        const opt = options.options;
+        const popupTemplate = options.popupTemplate;
         if (options.layers) {
             this.layers = [];
             options.layers.forEach((layer) => {
                 layer.sublayers.forEach((children) => {
-                    let sublayer = new Sublayer({
+                    const sublayer = new Sublayer({
                         layerId: layer.id,
                         sublayerId: children.id,
                         layerUrl: layer.url,
@@ -41,7 +41,7 @@ export default class ClusterFeatureLayerTypeFactory {
                 });
             });
         }
-        let layer = this.layer = new ClusterFeatureLayer({
+        const layer = this.layer = new ClusterFeatureLayer({
             id: options.id,
             title: options.title,
             visible: options.visible,
@@ -71,7 +71,7 @@ export default class ClusterFeatureLayerTypeFactory {
         return {instance: layer};
     }
 
-    setMapWidgetModel(mapWidgetModel, properties) {
+    setMapWidgetModel(mapWidgetModel) {
         this.mapWidgetModel = mapWidgetModel;
         this._clusterLayers.forEach((clusterLayer) => {
             clusterLayer.setMapWidgetModel(mapWidgetModel);

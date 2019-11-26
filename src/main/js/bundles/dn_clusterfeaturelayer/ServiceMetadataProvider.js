@@ -19,18 +19,12 @@ export default class ServiceMetadataProvider {
     }
 
     getRendererForLayer(layerId) {
-        let metadata = this._serviceMetadata;
-        let sublayer = metadata.sublayers.find((layer) => {
-            return layerId === layer.layerId + "/" + layer.sublayerId;
-        });
-        let url = sublayer.layerUrl;
-        let details = metadata.details.find((detail) => {
-            return url === detail.url;
-        });
-        let id = sublayer.sublayerId;
-        let detail = details.layers.find((layer) => {
-            return layer.id.toString() === id;
-        });
+        const metadata = this._serviceMetadata;
+        const sublayer = metadata.sublayers.find((layer) => layerId === layer.layerId + "/" + layer.sublayerId);
+        const url = sublayer.layerUrl;
+        const details = metadata.details.find((detail) => url === detail.url);
+        const id = sublayer.sublayerId;
+        const detail = details.layers.find((layer) => layer.id.toString() === id);
         return detail && detail.drawingInfo && detail.drawingInfo.renderer;
     }
 }

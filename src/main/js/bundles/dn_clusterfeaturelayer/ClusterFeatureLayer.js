@@ -39,7 +39,7 @@ import ClusterGraphicsFactory from "./ClusterGraphicsFactory";
 export default GraphicsLayer.createSubclass({
     declaredClass: "esri.layers.GraphicsLayer",
     properties: {},
-    constructor: function (args) {
+    constructor(args) {
         this.sublayers = args.sublayers;
 
         this._clusterData = {};
@@ -65,15 +65,15 @@ export default GraphicsLayer.createSubclass({
 
         this._initDataStructures(this.sublayers);
 
-        let mapWidgetModel = this._mapWidgetModel;
+        const mapWidgetModel = this._mapWidgetModel;
         if (mapWidgetModel) {
             this._waitForWkid(mapWidgetModel);
         }
     },
 
-    _waitForWkid: function (mapWidgetModel) {
-        let that = this;
-        let sr = mapWidgetModel.get("spatialReference");
+    _waitForWkid(mapWidgetModel) {
+        const that = this;
+        const sr = mapWidgetModel.get("spatialReference");
         if (sr) {
             this.wkid = sr.latestWkid || sr.wkid;
             that._initListener();
@@ -87,58 +87,57 @@ export default GraphicsLayer.createSubclass({
         }
     },
 
-    _initListener: function () {
-        let that = this;
-        let mapWidgetModel = this._mapWidgetModel;
-        let requester = that._serverRequester = new FeatureServerRequester(that.sublayers, {wkid: that.wkid}, that._returnLimit, mapWidgetModel);
+    _initListener() {
+        const mapWidgetModel = this._mapWidgetModel;
+        const requester = this._serverRequester = new FeatureServerRequester(this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
         requester.getServiceMetadata().then((serviceDetails) => {
-            if (that.events && that.events.length > 0) {
-                that.events.forEach((event) => {
+            if (this.events && this.events.length > 0) {
+                this.events.forEach((event) => {
                     event.remove();
                 });
-                that.events = [];
+                this.events = [];
             }
 
-            that.events = [];
-            let metadataProvider = that._getServiceMetadataProvider(serviceDetails);
-            that._clusterGraphicsFactory = that._getClusterGraphicsFactory(that._clusterSymbolProvider, that._featureSymbolProvider, metadataProvider, mapWidgetModel, that._popupTemplate, that._options);
-            let view = mapWidgetModel.get("view");
-            let map = mapWidgetModel.get("map");
-            that.events.push(map.allLayers.on("change", (event) => {
-                that._reCluster({forceReinit: true});
+            this.events = [];
+            const metadataProvider = this._getServiceMetadataProvider(serviceDetails);
+            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider, metadataProvider, mapWidgetModel, this._popupTemplate, this._options);
+            const view = mapWidgetModel.get("view");
+            const map = mapWidgetModel.get("map");
+            this.events.push(map.allLayers.on("change", () => {
+                this._reCluster({forceReinit: true});
             }));
-            that.sublayers.forEach((layer) => {
-                that.events.push(WatchUtils.watch(layer, "visible", () => {
-                    that._reCluster({forceReinit: true});
+            this.sublayers.forEach((layer) => {
+                this.events.push(WatchUtils.watch(layer, "visible", () => {
+                    this._reCluster({forceReinit: true});
                 }));
             });
-            that.events.push(view.watch("stationary", (response) => {
+            this.events.push(view.watch("stationary", (response) => {
                 if (response) {
-                    that._reCluster();
+                    this._reCluster();
                 }
             }));
-            that.events.push(view.on("pointer-down", (event) => {
-                that._handleClick(event);
+            this.events.push(view.on("pointer-down", (event) => {
+                this._handleClick(event);
             }));
-            that.events.push(view.on("pointer-move", (event) => {
-                that._clusterMouseOver(event);
+            this.events.push(view.on("pointer-move", (event) => {
+                this._clusterMouseOver(event);
             }));
-            that.events.push(mapWidgetModel.watch("view", () => {
-                that._initListener();
+            this.events.push(mapWidgetModel.watch("view", () => {
+                this._initListener();
             }));
-            that._reCluster({forceReinit: true});
+            this._reCluster({forceReinit: true});
         });
     },
 
-    _initDataStructures: function (sublayers) {
+    _initDataStructures(sublayers) {
         sublayers.forEach((layer) => {
-            let layerId = layer.layerId + "/" + layer.sublayerId;
+            const layerId = layer.layerId + "/" + layer.sublayerId;
             this._clusterCache[layerId] = {};
             this._clusterData[layerId] = [];
         });
     },
 
-    setData: function (objectIds) {
+    setData(objectIds) {
         this._predefinedObjectIds = objectIds;
         // clear array with calculated clusters
         this._clusters = [];
@@ -146,7 +145,7 @@ export default GraphicsLayer.createSubclass({
         this._reCluster({forceReinit: true});
     },
 
-    setMapWidgetModel: function (mapWidgetModel) {
+    setMapWidgetModel(mapWidgetModel) {
         this._mapWidgetModel = mapWidgetModel;
         this._waitForWkid(mapWidgetModel);
     },
@@ -154,14 +153,14 @@ export default GraphicsLayer.createSubclass({
     /**
      * Method to recluster.
      */
-    _reCluster: function (options) {
+    _reCluster(options) {
         if (!this._mapWidgetModel) {
             return;
         }
-        let view = this._mapWidgetModel.get("view");
-        let mapExtent = view && view.get("extent");
+        const view = this._mapWidgetModel.get("view");
+        const mapExtent = view && view.get("extent");
         if (mapExtent) {
-            let scale = this._mapWidgetModel.get("scale");
+            const scale = this._mapWidgetModel.get("scale");
             if (scale) {
                 if (scale <= this._maxClusterScale) {
                     this._clusterTolerance = 0;
@@ -171,11 +170,11 @@ export default GraphicsLayer.createSubclass({
             } else {
                 this._clusterTolerance = this._clusterDistance;
             }
-            let visitedExtent = this._visitedExtent;
-            let beenThereBefore = visitedExtent && visitedExtent.contains(mapExtent);
+            const visitedExtent = this._visitedExtent;
+            const beenThereBefore = visitedExtent && visitedExtent.contains(mapExtent);
 
             // reclustering is started asynchronously to prevent UI freeze and some displaying bugs
-            let that = this;
+            const that = this;
             let clusterTimeout;
             clearTimeout(clusterTimeout);
             clusterTimeout = setTimeout(() => {
@@ -204,20 +203,20 @@ export default GraphicsLayer.createSubclass({
         }
     },
 
-    _unsetMap: function () {
+    _unsetMap() {
         this._extentChangeSignal.remove();
         return this.inherited(arguments);
     },
 
-    _getFeaturesFromServer: function () {
-        let that = this;
-        let requester = this._serverRequester;
-        let finalDeferred = new Deferred();
+    _getFeaturesFromServer() {
+        const that = this;
+        const requester = this._serverRequester;
+        const finalDeferred = new Deferred();
 
         if (this._predefinedObjectIds) {
-            let allDeferreds = [];
+            const allDeferreds = [];
             this._predefinedObjectIds.forEach((result) => {
-                let d = new Deferred();
+                const d = new Deferred();
                 allDeferreds.push(d);
                 requester.getFeaturesByIds(result.objectIds, result.layerId, true).then((featuresResult) => {
                     that._addFeaturesToClusterCache(featuresResult, result.layerId);
@@ -233,9 +232,9 @@ export default GraphicsLayer.createSubclass({
             });
         } else {
             requester.getObjectIds(this.sublayers).then((results) => {
-                let allDeferreds = [];
+                const allDeferreds = [];
                 results.forEach((result) => {
-                    let d = new Deferred();
+                    const d = new Deferred();
                     allDeferreds.push(d);
                     requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
                         that._addFeaturesToClusterCache(featuresResult, result.layerId);
@@ -256,14 +255,14 @@ export default GraphicsLayer.createSubclass({
         return finalDeferred;
     },
 
-    _getCachedFeaturesInExtent: function (layerId) {
-        let extent = this._getNormalizedExtentsPolygon();
+    _getCachedFeaturesInExtent(layerId) {
+        const extent = this._getNormalizedExtentsPolygon();
         let len = this._serverRequester.objectIdCache.get(layerId).length;
-        let featuresInExtent = [];    // See if cached feature is in current extent
+        const featuresInExtent = [];    // See if cached feature is in current extent
         // See if cached feature is in current extent
         while (len--) {
-            let oid = this._serverRequester.objectIdCache.get(layerId)[len];
-            let cached = this._clusterCache[layerId][oid];
+            const oid = this._serverRequester.objectIdCache.get(layerId)[len];
+            const cached = this._clusterCache[layerId][oid];
             if (cached && extent.contains(cached.geometry)) {
                 featuresInExtent.push(cached);
             }
@@ -279,22 +278,18 @@ export default GraphicsLayer.createSubclass({
      * @param layerId
      * @private
      */
-    _addFeaturesToClusterCache: function (result, layerId) {
+    _addFeaturesToClusterCache(result, layerId) {
         // get features from cache (features that have been requested before)
-        let cachedFeaturesInExtent = this._getCachedFeaturesInExtent(layerId);
+        const cachedFeaturesInExtent = this._getCachedFeaturesInExtent(layerId);
         let newFeaturesInExtent;
         if (result.features && result.features.length > 0) {
-            if (this.native_geometryType === "esriGeometryPolygon") {
-                newFeaturesInExtent = ClusterGeometryFunctions.toPointGraphics(result.features);
-            } else {
-                newFeaturesInExtent = result.features;
-            }
-            let len = newFeaturesInExtent.length;
+            newFeaturesInExtent = result.features;
+            const len = newFeaturesInExtent.length;
             // Update the cluster features for drawing
             if (len) {
                 // Append actual feature to cluster cache
                 newFeaturesInExtent.forEach((feat) => {
-                    let featureId = feat.attributes[this._objectIdField];
+                    const featureId = feat.attributes[this._objectIdField];
                     this._clusterCache[layerId][featureId] = feat;
                     feat.layerId = layerId;
                 });
@@ -308,21 +303,21 @@ export default GraphicsLayer.createSubclass({
     /**
      * Method to build new cluster array from features and draw graphics.
      */
-    _clusterGraphics: function () {
+    _clusterGraphics() {
         // clear array with calculated clusters
         this._clusters = [];
         // test against a modified/scrubbed map extent polygon geometry
-        let testExtent = this._getNormalizedExtentsPolygon();
+        const testExtent = this._getNormalizedExtentsPolygon();
         // first time through, loop through the points
         this.sublayers.forEach((layerObject) => {
-            let layerId = layerObject.layerId + "/" + layerObject.sublayerId;
-            let nodeAndParentsEnabledTemp = this.nodeAndParentsEnabled(layerId);
-            let clusterData = this._clusterData;
-            let currentLength = clusterData[layerId].length;
+            const layerId = layerObject.layerId + "/" + layerObject.sublayerId;
+            const nodeAndParentsEnabledTemp = this.nodeAndParentsEnabled(layerId);
+            const clusterData = this._clusterData;
+            const currentLength = clusterData[layerId].length;
             for (let j = 0; j < currentLength; j++) {
                 // see if the current feature should be added to a cluster
-                let feature = clusterData[layerId][j];
-                let point = feature.geometry || feature;
+                const feature = clusterData[layerId][j];
+                const point = feature.geometry || feature;
                 // if current feature is NOT in geo-extent don't add it to clusters to draw
                 if (!testExtent.contains(point)) {
                     continue;
@@ -335,8 +330,8 @@ export default GraphicsLayer.createSubclass({
                     let clustered = false;
                     // Add point to existing cluster
                     for (let i = 0; i < this._clusters.length; i++) {
-                        let c = this._clusters[i];
-                        let clusterResolution = this._mapWidgetModel.extent.width / this._mapWidgetModel.width;
+                        const c = this._clusters[i];
+                        const clusterResolution = this._mapWidgetModel.extent.width / this._mapWidgetModel.width;
                         if (ClusterGeometryFunctions.clusterTest(point, c, this._clusterTolerance, clusterResolution)) {
                             this._clusterAddPoint(feature, point, c);
                             clustered = true;
@@ -353,13 +348,13 @@ export default GraphicsLayer.createSubclass({
         this._addGraphicsToLayer(this._clusters);
     },
 
-    _setLayerExtent: function () {
-        let clusterData = this._clusterData;
+    _setLayerExtent() {
+        const clusterData = this._clusterData;
         let extent = null;
-        ct_lang.forEachOwnProp(clusterData, (v, n) => {
+        ct_lang.forEachOwnProp(clusterData, (v) => {
             if (v.length) {
                 v.forEach((feature) => {
-                    let e = feature.geometry.extent;
+                    const e = feature.geometry.extent;
                     if (!extent) {
                         extent = e;
                     } else {
@@ -371,14 +366,13 @@ export default GraphicsLayer.createSubclass({
         this.set("fullExtent", extent);
     },
 
-    _addGraphicsToLayer: function () {
+    _addGraphicsToLayer() {
         // When zooming remove the graphics before the timeout and the server request is started.
         // This avoids flickering of the cluster graphics.
         this.removeAll();
         this._clusters.forEach((cluster) => {
-            let features = cluster.attributes.features;
-            let clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
-            let clusterResolution = this._mapWidgetModel.extent.width / this._mapWidgetModel.width;
+            const features = cluster.attributes.features;
+            const clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
             if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance) && features.length > 1) {
                 // check for spiderfying
                 this._addSpiderfyingGraphics(cluster);
@@ -389,14 +383,14 @@ export default GraphicsLayer.createSubclass({
         });
     },
 
-    _addClusterGraphics: function (cluster) {
-        let clusterGraphics = this._clusterGraphicsFactory.getClusterGraphics(cluster, this._clusters);
+    _addClusterGraphics(cluster) {
+        const clusterGraphics = this._clusterGraphicsFactory.getClusterGraphics(cluster, this._clusters);
         this.addMany(clusterGraphics);
     },
 
-    _addSpiderfyingGraphics: function (cluster) {
+    _addSpiderfyingGraphics(cluster) {
         cluster.attributes.spiderfying = true;
-        let spiderfyingGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
+        const spiderfyingGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
         this.addMany(spiderfyingGraphics);
     },
 
@@ -408,18 +402,17 @@ export default GraphicsLayer.createSubclass({
      * @param cluster cluster
      * @private
      */
-    _clusterAddPoint: function (feature, p, cluster) {
+    _clusterAddPoint(feature, p, cluster) {
         // points passed to clusterAddPoint should be included
         // in an existing cluster
         // that corresponds to its cluster
         // Average in the new point to the cluster geometry
-        let count, x, y;
-        count = cluster.attributes.clusterCount;
-        x = (p.x + cluster.x * count) / (count + 1);
-        y = (p.y + cluster.y * count) / (count + 1);
+        const count = cluster.attributes.clusterCount;
+        const x = (p.x + cluster.x * count) / (count + 1);
+        const y = (p.y + cluster.y * count) / (count + 1);
         cluster.x = x;
         cluster.y = y;
-        let clusterExtent = cluster.attributes.extent;
+        const clusterExtent = cluster.attributes.extent;
         // Build an extent that includes all points in a cluster
         if (p.x < clusterExtent[0]) {
             clusterExtent[0] = p.x;
@@ -445,13 +438,13 @@ export default GraphicsLayer.createSubclass({
      * Method to create a new cluster if the point isn't within the clustering distance specified for the layer.
      * TODO: Random and not based on grid dispersion!
      */
-    _clusterCreate: function (feature, p) {
-        let clusterId = this._clusters.length + 1;
+    _clusterCreate(feature, p) {
+        const clusterId = this._clusters.length + 1;
         if (!p.attributes) {
             p.attributes = {};
         }
         // create the cluster
-        let cluster = {
+        const cluster = {
             x: p.x,
             y: p.y,
             spatialReference: feature.geometry.spatialReference,
@@ -470,28 +463,28 @@ export default GraphicsLayer.createSubclass({
         this._clusters.push(cluster);
     },
 
-    _handleClick: function (event) {
-        let that = this;
-        let view = this._mapWidgetModel.get("view");
+    _handleClick(event) {
+        const that = this;
+        const view = this._mapWidgetModel.get("view");
         view.hitTest(event).then((response) => {
             if (response.results.length === 0) {
                 return;
             }
-            let graphic = response.results[0].graphic;
+            const graphic = response.results[0].graphic;
             if (graphic) {
                 that._eventService.postEvent("dn_clusterfeaturelayer/GRAPHIC_CLICKED", {
                     attributes: graphic.attributes,
                     geometry: graphic.geometry
                 });
             }
-            let attributes = graphic && graphic.attributes;
+            const attributes = graphic && graphic.attributes;
             if (!attributes) {
                 return;
             }
             if (attributes.hasOwnProperty("features")) {
                 if (attributes.spiderfying) {
-                    let features = attributes.features;
-                    let clusterCenterPoint = new Point(graphic.geometry.x, graphic.geometry.y, graphic.geometry.spatialReference);
+                    const features = attributes.features;
+                    const clusterCenterPoint = new Point(graphic.geometry.x, graphic.geometry.y, graphic.geometry.spatialReference);
                     if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, that._spiderfyingDistance)) {
                         that._eventService.postEvent("dn_clusterfeaturelayer/SPIDERFYING_CLICKED", {
                             attributes: graphic.attributes,
@@ -499,8 +492,8 @@ export default GraphicsLayer.createSubclass({
                         });
                     }
                 } else {
-                    let extent = attributes.extent;
-                    let clusterExtent = new Extent(extent[0], extent[1], extent[2], extent[3], view.spatialReference).expand(1.5);
+                    const extent = attributes.extent;
+                    const clusterExtent = new Extent(extent[0], extent[1], extent[2], extent[3], view.spatialReference).expand(1.5);
                     view.goTo({target: clusterExtent}, {
                         "animate": true,
                         "duration": 1000,
@@ -511,11 +504,11 @@ export default GraphicsLayer.createSubclass({
         });
     },
 
-    _clusterMouseOver: function (event) {
+    _clusterMouseOver(event) {
         if (this._showClusterArea) {
-            let view = this._mapWidgetModel.get("view");
+            const view = this._mapWidgetModel.get("view");
             view.hitTest(event).then((response) => {
-                let attributes = response.results[0] && response.results[0].graphic.attributes;
+                const attributes = response.results[0] && response.results[0].graphic.attributes;
                 if (attributes) {
                     this._drawClusterArea(attributes);
                 } else {
@@ -525,31 +518,29 @@ export default GraphicsLayer.createSubclass({
         }
     },
 
-    _drawClusterArea: function (attributes) {
+    _drawClusterArea(attributes) {
         if (this.getCluster(attributes)) {
-            let points = attributes.features.map((feature) => {
-                return feature.geometry;
-            });
-            let clusterArea = geometryEngine.convexHull(points, true);
+            const points = attributes.features.map((feature) => feature.geometry);
+            const clusterArea = geometryEngine.convexHull(points, true);
             //use convex hull on the points to get the boundary
             this._hideClusterArea();
             if (clusterArea[0] && !this.clusterAreaGraphic) {
-                let clusterAreaGraphic = this.clusterAreaGraphic = this._clusterGraphicsFactory.getAreaGraphic(clusterArea[0]);
+                const clusterAreaGraphic = this.clusterAreaGraphic = this._clusterGraphicsFactory.getAreaGraphic(clusterArea[0]);
                 this.add(clusterAreaGraphic);
                 clusterAreaGraphic.set("visible", true);
             }
         }
     },
 
-    _hideClusterArea: function (event) {
-        let clusterAreaGraphic = this.clusterAreaGraphic;
+    _hideClusterArea(event) {
+        const clusterAreaGraphic = this.clusterAreaGraphic;
         if (clusterAreaGraphic) {
             this.remove(clusterAreaGraphic);
             this.clusterAreaGraphic = null;
         }
     },
 
-    getCluster: function (attributes) {
+    getCluster(attributes) {
         let res = null;
         this._clusters.forEach((cluster) => {
             if (cluster.attributes.clusterId === attributes.clusterId && cluster.attributes.clusterCount === attributes.clusterCount) {
@@ -567,34 +558,30 @@ export default GraphicsLayer.createSubclass({
      * @returns {*} masterpolygon
      * @private
      */
-    _getNormalizedExtentsPolygon: function () {
-        let view = this._mapWidgetModel.get("view");
-        let spatialReference = this._mapWidgetModel.get("spatialReference");
-        let normalizedExtents = view.get("extent").normalize();
-        let normalizedExtentPolygons = normalizedExtents.map((extent) => {
-            return Polygon.fromExtent(extent);
-        });
-        let masterPolygon = new Polygon(spatialReference);
+    _getNormalizedExtentsPolygon() {
+        const view = this._mapWidgetModel.get("view");
+        const spatialReference = this._mapWidgetModel.get("spatialReference");
+        const normalizedExtents = view.get("extent").normalize();
+        const normalizedExtentPolygons = normalizedExtents.map((extent) => Polygon.fromExtent(extent));
+        const masterPolygon = new Polygon(spatialReference);
         normalizedExtentPolygons.forEach((polygon) => {
             masterPolygon.addRing(polygon.rings[0]);
         });
         return masterPolygon;
     },
 
-    nodeAndParentsEnabled: function (layerId) {
-        let that = this;
-        let layer = that.sublayers.find((layer) => {
-            return layer.layerId + "/" + layer.sublayerId === layerId;
-        });
+    nodeAndParentsEnabled(layerId) {
+        const that = this;
+        const layer = that.sublayers.find((layer) => layer.layerId + "/" + layer.sublayerId === layerId);
         return that.visible && layer.visible;
     },
 
 
-    _getClusterGraphicsFactory: function (clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, options) {
+    _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, options) {
         return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, options);
     },
 
-    _getServiceMetadataProvider: function (serviceDetails) {
+    _getServiceMetadataProvider(serviceDetails) {
         return new ServiceMetadataProvider(serviceDetails);
     }
 });

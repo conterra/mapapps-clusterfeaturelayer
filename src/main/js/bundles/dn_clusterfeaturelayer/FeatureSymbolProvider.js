@@ -26,11 +26,11 @@ export default class FeatureSymbolProvider {
     }
 
     getFeatureSymbol() {
-        let singleSymbolColor = this.symbolColor;
-        let singleBorderColor = this.borderColor;
-        let singleSymbolSize = this.symbolSize;
-        let singleBorderSize = this.borderSize;
-        let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(singleBorderColor), singleBorderSize);
+        const singleSymbolColor = this.symbolColor;
+        const singleBorderColor = this.borderColor;
+        const singleSymbolSize = this.symbolSize;
+        const singleBorderSize = this.borderSize;
+        const lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(singleBorderColor), singleBorderSize);
         return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, singleSymbolSize, lineSymbol, new Color(singleSymbolColor));
     }
 }

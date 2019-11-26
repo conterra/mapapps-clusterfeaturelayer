@@ -16,8 +16,8 @@
 import domGeometry from "dojo/dom-geometry";
 import domStyle from "dojo/dom-style";
 
-let getPositionForBoxInContainer = (containerSize, boxSize, boxRootPosition, offset) => {
-    let finalPosition = {
+const getPositionForBoxInContainer = (containerSize, boxSize, boxRootPosition, offset) => {
+    const finalPosition = {
         x: boxRootPosition.x + offset.x,
         y: boxRootPosition.y + offset.y
     };
@@ -30,14 +30,14 @@ let getPositionForBoxInContainer = (containerSize, boxSize, boxRootPosition, off
     return finalPosition;
 };
 
-let positionNodeInContainer = (node, containerNode, nodeRootPosition, offset) => {
-    let containerMarginBox = domGeometry.getMarginBox(containerNode);
-    let containerSize = {
+const positionNodeInContainer = (node, containerNode, nodeRootPosition, offset) => {
+    const containerMarginBox = domGeometry.getMarginBox(containerNode);
+    const containerSize = {
         width: containerMarginBox.w,
         height: containerMarginBox.h
     };
-    let boxMarginBox = domGeometry.getMarginBox(node);
-    let boxSize = {
+    const boxMarginBox = domGeometry.getMarginBox(node);
+    const boxSize = {
         width: boxMarginBox.w,
         height: boxMarginBox.h
     };
@@ -47,7 +47,7 @@ let positionNodeInContainer = (node, containerNode, nodeRootPosition, offset) =>
             y: 0
         };
     }
-    let position = getPositionForBoxInContainer(containerSize, boxSize, nodeRootPosition, offset);
+    const position = getPositionForBoxInContainer(containerSize, boxSize, nodeRootPosition, offset);
     domStyle.set(node, "left", position.x + "px");
     domStyle.set(node, "top", position.y + "px");
 };

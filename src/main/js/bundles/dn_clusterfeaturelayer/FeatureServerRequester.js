@@ -36,27 +36,27 @@ export default class FeatureServerRequester {
     }
 
     getServiceMetadata() {
-        let urls = this.filteredUrls = [];
+        const urls = this.filteredUrls = [];
         this.sublayers.forEach((layer) => {
             ct_array.arrayAdd(urls, layer.layerUrl);
-        }, this);
-        let that = this;
-        let d = new Deferred();
+        });
+        const that = this;
+        const d = new Deferred();
         if (this._serviceMetadata) {
             d.resolve(this._serviceMetadata);
         }
-        let requests = urls.map((url) => {
+        const requests = urls.map((url) => {
             // Use MapServer interface because FeatureServer does not deliver the details for each layer.
             // [URL]/MapServer/layers?f=json
-            let newUrl = url.replace("/FeatureServer", "/MapServer");
+            const newUrl = url.replace("/FeatureServer", "/MapServer");
             return apprt_request(newUrl + "/layers", {
                 query: {f: "json"},
                 handleAs: "json"
             });
-        }, this);
-        let dl = new DeferredList(requests);
+        });
+        const dl = new DeferredList(requests);
         dl.then((details) => {
-            let response = {details: []};
+            const response = {details: []};
             details.forEach((detail, i) => {
                 detail[1].url = that.filteredUrls[i];
                 response.details.push(detail[1]);
@@ -69,15 +69,15 @@ export default class FeatureServerRequester {
     }
 
     getObjectIds(sublayers, whereExpression) {
-        let allQueriesDeferred = new Deferred();
-        let that = this;
-        let queryPromises = [];
+        const allQueriesDeferred = new Deferred();
+        const that = this;
+        const queryPromises = [];
 
         sublayers.forEach((layer) => {
-            let layerId = layer.layerId + "/" + layer.sublayerId;
-            let singleQueryDeferred = new Deferred();
-            let query = that._getQueryForLayer(layerId);
-            let view = that.mapWidgetModel.get("view");
+            const layerId = layer.layerId + "/" + layer.sublayerId;
+            const singleQueryDeferred = new Deferred();
+            const query = that._getQueryForLayer(layerId);
+            const view = that.mapWidgetModel.get("view");
             query.objectIds = null;
             query.geometry = view && view.get("extent");
             query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
@@ -91,12 +91,12 @@ export default class FeatureServerRequester {
             }
 
             // executeForIds will only return an array of object IDs for features that satisfy the input query
-            let promise = that._getQueryTaskForLayer(layerId).executeForIds(query);
+            const promise = that._getQueryTaskForLayer(layerId).executeForIds(query);
             promise.then((results) => {
                 if (!results) {
                     results = [];
                 }
-                let res = {
+                const res = {
                     objectIds: results,
                     layerId: layerId
                 };
@@ -109,7 +109,7 @@ export default class FeatureServerRequester {
             // Add Deferred for each leaf node to 'promises' in order that the application waits for all of them till execution is continued.
             queryPromises.push(singleQueryDeferred.promise);
 
-        }, this);
+        });
         all(queryPromises).then((result) => {
             allQueriesDeferred.resolve(result);
         });
@@ -117,16 +117,16 @@ export default class FeatureServerRequester {
     }
 
     getFeaturesByIds(objectIds, layerId, reset) {
-        let d = new Deferred();
-        let cacheEntry = this.objectIdCache.get(layerId);
-        let uncached = FeatureServerRequester._difference(objectIds, cacheEntry.length, this._getObjectIdHashEntryForLayerId(layerId));
+        const d = new Deferred();
+        const cacheEntry = this.objectIdCache.get(layerId);
+        const uncached = FeatureServerRequester._difference(objectIds, cacheEntry.length, this._getObjectIdHashEntryForLayerId(layerId));
         this.objectIdCache.set(layerId, cacheEntry.concat(uncached));
         if (reset) {
             if (objectIds.length > 0) {
-                let query = this._getQueryForLayer(layerId);
+                const query = this._getQueryForLayer(layerId);
                 query.where = null;
                 query.geometry = null;
-                let queries = [];
+                const queries = [];
                 if (objectIds.length > this.returnLimit) {
                     while (objectIds.length) {
                         // Improve performance by just passing list of IDs
@@ -135,9 +135,7 @@ export default class FeatureServerRequester {
                         queries.push(this._getQueryTaskForLayer(layerId).execute(query));
                     }
                     all(queries).then((res) => {
-                        let features = res.map((r) => {
-                            return r.features;
-                        });
+                        const features = res.map((r) => r.features);
                         d.resolve({features: FeatureServerRequester._merge(features)});
                     });
                 } else {
@@ -152,10 +150,10 @@ export default class FeatureServerRequester {
             }
         } else {
             if ((uncached && uncached.length)) {
-                let query = this._getQueryForLayer(layerId);
+                const query = this._getQueryForLayer(layerId);
                 query.where = null;
                 query.geometry = null;
-                let queries = [];
+                const queries = [];
                 if (uncached.length > this.returnLimit) {
                     while (uncached.length) {
                         // Improve performance by just passing list of IDs
@@ -164,9 +162,7 @@ export default class FeatureServerRequester {
                         queries.push(this._getQueryTaskForLayer(layerId).execute(query));
                     }
                     all(queries).then((res) => {
-                        let features = res.map((r) => {
-                            return r.features;
-                        });
+                        const features = res.map((r) => r.features);
                         d.resolve({features: FeatureServerRequester._merge(features)});
                     });
                 } else {
@@ -187,13 +183,11 @@ export default class FeatureServerRequester {
         if (this._queryTasks[layerId]) {
             return this._queryTasks[layerId];
         }
-        let sublayer = this.sublayers.find((layer) => {
-            return layerId === layer.layerId + "/" + layer.sublayerId;
-        });
-        let url = sublayer.layerUrl;
-        let id = sublayer.sublayerId;
-        let queryUrl = url + "/" + id;
-        let newQueryTask = new QueryTask(queryUrl);
+        const sublayer = this.sublayers.find((layer) => layerId === layer.layerId + "/" + layer.sublayerId);
+        const url = sublayer.layerUrl;
+        const id = sublayer.sublayerId;
+        const queryUrl = url + "/" + id;
+        const newQueryTask = new QueryTask(queryUrl);
         this._queryTasks[layerId] = newQueryTask;
         return newQueryTask;
     }
@@ -202,7 +196,7 @@ export default class FeatureServerRequester {
         if (this._queries[layerId]) {
             return this._queries[layerId];
         }
-        let newQuery = new Query();
+        const newQuery = new Query();
         newQuery.outSpatialReference = this.spatialReference;
         newQuery.returnGeometry = true;
         newQuery.outFields = ["*"];
@@ -229,13 +223,13 @@ export default class FeatureServerRequester {
     /*objecid hash*/ {
         //let start = new Date().valueOf();
         //console.debug('difference start');
-        let len = arr1.length, diff = [];
+        let len = arr1.length; let diff = [];
         if (!cacheCount) {
             diff = arr1;    // if no data are cached right now, all features are new.
             // if no data are cached right now, all features are new.
             while (len--) {
                 // Add the current feature form the new feature object to the hash if it is not in there already.
-                let value = arr1[len];
+                const value = arr1[len];
                 if (!hash[value]) {
                     hash[value] = value;
                 }
@@ -244,7 +238,7 @@ export default class FeatureServerRequester {
         }
         while (len--) {
             // Add the current feature from the new feature object to the hash if it is not in there already.
-            let val = arr1[len];
+            const val = arr1[len];
             if (!hash[val]) {
                 hash[val] = val;
                 diff.push(val);    // Only add new features to return array.
@@ -257,9 +251,9 @@ export default class FeatureServerRequester {
      make a single array from multiple arrays from parameter
      */
     static _merge(arrs) {
-        let len = arrs.length, target = [];
+        let len = arrs.length; let target = [];
         while (len--) {
-            let o = arrs[len];
+            const o = arrs[len];
             if (o.constructor === Array) {
                 target = target.concat(o);
             } else {

@@ -58,7 +58,7 @@ export default class ClusterSymbolProvider {
             size = 125;
         }
 
-        let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterSingleSymbolBorderColor), this.clusterSingleSymbolBorderSize);
+        const lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterSingleSymbolBorderColor), this.clusterSingleSymbolBorderSize);
         return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, size, lineSymbol, new Color(this.clusterSingleSymbolColor));
     }
 
@@ -71,8 +71,8 @@ export default class ClusterSymbolProvider {
     }
 
     getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, transparent) {
-        let width = columnsCount * baseSize;
-        let height = rowsCount * baseSize;
+        const width = columnsCount * baseSize;
+        const height = rowsCount * baseSize;
         let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterBackgroundBorderColor), this.clusterBackgroundBorderSize);
         let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color(this.clusterBackgroundSymbolColor));
         if (transparent) {
@@ -80,7 +80,7 @@ export default class ClusterSymbolProvider {
             symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color([0, 0, 0, 0]));
         }
 
-        let pathString = d_string.substitute("M 0 0 L ${width} 0 L ${width} ${height} L 0 ${height} z", {
+        const pathString = d_string.substitute("M 0 0 L ${width} 0 L ${width} ${height} L 0 ${height} z", {
             width: width,
             height: height
         });
@@ -93,7 +93,7 @@ export default class ClusterSymbolProvider {
     }
 
     getClusterLabel(labelText, offset) {
-        let font = new Font({size: this.labelFontSize, family: this.labelFontFamily});
+        const font = new Font({size: this.labelFontSize, family: this.labelFontFamily});
         return new TextSymbol({
             text: labelText,
             color: new Color(this.labelColor),
