@@ -201,7 +201,7 @@ export default class ClusterGraphicsFactory {
         const allFeatures = cluster.attributes.features;
         const symbols = [];
         let symbol;
-        d_array.some(allFeatures, (feature) => {
+        allFeatures.forEach((feature) => {
             symbol = this.getSymbolForFeature(feature).clone();
             symbol.featureAttributes = feature.attributes;
             symbols.push(symbol);
@@ -227,9 +227,10 @@ export default class ClusterGraphicsFactory {
         }
         sortableCounts.sort((a, b) => b[1] - a[1]);
         const result = [];
-        d_array.some(sortableCounts, (count) => {
-            if (result.length >= maxNumberOfFeatures)
+        sortableCounts.some((count) => {
+            if (result.length >= maxNumberOfFeatures) {
                 return false;
+            }
             result.push(count);
         });
         return result;
