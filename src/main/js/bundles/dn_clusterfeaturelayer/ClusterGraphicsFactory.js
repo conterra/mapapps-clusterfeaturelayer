@@ -186,14 +186,14 @@ export default class ClusterGraphicsFactory {
             const w = baseSize / symbol.width;
             const h = baseSize / symbol.height;
             if (w > h) {
-                symbol.set("width", (symbol.width * w) - 2);
-                symbol.set("height", (symbol.height * w) - 2);
+                symbol.set("width", symbol.width * w);
+                symbol.set("height", symbol.height * w);
             } else {
-                symbol.set("width", (symbol.width * h) - 2);
-                symbol.set("height", (symbol.height * h) - 2);
+                symbol.set("width", symbol.width * h);
+                symbol.set("height", symbol.height * h);
             }
         } else if (symbol.size) {
-            symbol.set("size", this.symbolBaseSize - 2);
+            symbol.set("size", baseSize);
         }
     }
 
