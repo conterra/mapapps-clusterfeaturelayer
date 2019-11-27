@@ -56,7 +56,7 @@ export default class ClusterFeatureLayerTypeFactory {
             _objectIdField: opt.objectIdField || "objectid",
             _clusterDistance: opt.clusterDistance || 100,
             _spiderfyingDistance: opt.spiderfyingDistance || 1,
-            _maxClusterScale: opt.maxClusterScale || 5000,
+            _maxClusterScale: opt.maxClusterScale || 0,
             _showClusterArea: opt.showClusterArea || false,
             _returnLimit: opt.returnLimit || 1000,
             _options: opt,

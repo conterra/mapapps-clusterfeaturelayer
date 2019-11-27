@@ -222,7 +222,7 @@
                                 "clusterDistance": 100,
                                 "spiderfyingDistance": 1,
                                 "returnLimit": 1000,
-                                "maxClusterScale": 5000,
+                                "maxClusterScale": 0,
                                 "symbolBaseSize": 25,
                                 "showClusterGrid": true,
                                 "showClusterGridCounts": true,

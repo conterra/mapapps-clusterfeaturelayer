@@ -79,7 +79,7 @@ https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer4_
                         "clusterDistance": 100,
                         "spiderfyingDistance": 1,
                         "returnLimit": 1000,
-                        "maxClusterScale": 500,
+                        "maxClusterScale": 0,
                         "symbolBaseSize": 25,
                         "showClusterGrid": true,
                         "showClusterGridCounts": true,
