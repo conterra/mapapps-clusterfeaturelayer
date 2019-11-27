@@ -70,7 +70,6 @@ export default class ClusterGraphicsFactory {
             // show number of points in the cluster
             if (this.showClusterSize) {
                 const label = this.clusterSymbolProvider.getClusterLabel(clusterAttributes.clusterCount.toString(), 0);
-                label.set("angle", this._getRotation());
                 returnGraphics.push(new Graphic(point, label, clusterAttributes));
             }
             return returnGraphics;
@@ -90,14 +89,13 @@ export default class ClusterGraphicsFactory {
             const maxClusterSize = 3 * baseSize;
             const clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, false);
             clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * baseSize)));
-            clusterSymbolsBackground.set("angle", this._getRotation());
             returnGraphics.push(new Graphic(point, clusterSymbolsBackground, clusterAttributes));
         }
 
         // add symbols
         const differentSymbolPoints = mostFeatures.map(() => point.clone());
+        this._alignPointsInGrid(differentSymbolPoints, gridSize, baseSize);
         const differentFeatureSymbols = this._getSymbolsForGrid(allFeatures, mostFeatures);
-        this._alignSymbolsInGrid(differentFeatureSymbols, gridSize, baseSize);
 
         differentSymbolPoints.forEach((symbolPoint, i) => {
             returnGraphics.push(new Graphic(symbolPoint, differentFeatureSymbols[i], clusterAttributes));
@@ -106,8 +104,8 @@ export default class ClusterGraphicsFactory {
         // add labels
         if (this.showClusterGridCounts) {
             const differentLabelPoints = mostFeatures.map(() => point.clone());
+            this._alignPointsInGrid(differentLabelPoints, gridSize, baseSize);
             const differentFeatureLabels = this._getLabelsForGrid(mostFeatures);
-            this._alignSymbolsInGrid(differentFeatureLabels, gridSize, baseSize);
 
             differentLabelPoints.forEach((labelPoint, i) => {
                 returnGraphics.push(new Graphic(labelPoint, differentFeatureLabels[i], clusterAttributes));
@@ -176,7 +174,6 @@ export default class ClusterGraphicsFactory {
             }
         }
         this._setSymbolSize(featureSymbol);
-        featureSymbol.set("angle", this._getRotation());
         return featureSymbol;
     }
 
@@ -250,7 +247,6 @@ export default class ClusterGraphicsFactory {
         const rotation = this._getRotation();
         return mostFeatures.map((layerInfos) => {
             const label = that.clusterSymbolProvider.getClusterLabel(layerInfos[1], that.clusterLabelOffset);
-            label.angle = rotation;
             return label;
         });
     }
@@ -281,19 +277,19 @@ export default class ClusterGraphicsFactory {
 
     /**
      *
-     * @param symbols The symbols to display and align within the grid.
+     * @param points The points to display and align within the grid.
      * @param gridSize An integer that specifies whether it's a 1x1, 2x2, 3x3, etc. grid.
      * @param baseSize The distance between two symbols within the cluster.
      * @private
      */
-    _alignSymbolsInGrid(symbols, gridSize, baseSize) {
-        const size = baseSize;
+    _alignPointsInGrid(points, gridSize, baseSize) {
+        const size = baseSize * 1.1;
         // This calculates how many columns and rows are needed to display the symbols in the cluster.
-        const gridSizeX = Math.min(gridSize, symbols.length);
-        const gridSizeY = Math.ceil(symbols.length / gridSize);
+        const gridSizeX = Math.min(gridSize, points.length);
+        const gridSizeY = Math.ceil(points.length / gridSize);
         const offsetOriginX = (gridSizeX - 1) * size;
         const offsetOriginY = (gridSizeY - 1) * size;
-        symbols.forEach((symbol, index) => {
+        points.forEach((point, index) => {
             const rotation = this._getRotation();
             // This calculates the offset of the current symbol within the cluster.
             const rho = (180 / Math.PI);
@@ -301,8 +297,7 @@ export default class ClusterGraphicsFactory {
             const yOffset = offsetOriginY / 2 - Math.floor(index / gridSize) * size;
             const xOffsetRotated = xOffset * Math.cos(rotation / rho) + yOffset * Math.sin(rotation / rho);
             const yOffsetRotated = -xOffset * Math.sin(rotation / rho) + yOffset * Math.cos(rotation / rho);
-            symbol.xoffset = xOffsetRotated;
-            symbol.yoffset = yOffsetRotated;
+            point.offset(this.offsetToDistance(xOffsetRotated), this.offsetToDistance(yOffsetRotated));
         });
     }
 
