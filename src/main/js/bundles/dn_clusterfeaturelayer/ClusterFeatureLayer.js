@@ -35,6 +35,7 @@ import * as ClusterGeometryFunctions from "./ClusterGeometryFunctions";
 import FeatureServerRequester from "./FeatureServerRequester";
 import ServiceMetadataProvider from "./ServiceMetadataProvider";
 import ClusterGraphicsFactory from "./ClusterGraphicsFactory";
+import async from "apprt-core/async";
 
 export default GraphicsLayer.createSubclass({
     declaredClass: "esri.layers.GraphicsLayer",
@@ -106,7 +107,7 @@ export default GraphicsLayer.createSubclass({
             }));
             this.sublayers.forEach((layer) => {
                 this.events.push(WatchUtils.watch(layer, "visible", () => {
-                    this._reCluster({forceReinit: true});
+                    this._reCluster();
                 }));
             });
             this.events.push(view.watch("stationary", (response) => {
@@ -172,31 +173,29 @@ export default GraphicsLayer.createSubclass({
             const visitedExtent = this._visitedExtent;
             const beenThereBefore = visitedExtent && visitedExtent.contains(mapExtent);
 
-            // reclustering is started asynchronously to prevent UI freeze and some displaying bugs
-            const that = this;
-            let clusterTimeout;
-            clearTimeout(clusterTimeout);
-            clusterTimeout = setTimeout(() => {
-                if (!options) {
-                    options = {};
-                }
-                if (!that._isInProgress) {
-                    that._isInProgress = true;
-                    if (!beenThereBefore || options.forceReinit === true) {
-                        console.log("recluster + getfeatures");
-                        that._getFeaturesFromServer().then(() => {
+            if (!options) {
+                options = {};
+            }
+            if (!this._isInProgress) {
+                this._isInProgress = true;
+                if (!beenThereBefore || options.forceReinit === true) {
+                    console.log("recluster + getfeatures");
+                    async(() => {
+                        this._getFeaturesFromServer().then(() => {
                             // update clustered extent
-                            that._visitedExtent = visitedExtent ? visitedExtent.union(mapExtent) : mapExtent;
-                            that._clusterGraphics();
-                            that._isInProgress = false;
+                            this._visitedExtent = visitedExtent ? visitedExtent.union(mapExtent) : mapExtent;
+                            this._clusterGraphics();
+                            this._isInProgress = false;
                         });
-                    } else {
-                        console.log("recluster");
-                        that._clusterGraphics();
-                        that._isInProgress = false;
-                    }
+                    });
+                } else {
+                    console.log("recluster");
+                    async(() => {
+                        this._clusterGraphics();
+                        this._isInProgress = false;
+                    });
                 }
-            }, 0);
+            }
         } else {
             this._isInProgress = false;
         }
@@ -369,28 +368,30 @@ export default GraphicsLayer.createSubclass({
         // When zooming remove the graphics before the timeout and the server request is started.
         // This avoids flickering of the cluster graphics.
         this.removeAll();
+        let graphics = [];
         this._clusters.forEach((cluster) => {
             const features = cluster.attributes.features;
             const clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
             if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance) && features.length > 1) {
                 // check for spiderfying
-                this._addSpiderfyingGraphics(cluster);
+                graphics = graphics.concat(this._getSpiderfyingGraphics(cluster));
             } else {
                 // refresh cluster graphics
-                this._addClusterGraphics(cluster);
+                graphics = graphics.concat(this._getClusterGraphics(cluster));
             }
         });
+        this.addMany(graphics);
+        console.log("add " + graphics.length);
+        this.refresh();
     },
 
-    _addClusterGraphics(cluster) {
-        const clusterGraphics = this._clusterGraphicsFactory.getClusterGraphics(cluster, this._clusters);
-        this.addMany(clusterGraphics);
+    _getClusterGraphics(cluster) {
+        return this._clusterGraphicsFactory.getClusterGraphics(cluster, this._clusters);
     },
 
-    _addSpiderfyingGraphics(cluster) {
+    _getSpiderfyingGraphics(cluster) {
         cluster.attributes.spiderfying = true;
-        const spiderfyingGraphics = this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
-        this.addMany(spiderfyingGraphics);
+        return this._clusterGraphicsFactory.getSpiderfyingGraphics(cluster);
     },
 
     /**
