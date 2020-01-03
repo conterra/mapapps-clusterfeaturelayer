@@ -63,8 +63,6 @@ export default GraphicsLayer.createSubclass({
         this._eventService = args._eventService;
         this.i18n = args.i18n;
 
-        this._initDataStructures(this.sublayers);
-
         const mapWidgetModel = this._mapWidgetModel;
         if (mapWidgetModel) {
             this._waitForWkid(mapWidgetModel);
@@ -129,7 +127,8 @@ export default GraphicsLayer.createSubclass({
         });
     },
 
-    _initDataStructures(sublayers) {
+    initDataStructures(sublayers) {
+        sublayers = sublayers || this.sublayers;
         sublayers.forEach((layer) => {
             const layerId = layer.layerId + "/" + layer.sublayerId;
             this._clusterCache[layerId] = {};
@@ -141,7 +140,7 @@ export default GraphicsLayer.createSubclass({
         this._predefinedObjectIds = objectIds;
         // clear array with calculated clusters
         this._clusters = [];
-        this._initDataStructures(this.sublayers);
+        this.initDataStructures(this.sublayers);
         this._reCluster({forceReinit: true});
     },
 

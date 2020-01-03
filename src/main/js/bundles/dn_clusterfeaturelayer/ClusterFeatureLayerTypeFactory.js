@@ -26,22 +26,8 @@ export default class ClusterFeatureLayerTypeFactory {
     create(options) {
         const opt = options.options;
         const popupTemplate = options.popupTemplate;
-        if (options.layers) {
-            this.layers = [];
-            options.layers.forEach((layer) => {
-                layer.sublayers.forEach((children) => {
-                    const sublayer = new Sublayer({
-                        layerId: layer.id,
-                        sublayerId: children.id,
-                        layerUrl: layer.url,
-                        title: children.title || children.id,
-                        visible: children.visible || true
-                    });
-                    this.layers.push(sublayer);
-                });
-            });
-        }
-        const layer = this.layer = new ClusterFeatureLayer({
+
+        const clusterFeatureLayer = new ClusterFeatureLayer({
             id: options.id,
             title: options.title,
             visible: options.visible,
@@ -50,7 +36,6 @@ export default class ClusterFeatureLayerTypeFactory {
             listMode: options.listMode,
             opacity: options.opacity,
             elevationInfo: options.elevationInfo,
-            sublayers: new Collection(this.layers),
             legendEnabled: false,
             popupEnabled: false,
             _objectIdField: opt.objectIdField || "objectid",
@@ -67,8 +52,31 @@ export default class ClusterFeatureLayerTypeFactory {
             _featureSymbolProvider: this.featureSymbolProvider,
             _eventService: this.eventService
         });
-        this._clusterLayers.push(layer);
-        return {instance: layer};
+
+        this.layers = [];
+        if (options.layers) {
+            options.layers.forEach((layer) => {
+                layer.sublayers.forEach((children) => {
+                    const sublayer = new Sublayer({
+                        layerId: layer.id,
+                        sublayerId: children.id,
+                        layer: clusterFeatureLayer,
+                        parent: clusterFeatureLayer,
+                        layerUrl: layer.url,
+                        title: children.title || children.id,
+                        visible: children.visible || true
+                    });
+                    this.layers.push(sublayer);
+                });
+            });
+        }
+        const sublayers = new Collection(this.layers).reverse();
+        clusterFeatureLayer.sublayers = sublayers;
+        clusterFeatureLayer.allSublayers = sublayers;
+        clusterFeatureLayer.initDataStructures();
+
+        this._clusterLayers.push(clusterFeatureLayer);
+        return {instance: clusterFeatureLayer};
     }
 
     setMapWidgetModel(mapWidgetModel) {
