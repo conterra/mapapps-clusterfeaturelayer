@@ -164,7 +164,7 @@
                     "layers": [
                         {
                             "id": "clusterfeaturelayer",
-                            "title": "ClusterFeatureLayer",
+                            "title": "Köln",
                             "type": "CLUSTER_FEATURE_LAYER",
                             "elevationInfo": {
                                 "mode": "relative-to-scene"
@@ -172,35 +172,31 @@
                             "layers": [
                                 {
                                     "id": "koeln",
-                                    "title": "Köln",
                                     "url": "https://services.conterra.de/arcgis/rest/services/common/koeln/MapServer",
                                     "sublayers": [
                                         {
-                                            "id": "1"
+                                            "id": "1",
+                                            "title": "Veranstaltungsorte"
                                         },
                                         {
-                                            "id": "2"
+                                            "id": "2",
+                                            "title": "Spiel- und Sportplätze"
                                         },
                                         {
-                                            "id": "3"
+                                            "id": "3",
+                                            "title": "Sehenswürdigkeiten"
                                         },
                                         {
-                                            "id": "5"
+                                            "id": "5",
+                                            "title": "Schulen"
                                         },
                                         {
-                                            "id": "6"
+                                            "id": "6",
+                                            "title": "Museen"
                                         },
                                         {
-                                            "id": "7"
-                                        },
-                                        {
-                                            "id": "9"
-                                        },
-                                        {
-                                            "id": "10"
-                                        },
-                                        {
-                                            "id": "11"
+                                            "id": "7",
+                                            "title": "Bibliotheken"
                                         }
                                     ]
                                 }
