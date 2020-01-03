@@ -69,6 +69,7 @@ export default class ClusterGraphicsFactory {
             // show number of points in the cluster
             if (this.showClusterSize) {
                 const label = this.clusterSymbolProvider.getClusterLabel(clusterAttributes.clusterCount.toString(), 0);
+                //label.set("angle", this._getRotation());
                 returnGraphics.push(new Graphic(point, label, clusterAttributes));
             }
             return returnGraphics;
@@ -88,13 +89,14 @@ export default class ClusterGraphicsFactory {
             const maxClusterSize = 3 * baseSize;
             const clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, false);
             clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * baseSize)));
+            //clusterSymbolsBackground.set("angle", this._getRotation());
             returnGraphics.push(new Graphic(point, clusterSymbolsBackground, clusterAttributes));
         }
 
         // add symbols
         const differentSymbolPoints = mostFeatures.map(() => point.clone());
-        this._alignPointsInGrid(differentSymbolPoints, gridSize, baseSize);
         const differentFeatureSymbols = this._getSymbolsForGrid(allFeatures, mostFeatures);
+        this._alignSymbolsInGrid(differentFeatureSymbols, gridSize, baseSize);
 
         differentSymbolPoints.forEach((symbolPoint, i) => {
             returnGraphics.push(new Graphic(symbolPoint, differentFeatureSymbols[i], clusterAttributes));
@@ -103,8 +105,8 @@ export default class ClusterGraphicsFactory {
         // add labels
         if (this.showClusterGridCounts) {
             const differentLabelPoints = mostFeatures.map(() => point.clone());
-            this._alignPointsInGrid(differentLabelPoints, gridSize, baseSize);
             const differentFeatureLabels = this._getLabelsForGrid(mostFeatures);
+            this._alignSymbolsInGrid(differentFeatureLabels, gridSize, baseSize);
 
             differentLabelPoints.forEach((labelPoint, i) => {
                 returnGraphics.push(new Graphic(labelPoint, differentFeatureLabels[i], clusterAttributes));
@@ -274,20 +276,19 @@ export default class ClusterGraphicsFactory {
 
     /**
      *
-     * @param points The points to display and align within the grid.
+     * @param symbols The symbols to display and align within the grid.
      * @param gridSize An integer that specifies whether it's a 1x1, 2x2, 3x3, etc. grid.
      * @param baseSize The distance between two symbols within the cluster.
      * @private
      */
-    _alignPointsInGrid(points, gridSize, baseSize) {
-        const size = baseSize * 1.1;
+    _alignSymbolsInGrid(symbols, gridSize, baseSize) {
+        const size = baseSize;
         // This calculates how many columns and rows are needed to display the symbols in the cluster.
-        const gridSizeX = Math.min(gridSize, points.length);
-        const gridSizeY = Math.ceil(points.length / gridSize);
+        const gridSizeX = Math.min(gridSize, symbols.length);
+        const gridSizeY = Math.ceil(symbols.length / gridSize);
         const offsetOriginX = (gridSizeX - 1) * size;
         const offsetOriginY = (gridSizeY - 1) * size;
-        points.forEach((point, index) => {
-            const rotation = this._getRotation();
+        symbols.forEach((symbol, index) => {
             // This calculates the offset of the current symbol within the cluster.
             const xOffset = -offsetOriginX / 2 + index % gridSize * size;
             const yOffset = offsetOriginY / 2 - Math.floor(index / gridSize) * size;
