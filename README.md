@@ -3,6 +3,8 @@ The ClusterFeatureLayer bundle allows you to cluster features for any point feat
 
 ![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/master/screenshot.JPG)
 
+[dn_clusterfeaturelayer Documentation](https://github.com/conterra/mapapps-clusterfeaturelayer/tree/master/src/main/js/bundles/dn_clusterfeaturelayer)
+
 ## Important
 Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluster-layer-js
 
