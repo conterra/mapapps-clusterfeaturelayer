@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import d_array from "dojo/_base/array";
 import Point from "esri/geometry/Point";
 import Polyline from "esri/geometry/Polyline";
 import Graphic from "esri/Graphic";
@@ -244,10 +243,8 @@ export default class ClusterGraphicsFactory {
 
     _getLabelsForGrid(mostFeatures) {
         const that = this;
-        const rotation = this._getRotation();
         return mostFeatures.map((layerInfos) => {
-            const label = that.clusterSymbolProvider.getClusterLabel(layerInfos[1], that.clusterLabelOffset);
-            return label;
+            return that.clusterSymbolProvider.getClusterLabel(layerInfos[1], that.clusterLabelOffset);
         });
     }
 
@@ -292,12 +289,10 @@ export default class ClusterGraphicsFactory {
         points.forEach((point, index) => {
             const rotation = this._getRotation();
             // This calculates the offset of the current symbol within the cluster.
-            const rho = (180 / Math.PI);
             const xOffset = -offsetOriginX / 2 + index % gridSize * size;
             const yOffset = offsetOriginY / 2 - Math.floor(index / gridSize) * size;
-            const xOffsetRotated = xOffset * Math.cos(rotation / rho) + yOffset * Math.sin(rotation / rho);
-            const yOffsetRotated = -xOffset * Math.sin(rotation / rho) + yOffset * Math.cos(rotation / rho);
-            point.offset(this.offsetToDistance(xOffsetRotated), this.offsetToDistance(yOffsetRotated));
+            symbol.xoffset = xOffset;
+            symbol.yoffset = yOffset;
         });
     }
 

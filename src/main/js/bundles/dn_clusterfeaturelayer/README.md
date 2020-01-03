@@ -86,21 +86,21 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 }
 ```
 
-| Property                       | Type    | Possible Values               | Default        | Description                          |
-|--------------------------------|---------|-------------------------------|----------------|--------------------------------------|
-| objectIdField                  | String  |                               | ```objectid``` | Object id field                      |
-| clusterDistance                | number  |                               | ```100```      | Cluster distance in pixels           |
-| spiderfyingDistance            | number  |                               | ```1```        | Spiderfying distance in pixels       |
-| returnLimit                    | number  |                               | ```1000```     | Service return limit                 |
-| maxClusterScale                | number  |                               | ```0```        | Max cluster scale                    |
-| symbolBaseSize                 | number  |                               | ```30```       | Symbol base size                     |
-| showClusterGrid                | boolean | ```true``` &#124; ```false``` | ```true```     | Use the cluster grid style           |
-| showClusterGridCounts          | boolean | ```true``` &#124; ```false``` | ```true```     | Show cluster grid counts             |
-| showClusterGridBackground      | boolean | ```true``` &#124; ```false``` | ```false```    | Show cluster grid background         |
-| showClusterArea                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the area of a cluster           |
-| showClusterSize                | boolean | ```true``` &#124; ```false``` | ```false```    | Show the size of a cluster           |
-| useDefaultSymbolForFeatures    | boolean | ```true``` &#124; ```false``` | ```false```    | Use default symbols for features     |
-| clusterLabelOffset             | number  |                               | ```-10```      | Size of the label offset             |
+| Property                       | Type    | Possible Values               | Default        | Description                                                                              |
+|--------------------------------|---------|-------------------------------|----------------|------------------------------------------------------------------------------------------|
+| objectIdField                  | String  |                               | ```objectid``` | Object id field                                                                          |
+| clusterDistance                | number  |                               | ```100```      | Cluster distance in pixels                                                               |
+| spiderfyingDistance            | number  |                               | ```1```        | Spiderfying distance in pixels                                                           |
+| returnLimit                    | number  |                               | ```1000```     | Service return limit                                                                     |
+| maxClusterScale                | number  |                               | ```0```        | Max cluster scale                                                                        |
+| symbolBaseSize                 | number  |                               | ```30```       | Symbol base size                                                                         |
+| showClusterGrid                | boolean | ```true``` &#124; ```false``` | ```true```     | Use the cluster grid style                                                               |
+| showClusterGridCounts          | boolean | ```true``` &#124; ```false``` | ```true```     | Show cluster grid counts (This property is currently not supported in 3D SceneViews)     |
+| showClusterGridBackground      | boolean | ```true``` &#124; ```false``` | ```false```    | Show cluster grid background (This property is currently not supported in 3D SceneViews) |
+| showClusterArea                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the area of a cluster                                                               |
+| showClusterSize                | boolean | ```true``` &#124; ```false``` | ```false```    | Show the size of a cluster                                                               |
+| useDefaultSymbolForFeatures    | boolean | ```true``` &#124; ```false``` | ```false```    | Use default symbols for features                                                         |
+| clusterLabelOffset             | number  |                               | ```-10```      | Size of the label offset                                                                 |
 
 ## Configurable Components of dn_clusterfeaturelayer:
 
