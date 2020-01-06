@@ -115,7 +115,7 @@ export default GraphicsLayer.createSubclass({
                     this._reCluster();
                 }
             }));
-            this.events.push(view.on("pointer-down", (event) => {
+            this.events.push(view.on("click", (event) => {
                 this._handleClick(event);
             }));
             this.events.push(view.on("pointer-move", (event) => {
@@ -470,13 +470,25 @@ export default GraphicsLayer.createSubclass({
             if (response.results.length === 0) {
                 return;
             }
-            const graphic = response.results[0].graphic;
-            if (graphic) {
-                that._eventService.postEvent("dn_clusterfeaturelayer/GRAPHIC_CLICKED", {
-                    attributes: graphic.attributes,
-                    geometry: graphic.geometry
-                });
+            // find first clusterfeaturelayer graphic
+            const graphic = response.results.filter(function (result) {
+                const g = result.graphic;
+                const layer = g && g.layer;
+                if (layer) {
+                    return layer === that;
+                } else {
+                    return false;
+                }
+            })[0].graphic;
+            if (!graphic) {
+                return;
             }
+            // stop event propagation to prevent popup from being opened
+            event.stopPropagation();
+            that._eventService.postEvent("dn_clusterfeaturelayer/GRAPHIC_CLICKED", {
+                attributes: graphic.attributes,
+                geometry: graphic.geometry
+            });
             const attributes = graphic && graphic.attributes;
             if (!attributes) {
                 return;
