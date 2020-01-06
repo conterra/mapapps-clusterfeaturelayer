@@ -216,14 +216,14 @@
                             "options": {
                                 "objectIdField": "objectid",
                                 "clusterDistance": 100,
-                                "spiderfyingDistance": 1,
+                                "spiderfyingDistance": 100,
                                 "returnLimit": 1000,
                                 "maxClusterScale": 0,
                                 "symbolBaseSize": 25,
                                 "showClusterGrid": true,
                                 "showClusterGridCounts": true,
-                                "showClusterGridBackground": false,
-                                "showClusterArea": false,
+                                "showClusterGridBackground": true,
+                                "showClusterArea": true,
                                 "showClusterSize": true,
                                 "useDefaultSymbolForFeatures": false,
                                 "clusterLabelOffset": -4
