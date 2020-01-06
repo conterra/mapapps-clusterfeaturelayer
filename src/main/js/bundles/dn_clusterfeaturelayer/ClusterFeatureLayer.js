@@ -526,11 +526,8 @@ export default GraphicsLayer.createSubclass({
     },
 
     _findFirstClusterGraphicInView(results, layer) {
-        if (results.length === 0) {
-            return;
-        }
         // find first clusterfeaturelayer graphic
-        return results.filter(function (result) {
+        const result = results.filter(function (result) {
             const g = result.graphic;
             const l = g && g.layer;
             if (l) {
@@ -538,7 +535,12 @@ export default GraphicsLayer.createSubclass({
             } else {
                 return false;
             }
-        })[0].graphic;
+        })[0];
+        if (result && result.graphic) {
+            return result.graphic;
+        } else {
+            return null;
+        }
     },
 
     _drawClusterArea(attributes) {
