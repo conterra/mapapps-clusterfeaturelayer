@@ -25,8 +25,6 @@ export default class ClusterFeatureLayerTypeFactory {
 
     create(options) {
         const opt = options.options;
-        const popupTemplate = options.popupTemplate;
-
         const clusterFeatureLayer = new ClusterFeatureLayer({
             id: options.id,
             title: options.title,
@@ -36,6 +34,7 @@ export default class ClusterFeatureLayerTypeFactory {
             listMode: options.listMode,
             opacity: options.opacity,
             elevationInfo: options.elevationInfo,
+            popupTemplate: options.popupTemplate,
             legendEnabled: false,
             popupEnabled: false,
             _objectIdField: opt.objectIdField || "objectid",
@@ -47,7 +46,6 @@ export default class ClusterFeatureLayerTypeFactory {
             _options: opt,
             _serverRequester: this._serverRequester,
             _mapWidgetModel: this.mapWidgetModel,
-            _popupTemplate: popupTemplate,
             _clusterSymbolProvider: this.clusterSymbolProvider,
             _featureSymbolProvider: this.featureSymbolProvider,
             _eventService: this.eventService

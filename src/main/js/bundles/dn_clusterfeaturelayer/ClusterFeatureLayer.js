@@ -60,7 +60,6 @@ export default GraphicsLayer.createSubclass({
         this._clusterGraphicsFactory = args._clusterGraphicsFactory;
         this._clusterSymbolProvider = args._clusterSymbolProvider;
         this._featureSymbolProvider = args._featureSymbolProvider;
-        this._popupTemplate = args._popupTemplate;
         this._eventService = args._eventService;
         this.i18n = args.i18n;
 
