@@ -380,7 +380,6 @@ export default GraphicsLayer.createSubclass({
             }
         });
         this.addMany(graphics);
-        console.log("add " + graphics.length);
         this.refresh();
     },
 
@@ -480,7 +479,7 @@ export default GraphicsLayer.createSubclass({
                 return;
             }
             // stop event propagation to prevent popup from being opened
-            if(attributes.clusterId) {
+            if (attributes.clusterId) {
                 event.stopPropagation();
             }
             if (attributes.hasOwnProperty("features")) {
