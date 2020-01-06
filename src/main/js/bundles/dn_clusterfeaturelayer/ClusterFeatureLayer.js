@@ -99,7 +99,7 @@ export default GraphicsLayer.createSubclass({
 
             this.events = [];
             const metadataProvider = this._getServiceMetadataProvider(serviceDetails);
-            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider, metadataProvider, mapWidgetModel, this._popupTemplate, this._options);
+            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider, metadataProvider, mapWidgetModel, this.popupTemplate, this._options);
             const view = mapWidgetModel.get("view");
             const map = mapWidgetModel.get("map");
             this.events.push(map.allLayers.on("change", () => {
@@ -467,24 +467,11 @@ export default GraphicsLayer.createSubclass({
         const that = this;
         const view = this._mapWidgetModel.get("view");
         view.hitTest(event).then((response) => {
-            if (response.results.length === 0) {
-                return;
-            }
             // find first clusterfeaturelayer graphic
-            const graphic = response.results.filter(function (result) {
-                const g = result.graphic;
-                const layer = g && g.layer;
-                if (layer) {
-                    return layer === that;
-                } else {
-                    return false;
-                }
-            })[0].graphic;
+            const graphic = that._findFirstClusterGraphicInView(response.results, that);
             if (!graphic) {
                 return;
             }
-            // stop event propagation to prevent popup from being opened
-            event.stopPropagation();
             that._eventService.postEvent("dn_clusterfeaturelayer/GRAPHIC_CLICKED", {
                 attributes: graphic.attributes,
                 geometry: graphic.geometry
@@ -492,6 +479,10 @@ export default GraphicsLayer.createSubclass({
             const attributes = graphic && graphic.attributes;
             if (!attributes) {
                 return;
+            }
+            // stop event propagation to prevent popup from being opened
+            if(attributes.clusterId) {
+                event.stopPropagation();
             }
             if (attributes.hasOwnProperty("features")) {
                 if (attributes.spiderfying) {
@@ -517,10 +508,15 @@ export default GraphicsLayer.createSubclass({
     },
 
     _clusterMouseOver(event) {
+        const that = this;
         if (this._showClusterArea) {
             const view = this._mapWidgetModel.get("view");
             view.hitTest(event).then((response) => {
-                const attributes = response.results[0] && response.results[0].graphic.attributes;
+                const graphic = that._findFirstClusterGraphicInView(response.results, that);
+                if (!graphic) {
+                    return;
+                }
+                const attributes = graphic.attributes;
                 if (attributes) {
                     this._drawClusterArea(attributes);
                 } else {
@@ -528,6 +524,22 @@ export default GraphicsLayer.createSubclass({
                 }
             });
         }
+    },
+
+    _findFirstClusterGraphicInView(results, layer) {
+        if (results.length === 0) {
+            return;
+        }
+        // find first clusterfeaturelayer graphic
+        return results.filter(function (result) {
+            const g = result.graphic;
+            const l = g && g.layer;
+            if (l) {
+                return l === layer;
+            } else {
+                return false;
+            }
+        })[0].graphic;
     },
 
     _drawClusterArea(attributes) {
