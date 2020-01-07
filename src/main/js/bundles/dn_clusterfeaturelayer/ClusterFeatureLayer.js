@@ -380,7 +380,6 @@ export default GraphicsLayer.createSubclass({
             }
         });
         this.addMany(graphics);
-        this.refresh();
     },
 
     _getClusterGraphics(cluster) {
