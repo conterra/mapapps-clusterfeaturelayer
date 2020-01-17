@@ -21,6 +21,7 @@ import ct_array from "ct/array";
 import Query from "esri/tasks/support/Query";
 import QueryTask from "esri/tasks/QueryTask";
 import ObjectIdCache from "./ObjectIdCache";
+import * as esri_lang from "esri/core/lang";
 
 export default class FeatureServerRequester {
     constructor(sublayers, spatialReference, returnLimit, mapWidgetModel) {
@@ -132,7 +133,7 @@ export default class FeatureServerRequester {
                         // Improve performance by just passing list of IDs
                         // create separate queries for each 'returnLimit' number of feature IDs
                         query.objectIds = objectIds.splice(0, this.returnLimit - 1);
-                        queries.push(this._getQueryTaskForLayer(layerId).execute(query));
+                        queries.push(this._getQueryTaskForLayer(layerId).execute(esri_lang.clone(query)));
                     }
                     all(queries).then((res) => {
                         const features = res.map((r) => r.features);
@@ -159,7 +160,7 @@ export default class FeatureServerRequester {
                         // Improve performance by just passing list of IDs
                         // create separate queries for each 'returnLimit' number of feature IDs
                         query.objectIds = uncached.splice(0, this.returnLimit - 1);
-                        queries.push(this._getQueryTaskForLayer(layerId).execute(query));
+                        queries.push(this._getQueryTaskForLayer(layerId).execute(esri_lang.clone(query)));
                     }
                     all(queries).then((res) => {
                         const features = res.map((r) => r.features);
