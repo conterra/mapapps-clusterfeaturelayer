@@ -35,6 +35,8 @@ export default class ClusterFeatureLayerTypeFactory {
             opacity: options.opacity,
             elevationInfo: options.elevationInfo,
             popupTemplate: options.popupTemplate,
+            maptipTemplate: options.maptipTemplate,
+            maptipEnabled: options.maptipEnabled,
             legendEnabled: false,
             popupEnabled: false,
             _objectIdField: opt.objectIdField || "objectid",
