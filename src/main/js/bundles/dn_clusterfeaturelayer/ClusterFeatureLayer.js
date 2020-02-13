@@ -41,8 +41,6 @@ export default GraphicsLayer.createSubclass({
     declaredClass: "esri.layers.GraphicsLayer",
     properties: {},
     constructor(args) {
-        this.sublayers = args.sublayers;
-
         this._clusterData = {};
         this._clusters = [];
         this._clusterCache = {};
