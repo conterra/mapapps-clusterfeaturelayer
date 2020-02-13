@@ -23,20 +23,21 @@ export default class ClusterFeatureLayerTypeFactory {
         this._clusterLayers = [];
     }
 
-    create(options) {
-        const opt = options.options;
+    create(layerArguments) {
+        const opt = layerArguments.options;
         const clusterFeatureLayer = new ClusterFeatureLayer({
-            id: options.id,
-            title: options.title,
-            visible: options.visible,
-            minScale: options.minScale,
-            maxScale: options.maxScale,
-            listMode: options.listMode,
-            opacity: options.opacity,
-            elevationInfo: options.elevationInfo,
-            popupTemplate: options.popupTemplate,
-            maptipTemplate: options.maptipTemplate,
-            maptipEnabled: options.maptipEnabled,
+            id: layerArguments.id,
+            title: layerArguments.title,
+            visible: layerArguments.visible,
+            minScale: layerArguments.minScale,
+            maxScale: layerArguments.maxScale,
+            listMode: layerArguments.listMode,
+            opacity: layerArguments.opacity,
+            elevationInfo: layerArguments.elevationInfo,
+            popupTemplate: layerArguments.popupTemplate,
+            maptipTemplate: layerArguments.maptipTemplate,
+            maptipEnabled: layerArguments.maptipEnabled,
+            expanded: layerArguments.expanded,
             legendEnabled: false,
             popupEnabled: false,
             _objectIdField: opt.objectIdField || "objectid",
@@ -54,8 +55,8 @@ export default class ClusterFeatureLayerTypeFactory {
         });
 
         this.layers = [];
-        if (options.layers) {
-            options.layers.forEach((layer) => {
+        if (layerArguments.layers) {
+            layerArguments.layers.forEach((layer) => {
                 layer.sublayers.forEach((children) => {
                     const sublayer = new Sublayer({
                         layerId: layer.id,
