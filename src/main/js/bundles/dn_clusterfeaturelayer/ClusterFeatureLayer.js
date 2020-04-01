@@ -60,30 +60,35 @@ export default GraphicsLayer.createSubclass({
         this._featureSymbolProvider = args._featureSymbolProvider;
         this._eventService = args._eventService;
         this.i18n = args.i18n;
-
-        const mapWidgetModel = this._mapWidgetModel;
-        if (mapWidgetModel) {
-            this._waitForWkid(mapWidgetModel);
-        }
     },
 
-    _waitForWkid(mapWidgetModel) {
-        const that = this;
-        const sr = mapWidgetModel.get("spatialReference");
-        if (sr) {
-            this.wkid = sr.latestWkid || sr.wkid;
-            that._initListener();
-        } else {
-            mapWidgetModel.watch("spatialReference", (spatialReference) => {
-                if (spatialReference.value) {
-                    this.wkid = spatialReference.value.latestWkid || spatialReference.value.wkid;
-                    that._initListener();
-                }
-            });
+    activateLayer() {
+        const mapWidgetModel = this._mapWidgetModel;
+        if (!mapWidgetModel) {
+            return;
         }
+        this._getView().then(() => {
+            const spatialReference = mapWidgetModel.spatialReference;
+            this.wkid = spatialReference.latestWkid || spatialReference.wkid;
+            this._initListener();
+        });
+    },
+
+    _getView() {
+        const mapWidgetModel = this._mapWidgetModel;
+        return new Promise((resolve) => {
+            if (mapWidgetModel.view) {
+                resolve(mapWidgetModel.view);
+            } else {
+                mapWidgetModel.watch("view", ({value: view}) => {
+                    resolve(view);
+                });
+            }
+        });
     },
 
     _initListener() {
+        this.initDataStructures(this.sublayers);
         const mapWidgetModel = this._mapWidgetModel;
         const requester = this._serverRequester = new FeatureServerRequester(this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
         requester.getServiceMetadata().then((serviceDetails) => {
@@ -144,7 +149,6 @@ export default GraphicsLayer.createSubclass({
 
     setMapWidgetModel(mapWidgetModel) {
         this._mapWidgetModel = mapWidgetModel;
-        this._waitForWkid(mapWidgetModel);
     },
 
     /**

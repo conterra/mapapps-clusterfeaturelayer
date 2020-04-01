@@ -74,7 +74,7 @@ export default class ClusterFeatureLayerTypeFactory {
         const sublayers = new Collection(this.layers).reverse();
         clusterFeatureLayer.sublayers = sublayers;
         clusterFeatureLayer.allSublayers = sublayers;
-        clusterFeatureLayer.initDataStructures();
+        clusterFeatureLayer.activateLayer();
 
         this._clusterLayers.push(clusterFeatureLayer);
         return {instance: clusterFeatureLayer};
@@ -84,6 +84,7 @@ export default class ClusterFeatureLayerTypeFactory {
         this.mapWidgetModel = mapWidgetModel;
         this._clusterLayers.forEach((clusterLayer) => {
             clusterLayer.setMapWidgetModel(mapWidgetModel);
+            clusterLayer.activateLayer();
         })
     }
 }
