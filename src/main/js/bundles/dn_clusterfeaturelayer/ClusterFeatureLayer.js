@@ -235,7 +235,6 @@ export default GraphicsLayer.createSubclass({
                 results.forEach((result) => {
                     const p = new Promise((resolve, reject) => {
                         requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
-                            console.log("part downloaded")
                             that._addFeaturesToClusterCache(featuresResult, result.layerId);
                             resolve();
                         }, (error) => {
@@ -245,7 +244,6 @@ export default GraphicsLayer.createSubclass({
                     allDeferreds.push(p);
                 });
                 Promise.all(allDeferreds).then(() => {
-                    console.log("downloaded")
                     finalDeferred.resolve();
                 }, (error) => {
                     console.error(error);
