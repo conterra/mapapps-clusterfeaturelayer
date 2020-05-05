@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-clusterfeaturelayer</artifactId>
-    <version>3.1.5</version>
+    <version>3.1.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -516,7 +516,7 @@
         <developerConnection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git
         </developerConnection>
         <url>https://github.com/conterra/mapapps-clusterfeaturelayer</url>
-        <tag>3.1.5</tag>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
