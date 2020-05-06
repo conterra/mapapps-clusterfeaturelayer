@@ -22,8 +22,6 @@
  * |_esri/layers/GraphicsLayer
  *  |_ClusterFeatureLayer
  */
-import Deferred from "dojo/_base/Deferred";
-import all from "dojo/promise/all";
 import ct_lang from "ct/_lang";
 import geometryEngine from "esri/geometry/geometryEngine";
 import Point from "esri/geometry/Point";
@@ -210,51 +208,50 @@ export default GraphicsLayer.createSubclass({
     _getFeaturesFromServer() {
         const that = this;
         const requester = this._serverRequester;
-        const finalDeferred = new Deferred();
-
-        if (this._predefinedObjectIds) {
-            const allDeferreds = [];
-            this._predefinedObjectIds.forEach((result) => {
-                const d = new Deferred();
-                allDeferreds.push(d);
-                requester.getFeaturesByIds(result.objectIds, result.layerId, true).then((featuresResult) => {
-                    that._addFeaturesToClusterCache(featuresResult, result.layerId).then(()=>{
-                        d.resolve();
-                    });
-                }, (error) => {
-                    console.error(error);
-                });
-            });
-            all(allDeferreds).then(() => {
-                finalDeferred.resolve();
-            }, (error) => {
-                console.error(error);
-            });
-        } else {
-            requester.getObjectIds(this.sublayers).then((results) => {
-                const allDeferreds = [];
-                results.forEach((result) => {
+        const promises = [];
+        return new Promise((resolve, reject) => {
+            if (this._predefinedObjectIds) {
+                this._predefinedObjectIds.forEach((result) => {
                     const p = new Promise((resolve, reject) => {
-                        requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
-                            that._addFeaturesToClusterCache(featuresResult, result.layerId).then(()=>{
+                        requester.getFeaturesByIds(result.objectIds, result.layerId, true).then((featuresResult) => {
+                            that._addFeaturesToClusterCache(featuresResult, result.layerId).then(() => {
                                 resolve();
                             });
                         }, (error) => {
                             console.error(error);
                         });
-                    })
-                    allDeferreds.push(p);
+                    });
+                    promises.push(p);
                 });
-                Promise.all(allDeferreds).then(() => {
-                    finalDeferred.resolve();
+                Promise.all(promises).then(() => {
+                    resolve();
                 }, (error) => {
                     console.error(error);
-                })
-            }, (error) => {
-                console.error(error);
-            });
-        }
-        return finalDeferred;
+                });
+            } else {
+                requester.getObjectIds(this.sublayers).then((results) => {
+                    results.forEach((result) => {
+                        const p = new Promise((resolve, reject) => {
+                            requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
+                                that._addFeaturesToClusterCache(featuresResult, result.layerId).then(() => {
+                                    resolve();
+                                });
+                            }, (error) => {
+                                console.error(error);
+                            });
+                        })
+                        promises.push(p);
+                    });
+                    Promise.all(promises).then(() => {
+                        resolve();
+                    }, (error) => {
+                        console.error(error);
+                    })
+                }, (error) => {
+                    console.error(error);
+                });
+            }
+        });
     },
 
     _getCachedFeaturesInExtent(layerId) {
@@ -282,7 +279,7 @@ export default GraphicsLayer.createSubclass({
      */
     _addFeaturesToClusterCache(result, layerId) {
         console.log("add to cluster cache")
-        return new Promise((resolve)=>{
+        return new Promise((resolve) => {
             async(() => {
                 // get features from cache (features that have been requested before)
                 const cachedFeaturesInExtent = this._getCachedFeaturesInExtent(layerId);
