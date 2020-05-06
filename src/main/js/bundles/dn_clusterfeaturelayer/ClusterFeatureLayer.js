@@ -218,8 +218,9 @@ export default GraphicsLayer.createSubclass({
                 const d = new Deferred();
                 allDeferreds.push(d);
                 requester.getFeaturesByIds(result.objectIds, result.layerId, true).then((featuresResult) => {
-                    that._addFeaturesToClusterCache(featuresResult, result.layerId);
-                    d.resolve();
+                    that._addFeaturesToClusterCache(featuresResult, result.layerId).then(()=>{
+                        d.resolve();
+                    });
                 }, (error) => {
                     console.error(error);
                 });
@@ -235,8 +236,9 @@ export default GraphicsLayer.createSubclass({
                 results.forEach((result) => {
                     const p = new Promise((resolve, reject) => {
                         requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
-                            that._addFeaturesToClusterCache(featuresResult, result.layerId);
-                            resolve();
+                            that._addFeaturesToClusterCache(featuresResult, result.layerId).then(()=>{
+                                resolve();
+                            });
                         }, (error) => {
                             console.error(error);
                         });
@@ -279,28 +281,32 @@ export default GraphicsLayer.createSubclass({
      * @private
      */
     _addFeaturesToClusterCache(result, layerId) {
-        async(() => {
-            // get features from cache (features that have been requested before)
-            const cachedFeaturesInExtent = this._getCachedFeaturesInExtent(layerId);
-            let newFeaturesInExtent;
-            if (result.features && result.features.length > 0) {
-                newFeaturesInExtent = result.features;
-                const len = newFeaturesInExtent.length;
-                // Update the cluster features for drawing
-                if (len) {
-                    // Append actual feature to cluster cache
-                    for (let i = 0; i < newFeaturesInExtent.length; i++) {
-                        const feat = newFeaturesInExtent[i];
-                        const featureId = feat.attributes[this._objectIdField];
-                        this._clusterCache[layerId][featureId] = feat;
-                        feat.layerId = layerId;
+        console.log("add to cluster cache")
+        return new Promise((resolve)=>{
+            async(() => {
+                // get features from cache (features that have been requested before)
+                const cachedFeaturesInExtent = this._getCachedFeaturesInExtent(layerId);
+                let newFeaturesInExtent;
+                if (result.features && result.features.length > 0) {
+                    newFeaturesInExtent = result.features;
+                    const len = newFeaturesInExtent.length;
+                    // Update the cluster features for drawing
+                    if (len) {
+                        // Append actual feature to cluster cache
+                        for (let i = 0; i < newFeaturesInExtent.length; i++) {
+                            const feat = newFeaturesInExtent[i];
+                            const featureId = feat.attributes[this._objectIdField];
+                            this._clusterCache[layerId][featureId] = feat;
+                            feat.layerId = layerId;
+                        }
+                        // Refine features to draw
+                        this._clusterData[layerId] = newFeaturesInExtent.concat(cachedFeaturesInExtent);
                     }
-                    // Refine features to draw
-                    this._clusterData[layerId] = newFeaturesInExtent.concat(cachedFeaturesInExtent);
                 }
-            }
-            this._setLayerExtent();
-        });
+                this._setLayerExtent();
+                resolve();
+            });
+        })
     },
 
     /**
