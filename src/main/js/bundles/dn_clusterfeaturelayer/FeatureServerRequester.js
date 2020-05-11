@@ -47,10 +47,7 @@ export default class FeatureServerRequester {
             d.resolve(this._serviceMetadata);
         }
         const requests = urls.map((url) => {
-            // Use MapServer interface because FeatureServer does not deliver the details for each layer.
-            // [URL]/MapServer/layers?f=json
-            const newUrl = url.replace("/FeatureServer", "/MapServer");
-            return apprt_request(newUrl + "/layers", {
+            return apprt_request(url + "/layers", {
                 query: {f: "json"},
                 handleAs: "json"
             });
