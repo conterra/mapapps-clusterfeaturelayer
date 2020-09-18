@@ -58,16 +58,23 @@ export default class ClusterSymbolProvider {
             size = 125;
         }
 
-        const lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterSingleSymbolBorderColor), this.clusterSingleSymbolBorderSize);
-        return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, size, lineSymbol, new Color(this.clusterSingleSymbolColor));
-    }
-
-    getSpiderfyingSymbolCircle() {
-        return new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, this.spiderfyingCenterSize, null, new Color(this.spiderfyingCenterColor));
+        return new SimpleMarkerSymbol({
+            style: "circle",
+            size: size,
+            color: this.clusterSingleSymbolColor,
+            outline: {
+                color: this.clusterSingleSymbolBorderColor,
+                width: this.clusterSingleSymbolBorderSize
+            }
+        });
     }
 
     getAreaSymbol() {
-        return new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterAreaSymbolBorderColor), this.clusterAreaSymbolBorderSize), new Color(this.clusterAreaSymbolColor));
+        return new SimpleFillSymbol({
+            width: this.clusterAreaSymbolBorderSize,
+            color: this.clusterAreaSymbolColor,
+            outline: {color: this.clusterAreaSymbolBorderColor}
+        });
     }
 
     getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, transparent) {
@@ -88,8 +95,19 @@ export default class ClusterSymbolProvider {
         return symbol;
     }
 
+    getSpiderfyingSymbolCircle() {
+        return new SimpleMarkerSymbol({
+            style: "circle",
+            size: this.spiderfyingCenterSize,
+            color: this.spiderfyingCenterColor
+        });
+    }
+
     getSpiderfyingLineSymbol() {
-        return new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.spiderfyingLineColor), this.spiderfyingLineSize);
+        return new SimpleLineSymbol({
+            color: this.spiderfyingLineColor,
+            width: this.spiderfyingLineSize
+        });
     }
 
     getClusterLabel(labelText, offset) {
