@@ -23,7 +23,7 @@
  *  |_ClusterFeatureLayer
  */
 import ct_lang from "ct/_lang";
-import geometryEngine from "esri/geometry/geometryEngine";
+import {convexHull} from "esri/geometry/geometryEngine";
 import Point from "esri/geometry/Point";
 import Polygon from "esri/geometry/Polygon";
 import Extent from "esri/geometry/Extent";
@@ -553,7 +553,7 @@ export default GraphicsLayer.createSubclass({
     _drawClusterArea(attributes) {
         if (this.getCluster(attributes)) {
             const points = attributes.features.map((feature) => feature.geometry);
-            const clusterArea = geometryEngine.convexHull(points, true);
+            const clusterArea = convexHull(points, true);
             //use convex hull on the points to get the boundary
             this._hideClusterArea();
             if (clusterArea[0] && !this.clusterAreaGraphic) {
