@@ -224,6 +224,7 @@
                                 "showClusterGridBackground": true,
                                 "showClusterArea": true,
                                 "showClusterSize": true,
+                                "showSpiderfying": false,
                                 "useDefaultSymbolForFeatures": false,
                                 "clusterLabelOffset": -4
                             }

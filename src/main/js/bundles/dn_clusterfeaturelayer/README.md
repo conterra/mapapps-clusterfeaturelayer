@@ -74,6 +74,7 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
                         "showClusterGridBackground": false,
                         "showClusterArea": false,
                         "showClusterSize": true,
+                        "showSpiderfying": true,
                         "useDefaultSymbolForFeatures": false,
                         "clusterLabelOffset": -4
                     }
@@ -99,6 +100,7 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 | showClusterGridBackground      | boolean | ```true``` &#124; ```false``` | ```false```    | Show cluster grid background (This property is currently not supported in 3D SceneViews) |
 | showClusterArea                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the area of a cluster                                                               |
 | showClusterSize                | boolean | ```true``` &#124; ```false``` | ```false```    | Show the size of a cluster                                                               |
+| showSpiderfying                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the spiderfying                                                                     |
 | useDefaultSymbolForFeatures    | boolean | ```true``` &#124; ```false``` | ```false```    | Use default symbols for features                                                         |
 | clusterLabelOffset             | number  |                               | ```-10```      | Size of the label offset                                                                 |
 

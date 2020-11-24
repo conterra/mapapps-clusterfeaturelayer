@@ -25,6 +25,10 @@ export default class ClusterFeatureLayerTypeFactory {
 
     create(layerArguments) {
         const opt = layerArguments.options;
+        let showSpiderfying = true;
+        if(opt.showSpiderfying !== undefined) {
+            showSpiderfying = opt.showSpiderfying;
+        }
         const clusterFeatureLayer = new ClusterFeatureLayer({
             id: layerArguments.id,
             title: layerArguments.title,
@@ -45,6 +49,7 @@ export default class ClusterFeatureLayerTypeFactory {
             _spiderfyingDistance: opt.spiderfyingDistance || 1,
             _maxClusterScale: opt.maxClusterScale || 0,
             _showClusterArea: opt.showClusterArea || false,
+            _showSpiderfying: showSpiderfying,
             _returnLimit: opt.returnLimit || 1000,
             _options: opt,
             _serverRequester: this._serverRequester,

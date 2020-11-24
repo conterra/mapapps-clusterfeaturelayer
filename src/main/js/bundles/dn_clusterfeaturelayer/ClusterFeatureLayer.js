@@ -50,6 +50,7 @@ export default GraphicsLayer.createSubclass({
         this._spiderfyingDistance = args._spiderfyingDistance;
         this._maxClusterScale = args._maxClusterScale;
         this._showClusterArea = args._showClusterArea;
+        this._showSpiderfying = args._showSpiderfying;
         this._returnLimit = args._returnLimit;
         this._serverRequester = args._serverRequester;
         this._mapWidgetModel = args._mapWidgetModel;
@@ -380,7 +381,7 @@ export default GraphicsLayer.createSubclass({
         this._clusters.forEach((cluster) => {
             const features = cluster.attributes.features;
             const clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
-            if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance) && features.length > 1) {
+            if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance) && features.length > 1 && this._showSpiderfying) {
                 // check for spiderfying
                 graphics = graphics.concat(this._getSpiderfyingGraphics(cluster));
             } else {
