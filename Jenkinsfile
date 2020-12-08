@@ -14,10 +14,10 @@ def updateVersions(targetversion,pushChanges=false){
 
 pipeline {
     agent {
-       label 'maven-java-8'
+        label 'maven-java-8'
     }
     environment {
-        CREDENTIAL_ID = 'ctsolcisrv'
+        GIT_NEXUS_ID = 'bitbucket-nexus-access'
         GITHUB_CREDENTIAL_ID = 'github-api-key'
         AKS_CRED_ID = 'aksCTPrdSrv'
     }
@@ -89,7 +89,7 @@ pipeline {
             when { expression { return buildParams.build || buildParams.release } }
             steps {
                 echo "full build + js compress + nexus deploy"
-                withCredentials([usernamePassword(credentialsId: CREDENTIAL_ID, passwordVariable: 'USER_PW', usernameVariable: 'USER_NAME')]) {
+                withCredentials([usernamePassword(credentialsId: GIT_NEXUS_ID, passwordVariable: 'USER_PW', usernameVariable: 'USER_NAME')]) {
                     sh 'mvn deploy -P compress -DdeployAtEnd=true -Dmaven.test.skip.exec=true -Dct-nexus.username=$USER_NAME -Dct-nexus.password=$USER_PW'
                 }
             }
@@ -98,7 +98,7 @@ pipeline {
             when { expression { return buildParams.release } }
             steps {
                 echo "create rollout"
-                withCredentials([usernamePassword(credentialsId: CREDENTIAL_ID, passwordVariable: 'USER_PW', usernameVariable: 'USER_NAME'),
+                withCredentials([usernamePassword(credentialsId: GIT_NEXUS_ID, passwordVariable: 'USER_PW', usernameVariable: 'USER_NAME'),
                                  usernamePassword(credentialsId: GITHUB_CREDENTIAL_ID, passwordVariable: 'GITHUB_USER_PW', usernameVariable: 'GITHUB_USER_NAME')]){
                     sh "mvn deploy -P github-release -Dct-nexus.username=${USER_NAME} -Dct-nexus.password=${USER_PW} -Dusername=${GITHUB_USER_NAME} -Dpassword=${GITHUB_USER_PW}"
                 }
