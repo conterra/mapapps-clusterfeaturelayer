@@ -26,7 +26,7 @@ export default class ClusterFeatureLayerTypeFactory {
     create(layerArguments) {
         const opt = layerArguments.options;
         let showSpiderfying = true;
-        if(opt.showSpiderfying !== undefined) {
+        if (opt.showSpiderfying !== undefined) {
             showSpiderfying = opt.showSpiderfying;
         }
         const clusterFeatureLayer = new ClusterFeatureLayer({

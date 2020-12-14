@@ -1,149 +1,149 @@
 {
-  "name": "dn_clusterfeaturelayer",
-  "version": "3.2.1-SNAPSHOT",
-  "title": "${bundleName}",
-  "description": "${bundleDescription}",
-  "vendor": "con terra GmbH",
-  "productName": "devnet-mapapps-clusterfeaturelayer",
-  "keywords": [
-    "sample"
-  ],
-  "startLevel": 1,
-  "icon": {},
-  "dependencies": {
-    "map-widget": "^4.2.0"
-  },
-  "main": "main",
-  "components": [
-    {
-      "name": "ClusterFeatureLayerTypeFactory",
-        "immediate": true,
-      "provides": [
-        "map-config-api.LayerTypeFactory",
-        "dn_clusterfeaturelayer.ClusterFeatureLayerTypeFactory"
-      ],
-      "properties": {
-        "layerType": "CLUSTER_FEATURE_LAYER"
-      },
-      "references": [
+    "name": "dn_clusterfeaturelayer",
+    "version": "3.2.1-SNAPSHOT",
+    "title": "${bundleName}",
+    "description": "${bundleDescription}",
+    "vendor": "con terra GmbH",
+    "productName": "devnet-mapapps-clusterfeaturelayer",
+    "keywords": [
+        "sample"
+    ],
+    "startLevel": 1,
+    "icon": {},
+    "dependencies": {
+        "map-widget": "^4.2.0"
+    },
+    "main": "main",
+    "components": [
         {
-          "name": "mapWidgetModel",
-          "providing": "map-widget.MapWidgetModel",
-          "cardinality": "0..1"
+            "name": "ClusterFeatureLayerTypeFactory",
+            "immediate": true,
+            "provides": [
+                "map-config-api.LayerTypeFactory",
+                "dn_clusterfeaturelayer.ClusterFeatureLayerTypeFactory"
+            ],
+            "properties": {
+                "layerType": "CLUSTER_FEATURE_LAYER"
+            },
+            "references": [
+                {
+                    "name": "mapWidgetModel",
+                    "providing": "map-widget.MapWidgetModel",
+                    "cardinality": "0..1"
+                },
+                {
+                    "name": "clusterSymbolProvider",
+                    "providing": "dn_clusterfeaturelayer.ClusterSymbolProvider"
+                },
+                {
+                    "name": "featureSymbolProvider",
+                    "providing": "dn_clusterfeaturelayer.FeatureSymbolProvider"
+                },
+                {
+                    "name": "eventService",
+                    "providing": "ct.framework.api.EventService"
+                }
+            ]
         },
         {
-          "name": "clusterSymbolProvider",
-          "providing": "dn_clusterfeaturelayer.ClusterSymbolProvider"
+            "name": "ClusterSymbolProvider",
+            "provides": [
+                "dn_clusterfeaturelayer.ClusterSymbolProvider"
+            ],
+            "propertiesConstructor": true,
+            "properties": {
+                "clusterBackgroundSymbolColor": [
+                    200,
+                    200,
+                    200,
+                    0.5
+                ],
+                "clusterBackgroundBorderColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "clusterBackgroundBorderSize": 0.5,
+                "clusterAreaSymbolColor": [
+                    255,
+                    255,
+                    0,
+                    0.25
+                ],
+                "clusterAreaSymbolBorderColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "clusterAreaSymbolBorderSize": 0.5,
+                "clusterSingleSymbolColor": [
+                    140,
+                    177,
+                    210,
+                    0.75
+                ],
+                "clusterSingleSymbolBorderColor": [
+                    140,
+                    177,
+                    210,
+                    0.35
+                ],
+                "clusterSingleSymbolBorderSize": 3,
+                "spiderfyingLineSize": 1,
+                "spiderfyingLineColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "spiderfyingCenterColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "spiderfyingCenterSize": 3,
+                "labelColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "labelHaloColor": [
+                    255,
+                    255,
+                    255,
+                    1
+                ],
+                "labelFontSize": "10pt",
+                "labelHaloSize": 1,
+                "labelFontFamily": "Arial"
+            }
         },
         {
-          "name": "featureSymbolProvider",
-          "providing": "dn_clusterfeaturelayer.FeatureSymbolProvider"
-        },
-        {
-          "name": "eventService",
-          "providing": "ct.framework.api.EventService"
+            "name": "FeatureSymbolProvider",
+            "provides": [
+                "dn_clusterfeaturelayer.FeatureSymbolProvider"
+            ],
+            "propertiesConstructor": true,
+            "properties": {
+                "symbolColor": [
+                    255,
+                    255,
+                    255,
+                    1
+                ],
+                "borderColor": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "symbolSize": 20,
+                "borderSize": 1
+            }
         }
-      ]
-    },
-    {
-      "name": "ClusterSymbolProvider",
-      "provides": [
-        "dn_clusterfeaturelayer.ClusterSymbolProvider"
-      ],
-      "propertiesConstructor": true,
-      "properties": {
-        "clusterBackgroundSymbolColor": [
-          200,
-          200,
-          200,
-          0.5
-        ],
-        "clusterBackgroundBorderColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "clusterBackgroundBorderSize": 0.5,
-        "clusterAreaSymbolColor": [
-          255,
-          255,
-          0,
-          0.25
-        ],
-        "clusterAreaSymbolBorderColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "clusterAreaSymbolBorderSize": 0.5,
-        "clusterSingleSymbolColor": [
-          140,
-          177,
-          210,
-          0.75
-        ],
-        "clusterSingleSymbolBorderColor": [
-          140,
-          177,
-          210,
-          0.35
-        ],
-        "clusterSingleSymbolBorderSize": 3,
-        "spiderfyingLineSize": 1,
-        "spiderfyingLineColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "spiderfyingCenterColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "spiderfyingCenterSize": 3,
-        "labelColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "labelHaloColor": [
-          255,
-          255,
-          255,
-          1
-        ],
-        "labelFontSize": "10pt",
-        "labelHaloSize": 1,
-        "labelFontFamily": "Arial"
-      }
-    },
-    {
-      "name": "FeatureSymbolProvider",
-      "provides": [
-        "dn_clusterfeaturelayer.FeatureSymbolProvider"
-      ],
-      "propertiesConstructor": true,
-      "properties": {
-        "symbolColor": [
-          255,
-          255,
-          255,
-          1
-        ],
-        "borderColor": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "symbolSize": 20,
-        "borderSize": 1
-      }
-    }
-  ]
+    ]
 }

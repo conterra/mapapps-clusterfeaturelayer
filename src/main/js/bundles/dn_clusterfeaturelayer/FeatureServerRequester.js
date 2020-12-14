@@ -221,7 +221,8 @@ export default class FeatureServerRequester {
     /*objecid hash*/ {
         //let start = new Date().valueOf();
         //console.debug('difference start');
-        let len = arr1.length; let diff = [];
+        let len = arr1.length;
+        let diff = [];
         if (!cacheCount) {
             diff = arr1;    // if no data are cached right now, all features are new.
             // if no data are cached right now, all features are new.
@@ -249,7 +250,8 @@ export default class FeatureServerRequester {
      make a single array from multiple arrays from parameter
      */
     static _merge(arrs) {
-        let len = arrs.length; let target = [];
+        let len = arrs.length;
+        let target = [];
         while (len--) {
             const o = arrs[len];
             if (o.constructor === Array) {

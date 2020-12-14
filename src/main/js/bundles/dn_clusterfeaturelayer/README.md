@@ -1,14 +1,18 @@
 # dn_clusterfeaturelayer
+
 The ClusterFeatureLayer bundle allows you to cluster features for any point feature service.
 
 ## Important
+
 Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluster-layer-js
 
 ## Usage
+
 1. First, you need to add the bundle "dn_clusterfeaturelayer" to your app.
 2. After that, you can change the type of any Map- or FeatureService to "CLUSTER_FEATURE_LAYER".
 
 ### Layer-Config-Sample:
+
 ```json
 "map-init": {
     "Config": {
@@ -107,6 +111,7 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 ## Configurable Components of dn_clusterfeaturelayer:
 
 ### ClusterSymbolProvider:
+
 ```
 "ClusterSymbolProvider": {
     "clusterBackgroundSymbolColor": [
