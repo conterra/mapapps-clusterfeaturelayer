@@ -632,7 +632,7 @@
                                     <goal>gulp</goal>
                                 </goals>
                                 <configuration>
-                                    <arguments>run-js-tests --tests "http://localhost:${jetty.server.port}/resources/jsregistry/root/intern/latest/runner.html?boot=/js/tests/test-init.js&amp;test=sample_helloworld/tests/all"</arguments>
+                                    <arguments>run-js-tests --tests "http://localhost:${jetty.server.port}/resources/jsregistry/root/intern/latest/runner.html?boot=/js/tests/test-init.js&amp;test=dn_clusterfeaturelayer/tests/all"</arguments>
                                 </configuration>
                             </execution>
                         </executions>
