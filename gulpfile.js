@@ -39,6 +39,20 @@ gulp.task("default",
     )
 );
 
+gulp.task("compress",
+    gulp.series(
+        "copy-resources",
+        "themes-copy",
+        gulp.parallel(
+            "js-transpile",
+            gulp.series(
+                "themes-compile",
+                "themes-compress"
+            )
+        )
+    )
+);
+
 gulp.task("run-js-tests", function (done) {
     const initialWait = 10000;
     setTimeout(() => {
