@@ -8,7 +8,7 @@
   "keywords": [
     "sample"
   ],
-  //"startLevel": 50,
+  "startLevel": 1,
   "icon": {},
   "dependencies": {
     "map-widget": "^4.2.0"
@@ -17,6 +17,7 @@
   "components": [
     {
       "name": "ClusterFeatureLayerTypeFactory",
+        "immediate": true,
       "provides": [
         "map-config-api.LayerTypeFactory",
         "dn_clusterfeaturelayer.ClusterFeatureLayerTypeFactory"
