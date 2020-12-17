@@ -13,7 +13,7 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 
 ### Layer-Config-Sample:
 
-```json
+```javascript
 "map-init": {
     "Config": {
         "map": {
