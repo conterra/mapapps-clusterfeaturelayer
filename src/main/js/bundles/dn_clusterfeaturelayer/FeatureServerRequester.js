@@ -73,6 +73,7 @@ export default class FeatureServerRequester {
 
         sublayers.forEach((layer) => {
             const layerId = layer.layerId + "/" + layer.sublayerId;
+            const layerTitle = layer.title || layerId;
             const singleQueryDeferred = new Deferred();
             const query = that._getQueryForLayer(layerId);
             const view = that.mapWidgetModel.get("view");
@@ -96,7 +97,8 @@ export default class FeatureServerRequester {
                 }
                 const res = {
                     objectIds: results,
-                    layerId: layerId
+                    layerId: layerId,
+                    layerTitle: layerTitle
                 };
                 singleQueryDeferred.resolve(res);
             }, (error) => {

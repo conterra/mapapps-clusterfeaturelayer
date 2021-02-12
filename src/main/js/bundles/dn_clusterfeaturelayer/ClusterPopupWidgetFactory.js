@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import ".";
-import "./ClusterFeatureLayer";
-import "./ClusterFeatureLayerTypeFactory";
-import "./ClusterSymbolProvider";
-import "./ClusterGeometryFunctions";
-import "./FeatureSymbolProvider";
-import "./ClusterPopupWidgetFactory";
-import "ct/Stateful";
+import Vue from "apprt-vue/Vue";
+import VueDijit from "apprt-vue/VueDijit";
+import ClusterPopupWidget from "./ClusterPopupWidget.vue";
+
+export default class ClusterPopupWidgetFactory {
+
+    getWidget(graphic) {
+        const attributes = graphic.attributes;
+        const vm = this.vm = new Vue(ClusterPopupWidget);
+        vm.clusterInfos = attributes.clusterInfos;
+        const i18n = vm.i18n = this._i18n.get().ui;
+        vm.i18n = i18n;
+
+        return VueDijit(vm, {class: "linkWidget"});
+    }
+}

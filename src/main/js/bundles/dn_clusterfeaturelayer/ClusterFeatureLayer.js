@@ -101,7 +101,7 @@ export default GraphicsLayer.createSubclass({
 
             this.events = [];
             const metadataProvider = this._getServiceMetadataProvider(serviceDetails);
-            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider, metadataProvider, mapWidgetModel, this.popupTemplate, this._options);
+            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider, metadataProvider, mapWidgetModel, this.popupTemplate, this._clusterPopupWidgetFactory, this._options);
             const view = mapWidgetModel.get("view");
             const map = mapWidgetModel.get("map");
             this.events.push(map.allLayers.on("change", () => {
@@ -235,7 +235,7 @@ export default GraphicsLayer.createSubclass({
                     results.forEach((result) => {
                         const p = new Promise((resolve, reject) => {
                             requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
-                                that._addFeaturesToClusterCache(featuresResult, result.layerId).then(() => {
+                                that._addFeaturesToClusterCache(featuresResult, result.layerId, result.layerTitle).then(() => {
                                     resolve();
                                 });
                             }, (error) => {
@@ -279,7 +279,7 @@ export default GraphicsLayer.createSubclass({
      * @param layerId
      * @private
      */
-    _addFeaturesToClusterCache(result, layerId) {
+    _addFeaturesToClusterCache(result, layerId, layerTitle) {
         console.log("add to cluster cache")
         return new Promise((resolve) => {
             async(() => {
@@ -297,6 +297,8 @@ export default GraphicsLayer.createSubclass({
                             const featureId = feat.attributes[this._objectIdField];
                             this._clusterCache[layerId][featureId] = feat;
                             feat.layerId = layerId;
+                            feat.attributes.clusterLayerId = layerId;
+                            feat.attributes.clusterLayerTitle = layerTitle;
                         }
                         // Refine features to draw
                         this._clusterData[layerId] = newFeaturesInExtent.concat(cachedFeaturesInExtent);
@@ -607,8 +609,8 @@ export default GraphicsLayer.createSubclass({
     },
 
 
-    _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, options) {
-        return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, options);
+    _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options) {
+        return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options);
     },
 
     _getServiceMetadataProvider(serviceDetails) {

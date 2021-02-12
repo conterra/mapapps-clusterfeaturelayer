@@ -42,6 +42,10 @@
                 {
                     "name": "eventService",
                     "providing": "ct.framework.api.EventService"
+                },
+                {
+                    "name": "_clusterPopupWidgetFactory",
+                    "providing": "dn_clusterfeaturelayer.ClusterPopupWidgetFactory"
                 }
             ]
         },
@@ -143,6 +147,15 @@
                 ],
                 "symbolSize": 20,
                 "borderSize": 1
+            }
+        },
+        {
+            "name": "ClusterPopupWidgetFactory",
+            "provides": [
+                "dn_clusterfeaturelayer.ClusterPopupWidgetFactory"
+            ],
+            "properties": {
+                "linkAttributes": []
             }
         }
     ]

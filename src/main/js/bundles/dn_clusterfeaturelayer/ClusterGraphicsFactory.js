@@ -17,13 +17,15 @@ import Point from "esri/geometry/Point";
 import Polyline from "esri/geometry/Polyline";
 import Graphic from "esri/Graphic";
 import * as jsonUtils from "esri/renderers/support/jsonUtils";
+import CustomContent from "esri/popup/content/CustomContent";
 
 export default class ClusterGraphicsFactory {
-    constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapWidgetModel, popupTemplate, options) {
+    constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options) {
         this.clusterSymbolProvider = clusterSymbolProvider;
         this.featureSymbolProvider = featureSymbolProvider;
         this.rendererProvider = rendererProvider || {};
         this.mapWidgetModel = mapWidgetModel;
+        this.clusterPopupWidgetFactory = clusterPopupWidgetFactory;
         this.clusterLabelOffset = options.clusterLabelOffset;
         this.symbolBaseSize = options.symbolBaseSize;
         this.showClusterSize = options.showClusterSize;
@@ -56,11 +58,20 @@ export default class ClusterGraphicsFactory {
         // create graphics for cluster
         const returnGraphics = [];
         const allFeatures = cluster.attributes.features;
+        // get most features
+        const mostFeatures = this._getMostFeatures(allFeatures, 9);
+        const differentFeatureSymbols = this._getSymbolsForMostFeatures(allFeatures, mostFeatures);
+        const clusterInfos = mostFeatures.map((layerInfo, i)=>{
+            return {
+                layerId: layerInfo[0],
+                count: layerInfo[1],
+                symbol: differentFeatureSymbols[i].toJSON()
+            }
+        });
+        clusterAttributes.clusterInfos = clusterInfos;
 
-        const clusterPopupTemplate = {
-            "title": "Cluster: {clusterCount} Features",
-            "content": ""
-        }
+        const clusterPopupTemplate = this._getClusterPopupTemplate();
+
         // simple circle clusters
         if (!this.showClusterGrid) {
             let maxSize = clusters[0].attributes.clusterCount;
@@ -94,7 +105,6 @@ export default class ClusterGraphicsFactory {
         }
 
         // grid layout
-        const mostFeatures = this._getMostFeatures(allFeatures, 9);
         const baseSize = this.symbolBaseSize;
         const pointsCount = mostFeatures.length;
         // calculate grid
@@ -118,7 +128,6 @@ export default class ClusterGraphicsFactory {
 
         // add symbols
         const differentSymbolPoints = mostFeatures.map(() => point.clone());
-        const differentFeatureSymbols = this._getSymbolsForGrid(allFeatures, mostFeatures);
         this._alignSymbolsInGrid(differentFeatureSymbols, gridSize, baseSize);
 
         differentSymbolPoints.forEach((symbolPoint, i) => {
@@ -269,7 +278,7 @@ export default class ClusterGraphicsFactory {
         return result;
     }
 
-    _getSymbolsForGrid(allFeatures, mostFeatures) {
+    _getSymbolsForMostFeatures(allFeatures, mostFeatures) {
         const featuresFromDifferentLayers = this._getFeaturesFromDifferentLayers(allFeatures, mostFeatures);
         return featuresFromDifferentLayers.map((feature) => {
             const symbol = this.getSymbolForFeature(feature).clone();
@@ -392,5 +401,22 @@ export default class ClusterGraphicsFactory {
             rotation = camera && camera.get("heading");
         }
         return rotation;
+    }
+
+    _getClusterPopupTemplate() {
+        const linkContent = new CustomContent({
+            outFields: ["*"],
+            creator: (evt) => {
+                const graphic = evt.graphic ? evt.graphic : evt;
+                const widget = this.clusterPopupWidgetFactory.getWidget(graphic);
+                widget.startup();
+                return widget.domNode;
+            }
+        });
+
+        return {
+            "title": "Cluster: {clusterCount} Features",
+            "content": [linkContent]
+        }
     }
 }

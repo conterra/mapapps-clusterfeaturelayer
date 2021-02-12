@@ -57,6 +57,7 @@ export default class ClusterFeatureLayerTypeFactory {
             _mapWidgetModel: this.mapWidgetModel,
             _clusterSymbolProvider: this.clusterSymbolProvider,
             _featureSymbolProvider: this.featureSymbolProvider,
+            _clusterPopupWidgetFactory: this._clusterPopupWidgetFactory,
             _eventService: this.eventService
         });
 
