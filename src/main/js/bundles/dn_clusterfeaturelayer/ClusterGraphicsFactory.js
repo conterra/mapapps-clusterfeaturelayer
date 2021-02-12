@@ -60,12 +60,13 @@ export default class ClusterGraphicsFactory {
         const allFeatures = cluster.attributes.features;
         // get most features
         const mostFeatures = this._getMostFeatures(allFeatures, 9);
-        const differentFeatureSymbols = this._getSymbolsForMostFeatures(allFeatures, mostFeatures);
-        const clusterInfos = mostFeatures.map((layerInfo, i)=>{
+        const differentFeatureSymbols = mostFeatures.map((obj) => obj.symbol);
+        const clusterInfos = mostFeatures.map((obj) => {
             return {
-                layerId: layerInfo[0],
-                count: layerInfo[1],
-                symbol: differentFeatureSymbols[i].toJSON()
+                layerId: obj.layerId,
+                layerTitle: obj.layerTitle,
+                count: obj.count,
+                symbol: obj.symbol.toJSON()
             }
         });
         clusterAttributes.clusterInfos = clusterInfos;
@@ -252,44 +253,36 @@ export default class ClusterGraphicsFactory {
     }
 
     _getMostFeatures(allFeatures, maxNumberOfFeatures) {
-        const count = {};
+        const countObjects = {};
         allFeatures.forEach((feature) => {
-            if (!count[feature.layerId]) {
-                count[feature.layerId] = 1;
+            if (!countObjects[feature.layerId]) {
+                const symbol = this.getSymbolForFeature(feature).clone();
+                symbol.featureAttributes = feature.attributes;
+                countObjects[feature.layerId] = {
+                    count: 1,
+                    layerId: feature.layerId,
+                    layerTitle: feature.layerTitle,
+                    symbol: symbol
+                };
             } else {
-                count[feature.layerId]++;
+                countObjects[feature.layerId].count++;
             }
         });
-        const sortableCounts = [];
-        for (const layerId in count) {
-            sortableCounts.push([
-                layerId,
-                count[layerId]
-            ]);
-        }
-        sortableCounts.sort((a, b) => b[1] - a[1]);
+        const sortableCountObjects = Object.entries(countObjects).map((obj) => obj[1]);
+        sortableCountObjects.sort((a, b) => b.count - a.count);
         const result = [];
-        sortableCounts.some((count) => {
+        sortableCountObjects.some((obj) => {
             if (result.length >= maxNumberOfFeatures) {
                 return false;
             }
-            result.push(count);
+            result.push(obj);
         });
         return result;
     }
 
-    _getSymbolsForMostFeatures(allFeatures, mostFeatures) {
-        const featuresFromDifferentLayers = this._getFeaturesFromDifferentLayers(allFeatures, mostFeatures);
-        return featuresFromDifferentLayers.map((feature) => {
-            const symbol = this.getSymbolForFeature(feature).clone();
-            symbol.featureAttributes = feature.attributes;
-            return symbol;
-        });
-    }
-
     _getLabelsForGrid(mostFeatures) {
         const that = this;
-        return mostFeatures.map((layerInfos) => that.clusterSymbolProvider.getClusterLabel(layerInfos[1], that.clusterLabelOffset));
+        return mostFeatures.map((obj) => that.clusterSymbolProvider.getClusterLabel(obj.count, that.clusterLabelOffset));
     }
 
     /**
@@ -301,8 +294,8 @@ export default class ClusterGraphicsFactory {
      */
     _getFeaturesFromDifferentLayers(allFeatures, mostFeatures) {
         const layerIds = [];
-        mostFeatures.forEach((layerInfos) => {
-            layerIds.push(layerInfos[0]);
+        mostFeatures.forEach((infos) => {
+            layerIds.push(infos.layerId);
         });
         const hash = {};
         allFeatures.forEach((feature) => {

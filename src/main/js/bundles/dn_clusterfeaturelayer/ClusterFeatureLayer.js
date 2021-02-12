@@ -297,8 +297,7 @@ export default GraphicsLayer.createSubclass({
                             const featureId = feat.attributes[this._objectIdField];
                             this._clusterCache[layerId][featureId] = feat;
                             feat.layerId = layerId;
-                            feat.attributes.clusterLayerId = layerId;
-                            feat.attributes.clusterLayerTitle = layerTitle;
+                            feat.layerTitle = layerTitle;
                         }
                         // Refine features to draw
                         this._clusterData[layerId] = newFeaturesInExtent.concat(cachedFeaturesInExtent);

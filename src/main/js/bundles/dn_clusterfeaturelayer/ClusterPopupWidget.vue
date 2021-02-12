@@ -27,7 +27,7 @@
                     <img :src="getBase64Image(info.symbol.imageData)">
                 </v-list-tile-avatar>
                 <v-list-tile-content>
-                    {{ info.layerId }}: {{ info.count }}
+                    {{ info.layerTitle }}: {{ info.count }}
                 </v-list-tile-content>
             </v-list-tile>
         </v-list>
