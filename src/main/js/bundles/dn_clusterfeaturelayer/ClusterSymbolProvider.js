@@ -80,11 +80,40 @@ export default class ClusterSymbolProvider {
     getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, transparent) {
         const width = columnsCount * baseSize;
         const height = rowsCount * baseSize;
-        let lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(this.clusterBackgroundBorderColor), this.clusterBackgroundBorderSize);
-        let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color(this.clusterBackgroundSymbolColor));
+        let lineSymbol;
+        let symbol;
         if (transparent) {
-            lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 0, 0, 0]), 0);
-            symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_PATH, baseSize, lineSymbol, new Color([0, 0, 0, 0]));
+            lineSymbol = new SimpleLineSymbol(
+                {
+                    style: SimpleLineSymbol.STYLE_SOLID,
+                    color: new Color([0, 0, 0, 0]),
+                    width: 0
+                }
+            );
+            symbol = new SimpleMarkerSymbol(
+                {
+                    style: SimpleMarkerSymbol.STYLE_PATH,
+                    size: baseSize,
+                    outline: lineSymbol,
+                    color: new Color([0, 0, 0, 0])
+                }
+            );
+        } else {
+            lineSymbol = new SimpleLineSymbol(
+                {
+                    style: SimpleLineSymbol.STYLE_SOLID,
+                    color: new Color(this.clusterBackgroundBorderColor),
+                    width: this.clusterBackgroundBorderSize
+                }
+            );
+            symbol = new SimpleMarkerSymbol(
+                {
+                    style: SimpleMarkerSymbol.STYLE_PATH,
+                    size: baseSize,
+                    outline: lineSymbol,
+                    color: new Color(this.clusterBackgroundSymbolColor)
+                }
+            );
         }
 
         const pathString = d_string.substitute("M 0 0 L ${width} 0 L ${width} ${height} L 0 ${height} z", {

@@ -78,7 +78,9 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
                         "showClusterGridBackground": false,
                         "showClusterArea": false,
                         "showClusterSize": true,
+                        "showClusterPopup": false,
                         "showSpiderfying": true,
+                        "zoomOnClusterClick": true,
                         "useDefaultSymbolForFeatures": false,
                         "clusterLabelOffset": -4
                     }
@@ -104,7 +106,9 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 | showClusterGridBackground      | boolean | ```true``` &#124; ```false``` | ```false```    | Show cluster grid background (This property is currently not supported in 3D SceneViews) |
 | showClusterArea                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the area of a cluster                                                               |
 | showClusterSize                | boolean | ```true``` &#124; ```false``` | ```false```    | Show the size of a cluster                                                               |
+| showClusterPopup               | boolean | ```true``` &#124; ```false``` | ```false```    | Show a popup instead of zooming in when clicking on a cluster                            |
 | showSpiderfying                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the spiderfying                                                                     |
+| zoomOnClusterClick             | boolean | ```true``` &#124; ```false``` | ```true```     | Zoom in to the extent of the cluster features on click                                   |
 | useDefaultSymbolForFeatures    | boolean | ```true``` &#124; ```false``` | ```false```    | Use default symbols for features                                                         |
 | clusterLabelOffset             | number  |                               | ```-10```      | Size of the label offset                                                                 |
 

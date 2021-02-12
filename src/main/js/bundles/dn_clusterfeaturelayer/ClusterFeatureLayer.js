@@ -51,6 +51,7 @@ export default GraphicsLayer.createSubclass({
         this._maxClusterScale = args._maxClusterScale;
         this._showClusterArea = args._showClusterArea;
         this._showSpiderfying = args._showSpiderfying;
+        this._zoomOnClusterClick = args._zoomOnClusterClick;
         this._returnLimit = args._returnLimit;
         this._serverRequester = args._serverRequester;
         this._mapWidgetModel = args._mapWidgetModel;
@@ -487,10 +488,6 @@ export default GraphicsLayer.createSubclass({
             if (!attributes) {
                 return;
             }
-            // stop event propagation to prevent popup from being opened
-            if (attributes.clusterId) {
-                event.stopPropagation();
-            }
             if (attributes.hasOwnProperty("features")) {
                 if (attributes.spiderfying) {
                     const features = attributes.features;
@@ -501,7 +498,7 @@ export default GraphicsLayer.createSubclass({
                             geometry: graphic.geometry
                         });
                     }
-                } else {
+                } else if (this._zoomOnClusterClick) {
                     const extent = attributes.extent;
                     const clusterExtent = new Extent(extent[0], extent[1], extent[2], extent[3], view.spatialReference).expand(1.5);
                     view.goTo({target: clusterExtent}, {

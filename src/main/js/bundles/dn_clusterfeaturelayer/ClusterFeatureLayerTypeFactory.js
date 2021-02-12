@@ -50,6 +50,7 @@ export default class ClusterFeatureLayerTypeFactory {
             _maxClusterScale: opt.maxClusterScale || 0,
             _showClusterArea: opt.showClusterArea || false,
             _showSpiderfying: showSpiderfying,
+            _zoomOnClusterClick: opt.zoomOnClusterClick,
             _returnLimit: opt.returnLimit || 1000,
             _options: opt,
             _serverRequester: this._serverRequester,
