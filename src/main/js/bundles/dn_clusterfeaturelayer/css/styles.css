@@ -1,4 +1,8 @@
 .ctAppRoot .esri-popup__main-container .clusterPopupWidget .v-list {
-    background-color: #fff !important;
+    background-color: #fff;
     color: #6e6e6e;
+}
+
+.ctAppRoot .esri-popup__main-container .clusterPopupWidget .v-list .v-list__tile {
+    padding: 0;
 }
