@@ -26,6 +26,6 @@ export default class ClusterPopupWidgetFactory {
         const i18n = vm.i18n = this._i18n.get().ui;
         vm.i18n = i18n;
 
-        return VueDijit(vm, {class: "linkWidget"});
+        return VueDijit(vm, {class: "clusterPopupWidget"});
     }
 }

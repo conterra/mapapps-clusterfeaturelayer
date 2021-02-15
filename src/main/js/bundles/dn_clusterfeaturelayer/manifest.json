@@ -14,6 +14,14 @@
         "map-widget": "^4.2.0"
     },
     "main": "main",
+    "CSS-Themes-Extension": [
+        {
+            "name": "*",
+            "files": [
+                "./css/styles.css"
+            ]
+        }
+    ],
     "components": [
         {
             "name": "ClusterFeatureLayerTypeFactory",
