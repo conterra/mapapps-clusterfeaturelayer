@@ -112,6 +112,11 @@ export default GraphicsLayer.createSubclass({
                     this._reCluster();
                 }));
             });
+            this.events.push(this.watch("visible", (response) => {
+                if (response) {
+                    this._reCluster();
+                }
+            }));
             this.events.push(view.watch("stationary", (response) => {
                 if (response) {
                     this._reCluster();
