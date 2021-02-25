@@ -20,7 +20,10 @@ import * as jsonUtils from "esri/renderers/support/jsonUtils";
 import CustomContent from "esri/popup/content/CustomContent";
 
 export default class ClusterGraphicsFactory {
-    constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options) {
+    constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider,
+        mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
+        this.i18n = i18n;
+        this.clusterFeatureLayerTitle = clusterFeatureLayerTitle;
         this.clusterSymbolProvider = clusterSymbolProvider;
         this.featureSymbolProvider = featureSymbolProvider;
         this.rendererProvider = rendererProvider || {};
@@ -408,7 +411,7 @@ export default class ClusterGraphicsFactory {
         });
 
         return {
-            "title": "Cluster: {clusterCount} Features",
+            "title": this.clusterFeatureLayerTitle + ": {clusterCount} " + this.i18n.ui.features,
             "content": [linkContent]
         }
     }

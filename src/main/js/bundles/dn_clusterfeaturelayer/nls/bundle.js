@@ -16,7 +16,10 @@
 module.exports = {
     root: {
         bundleName: "ClusterFeatureLayer and Spiderfying",
-        bundleDescription: "This bundle draws a Cluster Feature Layer and activates a Spiderfying."
+        bundleDescription: "This bundle draws a Cluster Feature Layer and activates a Spiderfying.",
+        ui: {
+            features: "Features"
+        }
     },
     de: true
 };

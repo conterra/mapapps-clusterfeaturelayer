@@ -59,7 +59,7 @@ export default GraphicsLayer.createSubclass({
         this._clusterSymbolProvider = args._clusterSymbolProvider;
         this._featureSymbolProvider = args._featureSymbolProvider;
         this._eventService = args._eventService;
-        this.i18n = args.i18n;
+        this._i18n = args.i18n;
     },
 
     activateLayer() {
@@ -613,8 +613,11 @@ export default GraphicsLayer.createSubclass({
     },
 
 
-    _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options) {
-        return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options);
+    _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider,
+        mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options) {
+        return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider,
+            metadataProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory,
+            options, this.title, this._i18n);
     },
 
     _getServiceMetadataProvider(serviceDetails) {

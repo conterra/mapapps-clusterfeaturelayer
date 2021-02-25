@@ -30,6 +30,7 @@ export default class ClusterFeatureLayerTypeFactory {
             showSpiderfying = opt.showSpiderfying;
         }
         const clusterFeatureLayer = new ClusterFeatureLayer({
+            i18n: this._i18n.get(),
             id: layerArguments.id,
             title: layerArguments.title,
             visible: layerArguments.visible,
