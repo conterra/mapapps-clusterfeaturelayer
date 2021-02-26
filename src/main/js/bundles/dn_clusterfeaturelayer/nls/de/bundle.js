@@ -17,6 +17,7 @@ module.exports = {
     bundleName: "ClusterFeatureLayer und Spiderfying",
     bundleDescription: "Dieses Bundle erzeugt einen Cluster Feature Layer und aktiviert ein Spiderfying",
     ui: {
-        features: "Objekte"
+        features: "Objekte",
+        hint: "Zoomen auf Einzelsymbole für Detailinformationen."
     }
 };

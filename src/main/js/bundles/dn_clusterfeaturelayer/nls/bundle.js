@@ -18,7 +18,8 @@ module.exports = {
         bundleName: "ClusterFeatureLayer and Spiderfying",
         bundleDescription: "This bundle draws a Cluster Feature Layer and activates a Spiderfying.",
         ui: {
-            features: "Features"
+            features: "Features",
+            hint: "Zooming in on individual symbols for detailed information."
         }
     },
     de: true

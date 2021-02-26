@@ -17,6 +17,12 @@
 -->
 <template>
     <v-container pa-0>
+        <v-alert
+            :value="true"
+            type="info"
+        >
+            {{ i18n.hint }}
+        </v-alert>
         <v-list>
             <v-list-tile
                 v-for="info in clusterInfos"

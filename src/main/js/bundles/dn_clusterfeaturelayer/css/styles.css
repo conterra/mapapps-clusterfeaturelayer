@@ -18,6 +18,17 @@
     color: #6e6e6e;
 }
 
+.ctAppRoot .esri-popup__main-container .clusterPopupWidget .v-alert.info {
+    background-color: #2196f3 !important;
+    height: 40px;
+    border: none;
+    margin: 0;
+}
+
+.ctAppRoot .esri-popup__main-container .clusterPopupWidget .v-alert.info .v-alert__icon {
+    color: #fff;
+}
+
 .ctAppRoot .esri-popup__main-container .clusterPopupWidget .v-list .v-list__tile {
     padding: 0;
 }
