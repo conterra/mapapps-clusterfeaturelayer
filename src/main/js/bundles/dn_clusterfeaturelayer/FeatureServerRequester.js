@@ -17,7 +17,6 @@ import Deferred from "dojo/_base/Deferred";
 import all from "dojo/promise/all";
 import DeferredList from "dojo/DeferredList";
 import apprt_request from "apprt-request";
-import ct_array from "ct/array";
 import Query from "esri/tasks/support/Query";
 import QueryTask from "esri/tasks/QueryTask";
 import ObjectIdCache from "./ObjectIdCache";
@@ -39,7 +38,7 @@ export default class FeatureServerRequester {
     getServiceMetadata() {
         const urls = this.filteredUrls = [];
         this.sublayers.forEach((layer) => {
-            ct_array.arrayAdd(urls, layer.layerUrl);
+            urls.push(layer.layerUrl);
         });
         const that = this;
         const d = new Deferred();
