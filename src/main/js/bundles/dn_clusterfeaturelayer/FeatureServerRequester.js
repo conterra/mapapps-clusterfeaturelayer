@@ -17,8 +17,8 @@ import Deferred from "dojo/_base/Deferred";
 import all from "dojo/promise/all";
 import DeferredList from "dojo/DeferredList";
 import apprt_request from "apprt-request";
-import Query from "esri/tasks/support/Query";
-import QueryTask from "esri/tasks/QueryTask";
+import Query from "esri/rest/support/Query";
+import { executeForIds, executeQueryJSON } from "esri/rest/query";
 import ObjectIdCache from "./ObjectIdCache";
 import * as esri_lang from "esri/core/lang";
 
@@ -26,7 +26,6 @@ export default class FeatureServerRequester {
     constructor(sublayers, spatialReference, returnLimit, mapWidgetModel) {
         this.sublayers = sublayers;
         this.spatialReference = spatialReference;
-        this._queryTasks = {};
         this._queries = {};
         this._objectIdHash = {};    // holds IDs of cached features. Is written in _onIdsReturned -> difference() call
         // holds IDs of cached features. Is written in _onIdsReturned -> difference() call
@@ -89,7 +88,7 @@ export default class FeatureServerRequester {
             }
 
             // executeForIds will only return an array of object IDs for features that satisfy the input query
-            const promise = that._getQueryTaskForLayer(layerId).executeForIds(query);
+            const promise = executeForIds(that._getQueryUrlForLayer(layerId), query);
             promise.then((results) => {
                 if (!results) {
                     results = [];
@@ -105,7 +104,8 @@ export default class FeatureServerRequester {
                 singleQueryDeferred.reject();
             });
 
-            // Add Deferred for each leaf node to 'promises' in order that the application waits for all of them till execution is continued.
+            // Add Deferred for each leaf node to 'promises' in order
+            // that the application waits for all of them till execution is continued.
             queryPromises.push(singleQueryDeferred.promise);
 
         });
@@ -118,7 +118,8 @@ export default class FeatureServerRequester {
     getFeaturesByIds(objectIds, layerId, reset) {
         const d = new Deferred();
         const cacheEntry = this.objectIdCache.get(layerId);
-        const uncached = FeatureServerRequester._difference(objectIds, cacheEntry.length, this._getObjectIdHashEntryForLayerId(layerId));
+        const uncached = FeatureServerRequester._difference(objectIds,
+            cacheEntry.length, this._getObjectIdHashEntryForLayerId(layerId));
         this.objectIdCache.set(layerId, cacheEntry.concat(uncached));
         if (reset) {
             if (objectIds.length > 0) {
@@ -131,7 +132,7 @@ export default class FeatureServerRequester {
                         // Improve performance by just passing list of IDs
                         // create separate queries for each 'returnLimit' number of feature IDs
                         query.objectIds = objectIds.splice(0, this.returnLimit - 1);
-                        queries.push(this._getQueryTaskForLayer(layerId).execute(esri_lang.clone(query)));
+                        queries.push(executeQueryJSON(this._getQueryUrlForLayer(layerId), esri_lang.clone(query)));
                     }
                     all(queries).then((res) => {
                         const features = res.map((r) => r.features);
@@ -140,7 +141,7 @@ export default class FeatureServerRequester {
                 } else {
                     // Improve performance by just passing list of IDs
                     query.objectIds = objectIds.splice(0, this.returnLimit - 1);
-                    this._getQueryTaskForLayer(layerId).execute(query).then((results) => {
+                    executeQueryJSON(this._getQueryUrlForLayer(layerId), esri_lang.clone(query)).then((results) => {
                         d.resolve(results);
                     });
                 }
@@ -158,7 +159,7 @@ export default class FeatureServerRequester {
                         // Improve performance by just passing list of IDs
                         // create separate queries for each 'returnLimit' number of feature IDs
                         query.objectIds = uncached.splice(0, this.returnLimit - 1);
-                        queries.push(this._getQueryTaskForLayer(layerId).execute(esri_lang.clone(query)));
+                        queries.push(executeQueryJSON(this._getQueryUrlForLayer(layerId), esri_lang.clone(query)));
                     }
                     all(queries).then((res) => {
                         const features = res.map((r) => r.features);
@@ -167,7 +168,7 @@ export default class FeatureServerRequester {
                 } else {
                     // Improve performance by just passing list of IDs
                     query.objectIds = uncached.splice(0, this.returnLimit - 1);
-                    this._getQueryTaskForLayer(layerId).execute(query).then((results) => {
+                    executeQueryJSON(this._getQueryUrlForLayer(layerId), esri_lang.clone(query)).then((results) => {
                         d.resolve(results);
                     });
                 }
@@ -178,17 +179,11 @@ export default class FeatureServerRequester {
         return d;
     }
 
-    _getQueryTaskForLayer(layerId) {
-        if (this._queryTasks[layerId]) {
-            return this._queryTasks[layerId];
-        }
+    _getQueryUrlForLayer(layerId) {
         const sublayer = this.sublayers.find((layer) => layerId === layer.layerId + "/" + layer.sublayerId);
         const url = sublayer.layerUrl;
         const id = sublayer.sublayerId;
-        const queryUrl = url + "/" + id;
-        const newQueryTask = new QueryTask(queryUrl);
-        this._queryTasks[layerId] = newQueryTask;
-        return newQueryTask;
+        return url + "/" + id;
     }
 
     _getQueryForLayer(layerId) {
