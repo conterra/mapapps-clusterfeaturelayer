@@ -5,10 +5,6 @@ Important
 ------------------
 Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluster-layer-js
 
-Sample App
-------------------
-https://demos.conterra.de/mapapps/resources/apps/downloads_clusterfeaturelayer/index.html?lang=de
-
 ![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/3.x/screenshot.JPG)
 
 Installation Guide
