@@ -74,6 +74,10 @@ export default GraphicsLayer.createSubclass({
         });
     },
 
+    fetchSublayerInfo() {
+        // do nothing
+    },
+
     _getView() {
         const mapWidgetModel = this._mapWidgetModel;
         return new Promise((resolve) => {
