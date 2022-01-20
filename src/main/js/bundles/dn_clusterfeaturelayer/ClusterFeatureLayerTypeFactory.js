@@ -66,6 +66,7 @@ export default class ClusterFeatureLayerTypeFactory {
         if (layerArguments.layers) {
             layerArguments.layers.forEach((layer) => {
                 layer.sublayers.forEach((children) => {
+                    const childrenVisible = children.visible === undefined ? true : children.visible;
                     const sublayer = new Sublayer({
                         layerId: layer.id,
                         sublayerId: children.id,
@@ -73,7 +74,7 @@ export default class ClusterFeatureLayerTypeFactory {
                         parent: clusterFeatureLayer,
                         layerUrl: layer.url,
                         title: children.title || children.id,
-                        visible: children.visible || true
+                        visible: childrenVisible
                     });
                     this.layers.push(sublayer);
                 });
