@@ -176,32 +176,56 @@
                                         {
                                             "id": "1",
                                             "title": "Veranstaltungsorte",
-                                            "visible": true
+                                            "visible": true,
+                                            "popupTemplate": {
+                                                "title": "{NAME}",
+                                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
+                                            }
                                         },
                                         {
                                             "id": "2",
                                             "title": "Spiel- und Sportplätze",
-                                            "visible": true
+                                            "visible": true,
+                                            "popupTemplate": {
+                                                "title": "{Spielplatzname}",
+                                                "content": "<div>Viertel: {Stadtviertel}, Stadtteil: {Stadtteil}</div>"
+                                            }
                                         },
                                         {
                                             "id": "3",
                                             "title": "Sehenswürdigkeiten",
-                                            "visible": true
+                                            "visible": true,
+                                            "popupTemplate": {
+                                                "title": "{NAME}",
+                                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
+                                            }
                                         },
                                         {
                                             "id": "5",
                                             "title": "Schulen",
-                                            "visible": false
+                                            "visible": false,
+                                            "popupTemplate": {
+                                                "title": "{NAME}",
+                                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
+                                            }
                                         },
                                         {
                                             "id": "6",
                                             "title": "Museen",
-                                            "visible": false
+                                            "visible": false,
+                                            "popupTemplate": {
+                                                "title": "{NAME}",
+                                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
+                                            }
                                         },
                                         {
                                             "id": "7",
                                             "title": "Bibliotheken",
-                                            "visible": false
+                                            "visible": false,
+                                            "popupTemplate": {
+                                                "title": "{NAME}",
+                                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
+                                            }
                                         }
                                     ]
                                 }
@@ -211,10 +235,6 @@
                             "maxScale": 0,
                             "listMode": "show",
                             "opacity": 1,
-                            "popupTemplate": {
-                                "title": "{NAME}",
-                                "content": "<div>{ADRESSE} {HAUSNR}, {POSTLEITZAHL} {STADTTEIL}</div>"
-                            },
                             "outFields": [
                                 "*"
                             ],

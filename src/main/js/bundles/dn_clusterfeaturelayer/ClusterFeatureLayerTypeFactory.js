@@ -74,7 +74,8 @@ export default class ClusterFeatureLayerTypeFactory {
                         parent: clusterFeatureLayer,
                         layerUrl: layer.url,
                         title: children.title || children.id,
-                        visible: childrenVisible
+                        visible: childrenVisible,
+                        popupTemplate: children.popupTemplate
                     });
                     this.layers.push(sublayer);
                 });

@@ -21,7 +21,7 @@ import CustomContent from "esri/popup/content/CustomContent";
 
 export default class ClusterGraphicsFactory {
     constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider,
-                mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
+                mapWidgetModel, popupTemplate, popupTemplates, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
         this.i18n = i18n;
         this.clusterFeatureLayerTitle = clusterFeatureLayerTitle;
         this.clusterSymbolProvider = clusterSymbolProvider;
@@ -41,6 +41,7 @@ export default class ClusterGraphicsFactory {
         this.spiralLengthStart = options.spiralLengthStart || 20;
         this.spiralLengthFactor = options.spiralLengthFactor || 3;
         this.popupTemplate = popupTemplate;
+        this.popupTemplates = popupTemplates;
     }
 
     getAreaGraphic(area) {
@@ -60,6 +61,7 @@ export default class ClusterGraphicsFactory {
         if (clusterAttributes.features.length === 1) {
             const singleFeature = clusterAttributes.features[0];
             const singleFeatureSymbol = this.getSymbolForFeature(singleFeature);
+            const popupTemplate = this.popupTemplates[singleFeature.layerId];
 
             // The symbols from the features are reused, so they might be still offset for the cluster layout.
             return [
@@ -67,7 +69,7 @@ export default class ClusterGraphicsFactory {
                     geometry: point,
                     symbol: singleFeatureSymbol,
                     attributes: singleFeature.attributes,
-                    popupTemplate: this.popupTemplate
+                    popupTemplate: popupTemplate || this.popupTemplate
                 })
             ];
         }

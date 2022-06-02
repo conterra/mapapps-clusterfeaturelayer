@@ -40,6 +40,7 @@ export default GraphicsLayer.createSubclass({
     properties: {},
     constructor(args) {
         this._clusterData = {};
+        this._popupTemplates = {};
         this._clusters = [];
         this._clusterCache = {};
         this._visitedExtent = null;
@@ -94,7 +95,8 @@ export default GraphicsLayer.createSubclass({
     _initListener() {
         this.initDataStructures(this.sublayers);
         const mapWidgetModel = this._mapWidgetModel;
-        const requester = this._serverRequester = new FeatureServerRequester(this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
+        const requester = this._serverRequester = new FeatureServerRequester(
+            this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
         requester.getServiceMetadata().then((serviceDetails) => {
             if (this.events && this.events.length > 0) {
                 this.events.forEach((event) => {
@@ -105,7 +107,8 @@ export default GraphicsLayer.createSubclass({
 
             this.events = [];
             const metadataProvider = this._getServiceMetadataProvider(serviceDetails);
-            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider, metadataProvider, mapWidgetModel, this.popupTemplate, this._clusterPopupWidgetFactory, this._options);
+            this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider,
+                metadataProvider, mapWidgetModel, this.popupTemplate, this._clusterPopupWidgetFactory, this._options, this._popupTemplates);
             const view = mapWidgetModel.get("view");
             const map = mapWidgetModel.get("map");
             this.events.push(map.allLayers.on("change", () => {
@@ -145,6 +148,7 @@ export default GraphicsLayer.createSubclass({
             const layerId = layer.layerId + "/" + layer.sublayerId;
             this._clusterCache[layerId] = {};
             this._clusterData[layerId] = [];
+            this._popupTemplates[layerId] = layer.popupTemplate;
         });
     },
 
@@ -244,7 +248,8 @@ export default GraphicsLayer.createSubclass({
                     results.forEach((result) => {
                         const p = new Promise((resolve, reject) => {
                             requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
-                                that._addFeaturesToClusterCache(featuresResult, result.layerId, result.layerTitle).then(() => {
+                                that._addFeaturesToClusterCache(featuresResult,
+                                    result.layerId, result.layerTitle).then(() => {
                                     resolve();
                                 });
                             }, (error) => {
@@ -286,10 +291,11 @@ export default GraphicsLayer.createSubclass({
      *
      * @param result
      * @param layerId
+     * @param layerTitle
      * @private
      */
     _addFeaturesToClusterCache(result, layerId, layerTitle) {
-        console.log("add to cluster cache")
+        console.log("add to cluster cache");
         return new Promise((resolve) => {
             async(() => {
                 // get features from cache (features that have been requested before)
@@ -392,7 +398,8 @@ export default GraphicsLayer.createSubclass({
         this._clusters.forEach((cluster) => {
             const features = cluster.attributes.features;
             const clusterCenterPoint = new Point(cluster.x, cluster.y, cluster.spatialReference);
-            if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, this._spiderfyingDistance) && features.length > 1 && this._showSpiderfying) {
+            if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint,
+                this._spiderfyingDistance) && features.length > 1 && this._showSpiderfying) {
                 // check for spiderfying
                 graphics = graphics.concat(this._getSpiderfyingGraphics(cluster));
             } else {
@@ -501,8 +508,10 @@ export default GraphicsLayer.createSubclass({
             if (attributes.hasOwnProperty("features")) {
                 if (attributes.spiderfying) {
                     const features = attributes.features;
-                    const clusterCenterPoint = new Point(graphic.geometry.x, graphic.geometry.y, graphic.geometry.spatialReference);
-                    if (ClusterGeometryFunctions.haveSamePosition(features, clusterCenterPoint, that._spiderfyingDistance)) {
+                    const clusterCenterPoint = new Point(graphic.geometry.x,
+                        graphic.geometry.y, graphic.geometry.spatialReference);
+                    if (ClusterGeometryFunctions.haveSamePosition(features,
+                        clusterCenterPoint, that._spiderfyingDistance)) {
                         that._eventService.postEvent("dn_clusterfeaturelayer/SPIDERFYING_CLICKED", {
                             attributes: graphic.attributes,
                             geometry: graphic.geometry
@@ -510,7 +519,8 @@ export default GraphicsLayer.createSubclass({
                     }
                 } else if (this._zoomOnClusterClick) {
                     const extent = attributes.extent;
-                    const clusterExtent = new Extent(extent[0], extent[1], extent[2], extent[3], view.spatialReference).expand(1.5);
+                    const clusterExtent = new Extent(extent[0], extent[1], extent[2], extent[3],
+                        view.spatialReference).expand(1.5);
                     view.goTo({target: clusterExtent}, {
                         "animate": true,
                         "duration": 1000,
@@ -565,7 +575,8 @@ export default GraphicsLayer.createSubclass({
             //use convex hull on the points to get the boundary
             this._hideClusterArea();
             if (clusterArea[0] && !this.clusterAreaGraphic) {
-                const clusterAreaGraphic = this.clusterAreaGraphic = this._clusterGraphicsFactory.getAreaGraphic(clusterArea[0]);
+                const clusterAreaGraphic = this.clusterAreaGraphic =
+                    this._clusterGraphicsFactory.getAreaGraphic(clusterArea[0]);
                 this.add(clusterAreaGraphic);
                 clusterAreaGraphic.set("visible", true);
             }
@@ -583,7 +594,8 @@ export default GraphicsLayer.createSubclass({
     getCluster(attributes) {
         let res = null;
         this._clusters.forEach((cluster) => {
-            if (cluster.attributes.clusterId === attributes.clusterId && cluster.attributes.clusterCount === attributes.clusterCount) {
+            if (cluster.attributes.clusterId === attributes.clusterId &&
+                cluster.attributes.clusterCount === attributes.clusterCount) {
                 res = cluster;
             }
         });
@@ -618,9 +630,9 @@ export default GraphicsLayer.createSubclass({
 
 
     _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider,
-        mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options) {
+                               mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, popupTemplates) {
         return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider,
-            metadataProvider, mapWidgetModel, popupTemplate, clusterPopupWidgetFactory,
+            metadataProvider, mapWidgetModel, popupTemplate, popupTemplates, clusterPopupWidgetFactory,
             options, this.title, this._i18n);
     },
 
