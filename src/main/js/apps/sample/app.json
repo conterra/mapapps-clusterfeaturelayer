@@ -179,28 +179,33 @@
                                         },
                                         {
                                             "id": "2",
-                                            "title": "Spiel- und Sportplätze"
+                                            "title": "Spiel- und Sportplätze",
+                                            "visible": false
                                         },
                                         {
                                             "id": "3",
-                                            "title": "Sehenswürdigkeiten"
+                                            "title": "Sehenswürdigkeiten",
+                                            "visible": false
                                         },
                                         {
                                             "id": "5",
-                                            "title": "Schulen"
+                                            "title": "Schulen",
+                                            "visible": false
                                         },
                                         {
                                             "id": "6",
-                                            "title": "Museen"
+                                            "title": "Museen",
+                                            "visible": false
                                         },
                                         {
                                             "id": "7",
-                                            "title": "Bibliotheken"
+                                            "title": "Bibliotheken",
+                                            "visible": false
                                         }
                                     ]
                                 }
                             ],
-                            "visible": true,
+                            "visible": false,
                             "minScale": 500000,
                             "maxScale": 0,
                             "listMode": "show",

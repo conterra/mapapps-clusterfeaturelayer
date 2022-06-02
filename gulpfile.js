@@ -22,8 +22,8 @@ mapapps.registerTasks({
     themes: [/*"sample-theme"*/],
     /* state that the custom theme will be dependant from map.apps everlasting theme that provides the base styles */
     hasBaseThemes: true,
-    /* state that we want to support vuetify components and therefore need the the vuetify core styles*/
-    hasVuetify: true,
+    /* state that we want to support vuetify components and therefore need the vuetify core styles*/
+    hasVuetify: true
     /*themeChangeTargets: {
         "vuetify": [
             "sample_theme"
