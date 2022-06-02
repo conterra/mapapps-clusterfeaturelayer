@@ -21,7 +21,7 @@ import CustomContent from "esri/popup/content/CustomContent";
 
 export default class ClusterGraphicsFactory {
     constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider,
-        mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
+                mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
         this.i18n = i18n;
         this.clusterFeatureLayerTitle = clusterFeatureLayerTitle;
         this.clusterSymbolProvider = clusterSymbolProvider;
@@ -44,7 +44,13 @@ export default class ClusterGraphicsFactory {
     }
 
     getAreaGraphic(area) {
-        return new Graphic(area, this.clusterSymbolProvider.getAreaSymbol(), {clusterArea: true});
+        return new Graphic({
+            geometry: area,
+            symbol: this.clusterSymbolProvider.getAreaSymbol(),
+            attributes: {
+                clusterArea: true
+            }
+        });
     }
 
     getClusterGraphics(cluster, clusters) {
@@ -56,7 +62,14 @@ export default class ClusterGraphicsFactory {
             const singleFeatureSymbol = this.getSymbolForFeature(singleFeature);
 
             // The symbols from the features are reused, so they might be still offset for the cluster layout.
-            return [new Graphic(point, singleFeatureSymbol, singleFeature.attributes, this.popupTemplate)];
+            return [
+                new Graphic({
+                    geometry: point,
+                    symbol: singleFeatureSymbol,
+                    attributes: singleFeature.attributes,
+                    popupTemplate: this.popupTemplate
+                })
+            ];
         }
         // create graphics for cluster
         const returnGraphics = [];
@@ -64,15 +77,14 @@ export default class ClusterGraphicsFactory {
         // get most features
         const mostFeatures = this._getMostFeatures(allFeatures, 9);
         const differentFeatureSymbols = mostFeatures.map((obj) => obj.symbol);
-        const clusterInfos = mostFeatures.map((obj) => {
+        clusterAttributes.clusterInfos = mostFeatures.map((obj) => {
             return {
                 layerId: obj.layerId,
                 layerTitle: obj.layerTitle,
                 count: obj.count,
                 symbol: obj.symbol.toJSON()
-            }
+            };
         });
-        clusterAttributes.clusterInfos = clusterInfos;
 
         const clusterPopupTemplate = this._getClusterPopupTemplate();
 
@@ -84,26 +96,23 @@ export default class ClusterGraphicsFactory {
                     maxSize = c.attributes.clusterCount;
                 }
             });
-            const clusterSymbol = this.clusterSymbolProvider.getClusterSymbolCircle(cluster.attributes.clusterCount, 0.2 * maxSize, 0.4 * maxSize, 0.6 * maxSize, 0.8 * maxSize, maxSize);
-            returnGraphics.push(new Graphic(
-                {
-                    geometry: point,
-                    symbol: clusterSymbol,
-                    attributes: clusterAttributes,
-                    popupTemplate: this.showClusterPopup ? clusterPopupTemplate : null
-                }
-            ));
+            const clusterSymbol = this.clusterSymbolProvider.getClusterSymbolCircle(
+                cluster.attributes.clusterCount, 0.2 * maxSize, 0.4 * maxSize, 0.6 * maxSize, 0.8 * maxSize, maxSize);
+            returnGraphics.push(new Graphic({
+                geometry: point,
+                symbol: clusterSymbol,
+                attributes: clusterAttributes,
+                popupTemplate: this.showClusterPopup ? clusterPopupTemplate : null
+            }));
             // show number of points in the cluster
             if (this.showClusterSize) {
                 const label = this.clusterSymbolProvider.getClusterLabel(clusterAttributes.clusterCount.toString(), 0);
                 //label.set("angle", this._getRotation());
-                returnGraphics.push(new Graphic(
-                    {
-                        geometry: point,
-                        symbol: label,
-                        attributes: clusterAttributes
-                    }
-                ));
+                returnGraphics.push(new Graphic({
+                    geometry: point,
+                    symbol: label,
+                    attributes: clusterAttributes
+                }));
             }
             return returnGraphics;
         }
@@ -118,7 +127,8 @@ export default class ClusterGraphicsFactory {
         const rowsCount = Math.ceil(pointsCount / gridSize);
 
         const maxClusterSize = 3 * baseSize;
-        const clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(columnsCount, rowsCount, baseSize, !this.showClusterGridBackground);
+        const clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(
+            columnsCount, rowsCount, baseSize, !this.showClusterGridBackground);
         clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * baseSize)));
         //clusterSymbolsBackground.set("angle", this._getRotation());
         returnGraphics.push(new Graphic(
@@ -151,13 +161,11 @@ export default class ClusterGraphicsFactory {
             this._alignSymbolsInGrid(differentFeatureLabels, gridSize, baseSize);
 
             differentLabelPoints.forEach((labelPoint, i) => {
-                returnGraphics.push(new Graphic(
-                    {
-                        geometry: labelPoint,
-                        symbol: differentFeatureLabels[i],
-                        attributes: clusterAttributes
-                    }
-                ));
+                returnGraphics.push(new Graphic({
+                    geometry: labelPoint,
+                    symbol: differentFeatureLabels[i],
+                    attributes: clusterAttributes
+                }));
             });
         }
 
@@ -191,11 +199,24 @@ export default class ClusterGraphicsFactory {
                     hasM: true,
                     spatialReference: cluster.spatialReference
                 });
-                returnGraphics.push(new Graphic(line, this.clusterSymbolProvider.getSpiderfyingLineSymbol()));
+                returnGraphics.push(new Graphic({
+                    geometry: line,
+                    symbol: this.clusterSymbolProvider.getSpiderfyingLineSymbol()
+                }));
                 // add symbol
-                returnGraphics.push(new Graphic(offsetPoint, symbol, symbol.featureAttributes, this.popupTemplate));
+                returnGraphics.push(new Graphic({
+                    geometry: offsetPoint,
+                    symbol: symbol,
+                    attributes: symbol.featureAttributes,
+                    popupTemplate: this.popupTemplate
+                }));
 
-                const center = new Graphic(point, this.clusterSymbolProvider.getSpiderfyingSymbolCircle(), symbol.featureAttributes, this.popupTemplate);
+                const center = new Graphic({
+                    geometry: point,
+                    symbol: this.clusterSymbolProvider.getSpiderfyingSymbolCircle(),
+                    attributes: symbol.featureAttributes,
+                    popupTemplate: this.popupTemplate
+                });
                 returnGraphics.push(center);
             }
         });
