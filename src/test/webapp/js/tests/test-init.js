@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 con terra GmbH (info@conterra.de)
+ * Copyright (C) 2022 con terra GmbH (info@conterra.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ testConfig({
         //     ]
         // }
     ],
-    // ensure apprt polyfill is loaded during test execution
+    // ensure babel polyfill is loaded during test execution
     deps: [
         "apprt-polyfill",
         // Needed for import { assert } from "chai"
