@@ -1,132 +1,117 @@
-<!--
-
-    Copyright (C) 2021 con terra GmbH (info@conterra.de)
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-            http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
 <!DOCTYPE html>
 <html>
 
-    <head>
-        <!-- this is required to let ace editor work in IE 8 and 7 -->
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-        <meta charset="UTF-8" />
-        <meta name="robots" content="nofollow" />
-        <meta name="copyright" content="con terra GmbH" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-        <link rel="icon" href="@@mapapps.remote.base@@/favicon.ico" type="image/x-icon" />
-        <!--Import the init_night.css if you wish the map.apps 2.x default splashscreen
-            <link type="text/css" rel="stylesheet" href="init_night.css"/>-->
-        <link type="text/css" rel="stylesheet" href="@@mapapps.remote.base@@/init.css" />
-        <style type="text/css">
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
+<head>
+    <!-- this is required to let ace editor work in IE 8 and 7 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <meta name="robots" content="nofollow" />
+    <meta name="copyright" content="con terra GmbH" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <link rel="icon" href="@@mapapps.remote.base@@/favicon.png" type="image/png" />
+    <!--Import the init_night.css if you wish the map.apps 2.x default splashscreen
+        <link type="text/css" rel="stylesheet" href="init_night.css"/>-->
+    <link type="text/css" rel="stylesheet" href="@@mapapps.remote.base@@/init.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+    <title>map.apps sample</title>
+    <script type="text/javascript" src="@@client.config.initjs@@"></script>
+    <script type="text/javascript">
+        var proxyrules = [];
+        var proxyUrl = "@@applicationURL.noscheme@@/proxy";
+        "@@proxy.use.rules@@".split(/\s*,\s*/).forEach(function (rule) {
+            var rule = rule.split(/\s*\|\s*/);
+            var origin = rule[0];
+            if (!origin || origin.startsWith("@")){
+                return;
             }
-        </style>
-        <title>map.apps remote sample</title>
-        <script type="text/javascript" src="@@client.config.initjs@@"></script>
-        <script type="text/javascript">
-            var proxyrules = [];
-            var proxyUrl = "@@applicationURL.noscheme@@/proxy";
-            "@@proxy.use.rules@@".split(/\s*,\s*/).forEach(function (rule) {
-                var rule = rule.split(/\s*\|\s*/);
-                var origin = rule[0];
-                if (!origin || origin.startsWith("@")){
-                    return;
+            var url = rule[1] || proxyUrl;
+            proxyrules.push({
+                origin: origin,
+                proxyUrl: url
+            });
+        });
+        var trustedServers = "@@proxy.cors.trustedServers@@".split("\s*,\s*")
+            .filter(function(item){ return item && item.match(/^[^@.].*$/)});
+        $apprt.changeConfig({
+            isDebug: true,
+            has: {
+                "ct-debug": true,
+                "ct-log-deprecations": true
+            },
+            ct: {
+                amdPackages: ["apprt@^@@apprt.version@@"],
+                preFetchBundles: false
+            },
+            apprt: {
+                request: {
+                    trustedServers: trustedServers,
+                    proxyUrl: proxyUrl,
+                    proxyRules: proxyrules
                 }
-                var url = rule[1] || proxyUrl;
-                proxyrules.push({
-                    origin: origin,
-                    proxyUrl: url
-                });
-            });
-            $apprt.changeConfig({
-                isDebug: true,
-                has: {
-                    "ct-debug": true,
-                    "ct-log-deprecations": true
-                },
-                ct: {
-                    amdPackages: ["apprt@^@@apprt.version@@"],
-                    preFetchBundles: false
-                },
-                apprt: {
-                    request: {
-                        trustedServers: ["@@mapapps.remote.base@@"],
-                        proxyUrl: proxyUrl,
-                        proxyRules: proxyrules
-                    }
-                },
-                packages: [
-                    // add local apps directory as amd package
-                    { name: "localapps", location: "@@applicationURL.noscheme@@/js/apps" },
-                    // add local bundles directory as amd package
-                    { name: "localbundles", location: "@@jsregistry.root.url@@" }
-                ]
-            });
-            $apprt.startApp({
-                configLocation: "localapps",
-                param: "app",
-                defaultApp: "@@default.app.name@@"
-            });
-        </script>
-    </head>
-    <body class="start">
-        <div id="splashScreen" class="ct-splashscreen splashScreen">
-            <div class="ct-splashscreen-header"></div>
-            <div class="ct-splashscreen-main">
-                <div class="startLogo"></div>
-                <div class="ct-splashscreen-stage">
-                    <div class="launch__animation">
-                        <div class="dot-outer">
-                            <div class="dot dot-1"></div>
-                        </div>
-                        <div class="dot-outer">
-                            <div class="dot dot-2"></div>
-                        </div>
-                        <div class="dot-outer">
-                            <div class="dot dot-3"></div>
-                        </div>
-                        <div class="dot-outer">
-                            <div class="dot dot-4"></div>
-                        </div>
-                        <div class="dot-outer">
-                            <div class="dot dot-5"></div>
-                        </div>
-                        <div class="dot-outer">
-                            <div class="dot dot-6"></div>
-                        </div>
-                    </div>
-                    <div class="launch__title">
-                        <h4 class="splashHeader">
-                            <span class="launchLog"></span>
-                        </h4>
-                    </div>
-                    <div class="launch__bundles">
-                        <p class="splashBundle">&nbsp;</p>
-                    </div>
+            },
+            packages: [
+                // add local apps directory as amd package
+                { name: "localapps", location: "@@applicationURL.noscheme@@/js/apps" },
+                // add local bundles directory as amd package
+                { name: "localbundles", location: "@@jsregistry.root.url@@" }
+            ]
+        });
+        $apprt.startApp({
+            configLocation: "localapps",
+            param: "app",
+            defaultApp: "@@default.app.name@@"
+        });
+    </script>
+</head>
+<body class="start">
+<div id="splashScreen" class="ct-splashscreen splashScreen">
+    <div class="ct-splashscreen-header"></div>
+    <div class="ct-splashscreen-main">
+        <div class="startLogo"></div>
+        <div class="ct-splashscreen-stage">
+            <div class="launch__animation">
+                <div class="dot-outer">
+                    <div class="dot dot-1"></div>
+                </div>
+                <div class="dot-outer">
+                    <div class="dot dot-2"></div>
+                </div>
+                <div class="dot-outer">
+                    <div class="dot dot-3"></div>
+                </div>
+                <div class="dot-outer">
+                    <div class="dot dot-4"></div>
+                </div>
+                <div class="dot-outer">
+                    <div class="dot dot-5"></div>
+                </div>
+                <div class="dot-outer">
+                    <div class="dot dot-6"></div>
                 </div>
             </div>
-            <div class="ct-splashscreen-footer"></div>
+            <div class="launch__title">
+                <h4 class="splashHeader">
+                    <span class="launchLog"></span>
+                </h4>
+            </div>
+            <div class="launch__bundles">
+                <p class="splashBundle">&nbsp;</p>
+            </div>
         </div>
-    </body>
+    </div>
+    <div class="ct-splashscreen-footer"></div>
+</div>
+</body>
 </html>

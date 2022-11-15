@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright (C) 2021 con terra GmbH (info@conterra.de)
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-            http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-clusterfeaturelayer</artifactId>
@@ -102,10 +84,6 @@
                     <version>${ct.jsregistry.version}</version>
                 </plugin>
                 <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.1.0</version>
@@ -176,39 +154,9 @@
                     <artifactId>build-helper-maven-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
-                <plugin>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5.3</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.0.0</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.mycila</groupId>
-                    <artifactId>license-maven-plugin</artifactId>
-                    <version>2.11</version>
-                </plugin>
-                <plugin>
-                    <groupId>de.conterra.maven</groupId>
-                    <artifactId>setproperties-maven-plugin</artifactId>
-                    <version>1.0.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>de.conterra.jsrt</groupId>
-                    <artifactId>ct-jsrt-test-maven-plugin</artifactId>
-                    <version>${ct.jsrt-test.version}</version>
-                </plugin>
             </plugins>
         </pluginManagement>
         <sourceDirectory>src/main/js</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>src/main/js</directory>
-                <targetPath>${js.build.outputPath}</targetPath>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
         <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
@@ -243,9 +191,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- add here properties which are used in plugin configuration resolution -->
                     <properties>
-                        <!-- deployment of map.apps installation -->
                         <mapapps.remote.base>.</mapapps.remote.base>
                     </properties>
                 </configuration>
@@ -281,7 +227,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>de.conterra.mapapps</groupId>
-                                    <artifactId>ct-mapapps-js-api</artifactId>
+                                    <artifactId>ct-mapapps-js</artifactId>
                                     <version>${mapapps.version}</version>
                                     <classifier>src</classifier>
                                     <outputDirectory>${project.build.directory}/unpacked</outputDirectory>
@@ -365,6 +311,9 @@
                         </goals>
                         <configuration>
                             <arguments>${gulp.task}</arguments>
+                            <environmentVariables>
+                                <NODE_ENV>${gulp.node.env}</NODE_ENV>
+                            </environmentVariables>
                         </configuration>
                     </execution>
                     <execution>
@@ -377,43 +326,6 @@
                         <configuration>
                             <arguments>watch</arguments>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.mycila</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <configuration>
-                    <header>${project.baseUri}apache2-license-header.txt</header>
-                    <properties>
-                        <owner>con terra GmbH</owner>
-                        <email>info@conterra.de</email>
-                        <project.inceptionYear>2021</project.inceptionYear>
-                    </properties>
-                    <includes>
-                        <include>src/main/js/**/*.js</include>
-                        <include>src/main/js/**/*.ts</include>
-                        <include>src/main/js/**/*.vue</include>
-                        <include>src/main/js/**/*.css</include>
-                        <include>src/test/**/*.js</include>
-                        <include>src/test/**/*.html</include>
-                        <include>src/test/**/*.css</include>
-                        <include>src/test/**/application.properties</include>
-                        <include>src/main/config/assembly.xml</include>
-                        <include>**/build.properties</include>
-                        <include>**/gulpfile.js</include>
-                        <include>**/pom.xml</include>
-                    </includes>
-                    <mapping>
-                        <vue>XML_STYLE</vue>
-                    </mapping>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>format</goal>
-                        </goals>
-                        <phase>process-sources</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -436,9 +348,8 @@
                             <replacements>
                                 <replacement>
                                     <!-- remove bundleLocations from app.json -->
-                                    <token>\s*"bundleLocations"\s*:\s*\[\s*"localbundles"\s*,\s*"bundles"\s*\]\s*,\s*
-                                    </token>
-                                    <value/>
+                                    <token>\s*"bundleLocations"\s*:\s*\[\s*"localbundles"\s*,\s*"bundles"\s*\]\s*,\s*</token>
+                                    <value></value>
                                 </replacement>
                             </replacements>
                         </configuration>
@@ -448,6 +359,12 @@
             <plugin>
                 <groupId>de.conterra.mapapps</groupId>
                 <artifactId>mapapps-maven-plugin</artifactId>
+                <configuration>
+                    <!-- only build zip files -->
+                    <skipDeploy>true</skipDeploy>
+                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <!-- used to create .zip files containing the apps during the build -->
@@ -456,91 +373,20 @@
                             <goal>deployApps</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>build-app-template</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>deployAppTemplate</goal>
-                        </goals>
-                        <configuration>
-                            <templateFile>${project.build.directory}/${project.artifactId}-sample-app.zip</templateFile>
-                            <templateResources>
-                                <templateResource>
-                                    <directory>${js.build.outputPath}/apps/sample</directory>
-                                    <includes>
-                                        <include>**/*</include>
-                                    </includes>
-                                </templateResource>
-                            </templateResources>
-                        </configuration>
-                    </execution>
                 </executions>
-                <configuration>
-                    <!-- only build zip files -->
-                    <skipDeploy>true</skipDeploy>
-                    <createApp>false</createApp>
-                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/config/assembly.xml</descriptor>
-                    </descriptors>
-                    <finalName>${project.artifactId}-bundle</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-zip</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
-                    <preparationGoals>clean</preparationGoals>
-                    <releaseProfiles>compress</releaseProfiles>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                </configuration>
             </plugin>
         </plugins>
     </build>
-    <scm>
-        <connection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git</connection>
-        <developerConnection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git
-        </developerConnection>
-        <url>https://github.com/conterra/mapapps-clusterfeaturelayer</url>
-        <tag>HEAD</tag>
-    </scm>
-    <distributionManagement>
-        <repository>
-            <id>${dist.releases.id}</id>
-            <url>${dist.releases.url}</url>
-        </repository>
-        <snapshotRepository>
-            <id>${dist.snapshots.id}</id>
-            <url>${dist.snapshots.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- dojo custom build parameters -->
         <root.build.outputPath>${project.build.directory}/webapp</root.build.outputPath>
         <js.build.outputPath>${root.build.outputPath}/js</js.build.outputPath>
 
-        <mapapps.version>4.13.1</mapapps.version>
+        <mapapps.version>4.14.0</mapapps.version>
         <!-- JS lib versions -->
         <apprt.version>${mapapps.version}</apprt.version>
         <!-- java lib versions -->
-        <ct.jsregistry.version>1.4.4</ct.jsregistry.version>
+        <ct.jsregistry.version>1.5.6</ct.jsregistry.version>
         <ct.jsrt-test.version>2.0.2</ct.jsrt-test.version>
 
         <!-- the default app, replaced in the *.html files to switch app names-->
@@ -552,9 +398,12 @@
         </proxy.allowedServerUrls>
         <proxy.allowedSSLDNs>*</proxy.allowedSSLDNs>
         <proxy.use.rules></proxy.use.rules>
+        <proxy.cors.trustedServers>$\{mapapps.remote.base\}</proxy.cors.trustedServers>
+
         <jetty.port>9090</jetty.port>
         <mvn.cmd>mvn</mvn.cmd>
         <gulp.task></gulp.task>
+        <gulp.node.env>development</gulp.node.env>
 
         <mapapps.user>
             <!-- set correct username for map.apps remote installation-->
@@ -574,79 +423,11 @@
     </properties>
     <profiles>
         <profile>
-            <id>run-js-tests</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>build-helper-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>reserve-jetty-port</id>
-                                <goals>
-                                    <goal>reserve-network-port</goal>
-                                </goals>
-                                <phase>process-test-resources</phase>
-                                <configuration>
-                                    <portNames>
-                                        <portName>jetty.server.port</portName>
-                                    </portNames>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>jetty-start</id>
-                                <phase>process-test-classes</phase>
-                                <goals>
-                                    <goal>start</goal>
-                                </goals>
-                                <configuration>
-                                    <httpConnector>
-                                        <port>${jetty.server.port}</port>
-                                    </httpConnector>
-                                    <scanIntervalSeconds>0</scanIntervalSeconds>
-                                    <daemon>true</daemon>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>jetty-stop</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>stop</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>run gulp js tests</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>gulp</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>run-browser-tests --tests http://localhost:${jetty.server.port}/resources/jsregistry/root/@conterra/mapapps-mocha-runner/latest/mocha.html?boot=/js/tests/test-init.js&amp;timeout=5000&amp;test=dn_clusterfeaturelayer/tests/all&amp;reporter=tap</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>include-mapapps-deps</id>
             <dependencies>
                 <dependency>
                     <groupId>de.conterra.mapapps</groupId>
-                    <artifactId>ct-mapapps-js-api</artifactId>
+                    <artifactId>ct-mapapps-js</artifactId>
                     <scope>test</scope>
                 </dependency>
                 <dependency>
@@ -792,45 +573,66 @@
             </build>
         </profile>
         <profile>
-            <id>write-release-versions</id>
-            <properties>
-                <replace.source.version>${project.version}</replace.source.version>
-                <replace.target.version>${project.version}</replace.target.version>
-            </properties>
+            <id>run-js-tests</id>
             <build>
                 <plugins>
                     <plugin>
-                        <!-- ensure correct version in the manifest.json files-->
-                        <groupId>com.google.code.maven-replacer-plugin</groupId>
-                        <artifactId>replacer</artifactId>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
                         <executions>
-                            <!-- set release version -->
                             <execution>
-                                <id>Set Versions from ${replace.source.version} to ${replace.target.version}</id>
-                                <phase>validate</phase>
+                                <id>reserve-jetty-port</id>
                                 <goals>
-                                    <goal>replace</goal>
+                                    <goal>reserve-network-port</goal>
+                                </goals>
+                                <phase>process-test-resources</phase>
+                                <configuration>
+                                    <portNames>
+                                        <portName>jetty.server.port</portName>
+                                    </portNames>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.eclipse.jetty</groupId>
+                        <artifactId>jetty-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>jetty-start</id>
+                                <phase>process-test-classes</phase>
+                                <goals>
+                                    <goal>start</goal>
                                 </goals>
                                 <configuration>
-                                    <basedir>${basedir}</basedir>
-                                    <includes>
-                                        <include>src/main/js/**/manifest.json</include>
-                                        <include>src/main/js/**/package.json</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>src/main/js/**/tests/**</exclude>
-                                    </excludes>
-                                    <regex>false</regex>
-                                    <replacements>
-                                        <replacement>
-                                            <token>"${replace.source.version}"</token>
-                                            <value>"${replace.target.version}"</value>
-                                        </replacement>
-                                        <replacement>
-                                            <token>"~${replace.source.version}"</token>
-                                            <value>"~${replace.target.version}"</value>
-                                        </replacement>
-                                    </replacements>
+                                    <httpConnector>
+                                        <port>${jetty.server.port}</port>
+                                    </httpConnector>
+                                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                                    <daemon>true</daemon>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>jetty-stop</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>stop</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>run gulp js tests</id>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>gulp</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>run-browser-tests --tests http://localhost:${jetty.server.port}/resources/jsregistry/root/@conterra/mapapps-mocha-runner/latest/mocha.html?boot=/js/tests/test-init.js&amp;timeout=5000&amp;test=sample_tests/all&amp;reporter=tap</arguments>
                                 </configuration>
                             </execution>
                         </executions>
@@ -842,15 +644,10 @@
             <id>compress</id>
             <properties>
                 <gulp.task>compress</gulp.task>
+                <gulp.node.env>production</gulp.node.env>
             </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <updateReleaseInfo>true</updateReleaseInfo>
-                        </configuration>
-                    </plugin>
                     <plugin>
                         <groupId>de.conterra.jsregistry</groupId>
                         <artifactId>ct-jsregistry-maven-plugin</artifactId>
@@ -867,17 +664,7 @@
                                     <goal>optimizeJS</goal>
                                 </goals>
                                 <configuration>
-                                    <sourceLanguageLevel>ESNEXT</sourceLanguageLevel>
-                                    <targetLanguageLevel>ESNEXT</targetLanguageLevel>
-                                    <hasFeatures>
-                                        <ct-debug>false</ct-debug>
-                                    </hasFeatures>
-                                    <jsFiles>
-                                        <excludes>
-                                            <exclude>apps/**</exclude>
-                                            <exclude>**/tests/**</exclude>
-                                        </excludes>
-                                    </jsFiles>
+                                    <compress>false</compress>
                                 </configuration>
                             </execution>
                         </executions>
@@ -895,8 +682,6 @@
                         <configuration>
                             <skipDeploy>${skip.apps.upload}</skipDeploy>
                             <deployAsApp>true</deployAsApp>
-                            <appName>${project.artifactId}</appName>
-                            <appTitle>${project.artifactId}-${project.version}</appTitle>
                             <appEditorState>PUBLISHED</appEditorState>
                             <serverResourcesEndpoint>${mapapps.remote.base}/resources</serverResourcesEndpoint>
                             <username>${mapapps.user}</username>
