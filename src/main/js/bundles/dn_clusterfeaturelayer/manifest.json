@@ -11,7 +11,9 @@
     "startLevel": 1,
     "icon": {},
     "dependencies": {
-        "map-widget": "^4.2.0"
+        "map-widget": "^4.2.0",
+        "apprt-vue": "^4.2.0",
+        "apprt-vuetify": "^4.2.0"
     },
     "main": "main",
     "CSS-Themes-Extension": [
