@@ -42,7 +42,7 @@ export default class ClusterFeatureLayerTypeFactory {
             popupTemplate: layerArguments.popupTemplate,
             maptipTemplate: layerArguments.maptipTemplate,
             maptipEnabled: layerArguments.maptipEnabled,
-            expanded: layerArguments.expanded,
+            initiallyExpandedInToc: layerArguments.initiallyExpandedInToc,
             legendEnabled: false,
             popupEnabled: false,
             _objectIdField: opt.objectIdField || "objectid",
