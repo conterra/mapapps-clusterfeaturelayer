@@ -16,7 +16,7 @@
         "apprt-vuetify": "^4.2.0"
     },
     "main": "main",
-    "CSS-Themes-Extension": [
+    "cssThemesExtension": [
         {
             "name": "*",
             "files": [
