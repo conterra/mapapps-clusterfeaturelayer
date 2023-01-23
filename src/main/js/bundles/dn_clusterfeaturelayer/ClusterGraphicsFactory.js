@@ -179,11 +179,13 @@ export default class ClusterGraphicsFactory {
         const returnGraphics = [];
         // create graphics for cluster
         const baseSize = this.symbolBaseSize;
-        const spiderfyingSymbols = this._getSymbolsForSpiderfying(cluster);
-        const spiderfyingPoints = spiderfyingSymbols.map(() => point.clone());
+        const data = this._getDataForSpiderfying(cluster);
+        const spiderfyingPoints = data.map(() => point.clone());
         this._alignPointsInSpiderfying(spiderfyingPoints, baseSize);
-        spiderfyingSymbols.forEach((symbol, i) => {
-            if (symbol.featureAttributes) {
+
+        data.forEach((d, i) => {
+            const popupTemplate = this.popupTemplates[d.layerId];
+            if (d.attributes) {
                 // add line symbol
                 const offsetPoint = spiderfyingPoints[i];
                 const line = new Polyline({
@@ -208,16 +210,16 @@ export default class ClusterGraphicsFactory {
                 // add symbol
                 returnGraphics.push(new Graphic({
                     geometry: offsetPoint,
-                    symbol: symbol,
-                    attributes: symbol.featureAttributes,
-                    popupTemplate: this.popupTemplate
+                    symbol: d.symbol,
+                    attributes: d.attributes,
+                    popupTemplate: popupTemplate || this.popupTemplate
                 }));
 
                 const center = new Graphic({
                     geometry: point,
                     symbol: this.clusterSymbolProvider.getSpiderfyingSymbolCircle(),
-                    attributes: symbol.featureAttributes,
-                    popupTemplate: this.popupTemplate
+                    attributes: d.attributes,
+                    popupTemplate: popupTemplate || this.popupTemplate
                 });
                 returnGraphics.push(center);
             }
@@ -266,16 +268,15 @@ export default class ClusterGraphicsFactory {
         }
     }
 
-    _getSymbolsForSpiderfying(cluster) {
+    _getDataForSpiderfying(cluster) {
         const allFeatures = cluster.attributes.features;
-        const symbols = [];
-        let symbol;
-        allFeatures.forEach((feature) => {
-            symbol = this.getSymbolForFeature(feature).clone();
-            symbol.featureAttributes = feature.attributes;
-            symbols.push(symbol);
+        return allFeatures.map((feature) => {
+            return {
+                symbol: this.getSymbolForFeature(feature).clone(),
+                layerId: feature.layerId,
+                attributes: feature.attributes
+            };
         });
-        return symbols;
     }
 
     _getMostFeatures(allFeatures, maxNumberOfFeatures) {
@@ -436,6 +437,6 @@ export default class ClusterGraphicsFactory {
         return {
             "title": this.clusterFeatureLayerTitle + ": {clusterCount} " + this.i18n.ui.features,
             "content": [linkContent]
-        }
+        };
     }
 }
