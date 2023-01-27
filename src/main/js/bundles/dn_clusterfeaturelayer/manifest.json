@@ -1,6 +1,6 @@
 {
     "name": "dn_clusterfeaturelayer",
-    "version": "3.4.2",
+    "version": "3.4.3-SNAPSHOT",
     "title": "${bundleName}",
     "description": "${bundleDescription}",
     "vendor": "con terra GmbH",
