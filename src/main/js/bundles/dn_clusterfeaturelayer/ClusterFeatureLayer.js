@@ -27,8 +27,8 @@ import {convexHull} from "esri/geometry/geometryEngine";
 import Point from "esri/geometry/Point";
 import Polygon from "esri/geometry/Polygon";
 import Extent from "esri/geometry/Extent";
-import GraphicsLayer from "esri/layers/GraphicsLayer"
-import * as WatchUtils from "esri/core/watchUtils"
+import GraphicsLayer from "esri/layers/GraphicsLayer";
+import * as reactiveUtils from "esri/core/reactiveUtils";
 import * as ClusterGeometryFunctions from "./ClusterGeometryFunctions";
 import FeatureServerRequester from "./FeatureServerRequester";
 import ServiceMetadataProvider from "./ServiceMetadataProvider";
@@ -115,9 +115,12 @@ export default GraphicsLayer.createSubclass({
                 this._reCluster({forceReinit: true});
             }));
             this.sublayers.forEach((layer) => {
-                this.events.push(WatchUtils.watch(layer, "visible", () => {
-                    this._reCluster();
-                }));
+                this.events.push(reactiveUtils.watch(
+                    () => layer.visible,
+                    () => {
+                        this._reCluster();
+                    }
+                ));
             });
             this.events.push(this.watch("visible", (response) => {
                 if (response) {
