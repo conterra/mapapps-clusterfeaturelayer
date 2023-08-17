@@ -30,7 +30,10 @@
                 avatar
             >
                 <v-list-tile-avatar>
-                    <img :src="getBase64Image(info.symbol.imageData)">
+                    <img
+                        :src="getBase64Image(info.symbol.imageData)"
+                        alt=""
+                    >
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                     {{ info.layerTitle }}: {{ info.count }}
