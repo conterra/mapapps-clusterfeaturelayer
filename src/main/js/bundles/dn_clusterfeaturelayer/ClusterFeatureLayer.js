@@ -196,7 +196,7 @@ export default GraphicsLayer.createSubclass({
             if (!this._isInProgress) {
                 this._isInProgress = true;
                 if (!beenThereBefore || options.forceReinit === true) {
-                    console.log("recluster + getfeatures");
+                    console.info("recluster + getfeatures");
                     async(() => {
                         this._getFeaturesFromServer().then(() => {
                             // update clustered extent
@@ -206,7 +206,7 @@ export default GraphicsLayer.createSubclass({
                         });
                     });
                 } else {
-                    console.log("recluster");
+                    console.info("recluster");
                     async(() => {
                         this._clusterGraphics();
                         this._isInProgress = false;
@@ -258,14 +258,14 @@ export default GraphicsLayer.createSubclass({
                             }, (error) => {
                                 console.error(error);
                             });
-                        })
+                        });
                         promises.push(p);
                     });
                     Promise.all(promises).then(() => {
                         resolve();
                     }, (error) => {
                         console.error(error);
-                    })
+                    });
                 }, (error) => {
                     console.error(error);
                 });
@@ -298,7 +298,7 @@ export default GraphicsLayer.createSubclass({
      * @private
      */
     _addFeaturesToClusterCache(result, layerId, layerTitle) {
-        console.log("add to cluster cache");
+        console.info("add to cluster cache");
         return new Promise((resolve) => {
             async(() => {
                 // get features from cache (features that have been requested before)
@@ -324,7 +324,7 @@ export default GraphicsLayer.createSubclass({
                 this._setLayerExtent();
                 resolve();
             });
-        })
+        });
     },
 
     /**
@@ -633,7 +633,7 @@ export default GraphicsLayer.createSubclass({
 
 
     _getClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider, metadataProvider,
-                               mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, popupTemplates) {
+        mapWidgetModel, popupTemplate, clusterPopupWidgetFactory, options, popupTemplates) {
         return new ClusterGraphicsFactory(clusterSymbolProvider, featureSymbolProvider,
             metadataProvider, mapWidgetModel, popupTemplate, popupTemplates, clusterPopupWidgetFactory,
             options, this.title, this._i18n);

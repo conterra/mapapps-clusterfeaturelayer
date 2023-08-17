@@ -95,6 +95,6 @@ export default class ClusterFeatureLayerTypeFactory {
         this._clusterLayers.forEach((clusterLayer) => {
             clusterLayer.setMapWidgetModel(mapWidgetModel);
             clusterLayer.activateLayer();
-        })
+        });
     }
 }

@@ -44,12 +44,12 @@ export default class FeatureServerRequester {
         if (this._serviceMetadata) {
             d.resolve(this._serviceMetadata);
         }
-        const requests = urls.map((url) => {
-            return apprt_request(url + "/layers", {
+        const requests = urls.map((url) =>
+            apprt_request(url + "/layers", {
                 query: {f: "json"},
                 handleAs: "json"
-            });
-        });
+            })
+        );
         const dl = new DeferredList(requests);
         dl.then((details) => {
             const response = {details: []};

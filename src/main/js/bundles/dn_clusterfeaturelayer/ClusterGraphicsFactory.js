@@ -21,7 +21,7 @@ import CustomContent from "esri/popup/content/CustomContent";
 
 export default class ClusterGraphicsFactory {
     constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider,
-                mapWidgetModel, popupTemplate, popupTemplates, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
+        mapWidgetModel, popupTemplate, popupTemplates, clusterPopupWidgetFactory, options, clusterFeatureLayerTitle, i18n) {
         this.i18n = i18n;
         this.clusterFeatureLayerTitle = clusterFeatureLayerTitle;
         this.clusterSymbolProvider = clusterSymbolProvider;
