@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2022 con terra GmbH (info@conterra.de)
+    Copyright (C) 2023 con terra GmbH (info@conterra.de)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
     <artifactId>mapapps-clusterfeaturelayer</artifactId>
-    <version>3.4.3</version>
+    <version>3.4.4-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
