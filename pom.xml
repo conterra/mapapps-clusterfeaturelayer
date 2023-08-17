@@ -326,7 +326,7 @@
                     <properties>
                         <owner>con terra GmbH</owner>
                         <email>info@conterra.de</email>
-                        <project.inceptionYear>2022</project.inceptionYear>
+                        <project.inceptionYear>2023</project.inceptionYear>
                     </properties>
                     <includes>
                         <include>src/main/js/**/*.js</include>
