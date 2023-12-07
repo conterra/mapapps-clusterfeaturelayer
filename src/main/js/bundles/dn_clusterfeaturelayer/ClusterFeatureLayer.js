@@ -167,7 +167,6 @@ export default GraphicsLayer.createSubclass({
         this._predefinedObjectIds = null;
         // clear array with calculated clusters
         this._clusters = [];
-        this.initDataStructures(this.sublayers);
         this._reCluster({forceReinit: true});
     },
 
