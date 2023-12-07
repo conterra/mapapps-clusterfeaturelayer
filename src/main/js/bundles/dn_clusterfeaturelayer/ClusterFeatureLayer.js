@@ -167,6 +167,11 @@ export default GraphicsLayer.createSubclass({
         this._predefinedObjectIds = null;
         // clear array with calculated clusters
         this._clusters = [];
+        this.initDataStructures(this.sublayers);
+        const mapWidgetModel = this._mapWidgetModel;
+        // Create new FeatureServerRequester to clear cache
+        this._serverRequester = new FeatureServerRequester(
+            this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
         this._reCluster({forceReinit: true});
     },
 
