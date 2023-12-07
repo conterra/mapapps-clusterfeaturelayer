@@ -163,6 +163,14 @@ export default GraphicsLayer.createSubclass({
         this._reCluster({forceReinit: true});
     },
 
+    resetData() {
+        this._predefinedObjectIds = null;
+        // clear array with calculated clusters
+        this._clusters = [];
+        this.initDataStructures(this.sublayers);
+        this._reCluster({forceReinit: true});
+    },
+
     setMapWidgetModel(mapWidgetModel) {
         this._mapWidgetModel = mapWidgetModel;
     },
