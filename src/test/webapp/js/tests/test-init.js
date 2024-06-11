@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// eslint-disable-next-line no-undef
 testConfig({
     jsregistry: [{
-            //root: "url to registry..",
-            packages: [
-                // register all self hosted packages
-                "*"
-            ]
-        }
+        //root: "url to registry..",
+        packages: [
+            // register all self hosted packages
+            "*"
+        ]}
         //uncomment, if project runs in remote mode
         // ,{
         //     root: "@@mapapps.remote.base@@/resources/jsregistry/root",

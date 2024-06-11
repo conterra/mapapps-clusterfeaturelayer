@@ -16,7 +16,9 @@
         "apprt-vuetify": "^4.12.0",
         "esri": "^4.20.0"
     },
-    "main": "main",
+    "i18n": [
+        "bundle"
+    ],
     "cssThemesExtension": [
         {
             "name": "*",

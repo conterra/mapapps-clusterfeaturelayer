@@ -16,12 +16,13 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
-    <artifactId>mapapps-clusterfeaturelayer</artifactId>
-    <version>3.4.5-SNAPSHOT</version>
+    <artifactId>mapapps-devnet-blueprint</artifactId>
+    <version>4.18.1</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -45,11 +46,6 @@
                 <version>${mapapps.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>de.conterra.mapapps</groupId>
-                <artifactId>ct-mapapps-js</artifactId>
-                <version>${mapapps.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -81,7 +77,6 @@
             <version>${ct.jsrt-test.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     <build>
         <pluginManagement>
@@ -95,6 +90,10 @@
                     <groupId>de.conterra.jsregistry</groupId>
                     <artifactId>ct-jsregistry-maven-plugin</artifactId>
                     <version>${ct.jsregistry.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.8.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -143,10 +142,9 @@
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
                     <artifactId>frontend-maven-plugin</artifactId>
-                    <version>1.12.1</version>
+                    <version>1.14.2</version>
                     <configuration>
-                        <nodeVersion>v18.13.0</nodeVersion>
-                        <npmVersion>8.19.3</npmVersion>
+                        <nodeVersion>v20.9.0</nodeVersion>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -171,11 +169,6 @@
                     <groupId>de.conterra.maven</groupId>
                     <artifactId>setproperties-maven-plugin</artifactId>
                     <version>1.0.2</version>
-                </plugin>
-                <plugin>
-                    <groupId>de.conterra.jsrt</groupId>
-                    <artifactId>ct-jsrt-test-maven-plugin</artifactId>
-                    <version>${ct.jsrt-test.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -203,6 +196,29 @@
         </testResources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>[3.8.0,)</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[17,)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>de.conterra.maven</groupId>
                 <artifactId>setproperties-maven-plugin</artifactId>
                 <version>1.0.3</version>
@@ -214,9 +230,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- add here properties which are used in plugin configuration resolution -->
                     <properties>
-                        <!-- deployment of map.apps installation -->
                         <mapapps.remote.base>.</mapapps.remote.base>
                     </properties>
                 </configuration>
@@ -224,7 +238,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <version>3.11.0</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -232,7 +246,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.5.0</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
@@ -240,6 +254,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>unpack-themes-src</id>
@@ -342,6 +357,9 @@
                         <include>**/gulpfile.js</include>
                         <include>**/pom.xml</include>
                     </includes>
+                    <excludes>
+                        <exclude>src/main/js/**/*.min.js</exclude>
+                    </excludes>
                     <mapping>
                         <vue>XML_STYLE</vue>
                     </mapping>
@@ -394,7 +412,8 @@
                             <goal>buildPacksProperties</goal>
                         </goals>
                         <configuration>
-                            <!-- don't list not shipped bundles in the META-INF\js-registry-packs.properties file -->
+                            <!-- don't list not shipped bundles in the
+                            META-INF\js-registry-packs.properties file -->
                             <scanPackagesExcludes>apps/**,bundles/sample_tests</scanPackagesExcludes>
                         </configuration>
                     </execution>
@@ -407,6 +426,13 @@
             <plugin>
                 <groupId>de.conterra.mapapps</groupId>
                 <artifactId>mapapps-maven-plugin</artifactId>
+                <configuration>
+                    <!-- only build zip files -->
+                    <skipDeploy>true</skipDeploy>
+                    <createApp>false</createApp>
+                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <!-- used to create .zip files containing the apps during the build -->
@@ -434,13 +460,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <!-- only build zip files -->
-                    <skipDeploy>true</skipDeploy>
-                    <createApp>false</createApp>
-                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -473,10 +492,10 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git</connection>
-        <developerConnection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git
+        <connection>scm:git:https://github.com/conterra/mapapps-devnet-blueprint.git</connection>
+        <developerConnection>scm:git:https://github.com/conterra/mapapps-devnet-blueprint.git
         </developerConnection>
-        <url>https://github.com/conterra/mapapps-clusterfeaturelayer</url>
+        <url>https://github.com/conterra/mapapps-devnet-blueprint</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
@@ -494,11 +513,12 @@
         <root.build.outputPath>${project.build.directory}/webapp</root.build.outputPath>
         <js.build.outputPath>${root.build.outputPath}/js</js.build.outputPath>
 
-        <mapapps.version>4.15.0</mapapps.version>
+        <mapapps.version>4.18.1</mapapps.version>
+        <vuetify.version>1.5.30</vuetify.version>
         <!-- JS lib versions -->
         <apprt.version>${mapapps.version}</apprt.version>
         <!-- java lib versions -->
-        <ct.jsregistry.version>1.5.9</ct.jsregistry.version>
+        <ct.jsregistry.version>2.1.1</ct.jsregistry.version>
         <ct.jsrt-test.version>2.0.2</ct.jsrt-test.version>
 
         <!-- the default app, replaced in the *.html files to switch app names-->
@@ -528,7 +548,7 @@
         required -->
         <mapapps.useChunkedRequestEncoding>true</mapapps.useChunkedRequestEncoding>
         <!-- enable this if "upload" profile should only deploy bundles -->
-        <skip.apps.upload>true</skip.apps.upload>
+        <skip.apps.upload>false</skip.apps.upload>
         <!-- enable this if "upload" profile should pre-optimize apps -->
         <triggerPreOptimization>false</triggerPreOptimization>
     </properties>
@@ -562,6 +582,11 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
+                    <groupId>com.esri</groupId>
+                    <artifactId>terraformer-js</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
                     <groupId>moment-js</groupId>
                     <artifactId>moment-js</artifactId>
                     <scope>test</scope>
@@ -569,6 +594,11 @@
                 <dependency>
                     <groupId>de.conterra.js</groupId>
                     <artifactId>apprt-polyfill</artifactId>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>de.conterra.js</groupId>
+                    <artifactId>reactivity</artifactId>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
