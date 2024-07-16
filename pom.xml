@@ -21,8 +21,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.conterra.devnet</groupId>
-    <artifactId>mapapps-devnet-blueprint</artifactId>
-    <version>4.18.1</version>
+    <artifactId>mapapps-clusterfeaturelayer</artifactId>
+    <version>3.4.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -46,6 +46,11 @@
                 <version>${mapapps.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.conterra.mapapps</groupId>
+                <artifactId>ct-mapapps-js</artifactId>
+                <version>${mapapps.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -77,6 +82,7 @@
             <version>${ct.jsrt-test.version}</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <build>
         <pluginManagement>
@@ -90,10 +96,6 @@
                     <groupId>de.conterra.jsregistry</groupId>
                     <artifactId>ct-jsregistry-maven-plugin</artifactId>
                     <version>${ct.jsregistry.version}</version>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -170,6 +172,11 @@
                     <artifactId>setproperties-maven-plugin</artifactId>
                     <version>1.0.2</version>
                 </plugin>
+                <plugin>
+                    <groupId>de.conterra.jsrt</groupId>
+                    <artifactId>ct-jsrt-test-maven-plugin</artifactId>
+                    <version>${ct.jsrt-test.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <sourceDirectory>src/main/js</sourceDirectory>
@@ -230,7 +237,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <!-- add here properties which are used in plugin configuration resolution -->
                     <properties>
+                        <!-- deployment of map.apps installation -->
                         <mapapps.remote.base>.</mapapps.remote.base>
                     </properties>
                 </configuration>
@@ -412,8 +421,7 @@
                             <goal>buildPacksProperties</goal>
                         </goals>
                         <configuration>
-                            <!-- don't list not shipped bundles in the
-                            META-INF\js-registry-packs.properties file -->
+                            <!-- don't list not shipped bundles in the META-INF\js-registry-packs.properties file -->
                             <scanPackagesExcludes>apps/**,bundles/sample_tests</scanPackagesExcludes>
                         </configuration>
                     </execution>
@@ -426,13 +434,6 @@
             <plugin>
                 <groupId>de.conterra.mapapps</groupId>
                 <artifactId>mapapps-maven-plugin</artifactId>
-                <configuration>
-                    <!-- only build zip files -->
-                    <skipDeploy>true</skipDeploy>
-                    <createApp>false</createApp>
-                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
-                </configuration>
                 <executions>
                     <execution>
                         <!-- used to create .zip files containing the apps during the build -->
@@ -460,6 +461,13 @@
                         </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <!-- only build zip files -->
+                    <skipDeploy>true</skipDeploy>
+                    <createApp>false</createApp>
+                    <sourceDirectory>${js.build.outputPath}/apps</sourceDirectory>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -492,10 +500,10 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:git:https://github.com/conterra/mapapps-devnet-blueprint.git</connection>
-        <developerConnection>scm:git:https://github.com/conterra/mapapps-devnet-blueprint.git
+        <connection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git</connection>
+        <developerConnection>scm:git:https://github.com/conterra/mapapps-clusterfeaturelayer.git
         </developerConnection>
-        <url>https://github.com/conterra/mapapps-devnet-blueprint</url>
+        <url>https://github.com/conterra/mapapps-clusterfeaturelayer</url>
         <tag>HEAD</tag>
     </scm>
     <distributionManagement>
@@ -548,7 +556,7 @@
         required -->
         <mapapps.useChunkedRequestEncoding>true</mapapps.useChunkedRequestEncoding>
         <!-- enable this if "upload" profile should only deploy bundles -->
-        <skip.apps.upload>false</skip.apps.upload>
+        <skip.apps.upload>true</skip.apps.upload>
         <!-- enable this if "upload" profile should pre-optimize apps -->
         <triggerPreOptimization>false</triggerPreOptimization>
     </properties>
