@@ -16,7 +16,7 @@
 import Deferred from "dojo/_base/Deferred";
 import all from "dojo/promise/all";
 import DeferredList from "dojo/DeferredList";
-import { apprtFetch } from "apprt-fetch";
+import { apprtFetchJson } from "apprt-fetch";
 import Query from "esri/rest/support/Query";
 import { executeForIds, executeQueryJSON } from "esri/rest/query";
 import ObjectIdCache from "./ObjectIdCache";
@@ -45,7 +45,7 @@ export default class FeatureServerRequester {
             d.resolve(this._serviceMetadata);
         }
         const requests = urls.map((url) =>
-            apprtFetch(url + "/layers", {
+            apprtFetchJson(url + "/layers", {
                 query: {f: "json"},
                 handleAs: "json"
             })
