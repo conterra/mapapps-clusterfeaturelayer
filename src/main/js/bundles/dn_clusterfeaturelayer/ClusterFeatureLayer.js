@@ -630,7 +630,7 @@ export default GraphicsLayer.createSubclass({
         const spatialReference = this._mapWidgetModel.spatialReference;
         const normalizedExtents = view.extent.normalize();
         const normalizedExtentPolygons = normalizedExtents.map((extent) => Polygon.fromExtent(extent));
-        const masterPolygon = new Polygon(spatialReference);
+        const masterPolygon = new Polygon({ spatialReference });
         normalizedExtentPolygons.forEach((polygon) => {
             masterPolygon.addRing(polygon.rings[0]);
         });
