@@ -244,7 +244,7 @@
                                 "symbolBaseSize": 25,
                                 "showClusterGrid": true,
                                 "showClusterGridCounts": true,
-                                "showClusterGridBackground": true,
+                                "showClusterGridBackground": false,
                                 "showClusterArea": true,
                                 "showClusterSize": true,
                                 "showClusterPopup": false,
