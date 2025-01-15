@@ -23,7 +23,7 @@
  *  |_ClusterFeatureLayer
  */
 import ct_lang from "ct/_lang";
-import {convexHull} from "esri/geometry/geometryEngine";
+import { convexHull } from "esri/geometry/geometryEngine";
 import Point from "esri/geometry/Point";
 import Polygon from "esri/geometry/Polygon";
 import Extent from "esri/geometry/Extent";
@@ -85,7 +85,7 @@ export default GraphicsLayer.createSubclass({
             if (mapWidgetModel.view) {
                 resolve(mapWidgetModel.view);
             } else {
-                mapWidgetModel.watch("view", ({value: view}) => {
+                mapWidgetModel.watch("view", ({ value: view }) => {
                     resolve(view);
                 });
             }
@@ -96,7 +96,7 @@ export default GraphicsLayer.createSubclass({
         this.initDataStructures(this.sublayers);
         const mapWidgetModel = this._mapWidgetModel;
         const requester = this._serverRequester = new FeatureServerRequester(
-            this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
+            this.sublayers, { wkid: this.wkid }, this._returnLimit, mapWidgetModel);
         requester.getServiceMetadata().then((serviceDetails) => {
             if (this.events && this.events.length > 0) {
                 this.events.forEach((event) => {
@@ -109,10 +109,10 @@ export default GraphicsLayer.createSubclass({
             const metadataProvider = this._getServiceMetadataProvider(serviceDetails);
             this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider,
                 metadataProvider, mapWidgetModel, this.popupTemplate, this._clusterPopupWidgetFactory, this._options, this._popupTemplates);
-            const view = mapWidgetModel.get("view");
-            const map = mapWidgetModel.get("map");
+            const view = mapWidgetModel.view;
+            const map = mapWidgetModel.map;
             this.events.push(map.allLayers.on("change", () => {
-                this._reCluster({forceReinit: true});
+                this._reCluster({ forceReinit: true });
             }));
             this.sublayers.forEach((layer) => {
                 this.events.push(reactiveUtils.watch(
@@ -141,7 +141,7 @@ export default GraphicsLayer.createSubclass({
             this.events.push(mapWidgetModel.watch("view", () => {
                 this._initListener();
             }));
-            this._reCluster({forceReinit: true});
+            this._reCluster({ forceReinit: true });
         });
     },
 
@@ -160,7 +160,7 @@ export default GraphicsLayer.createSubclass({
         // clear array with calculated clusters
         this._clusters = [];
         this.initDataStructures(this.sublayers);
-        this._reCluster({forceReinit: true});
+        this._reCluster({ forceReinit: true });
     },
 
     resetData() {
@@ -171,8 +171,8 @@ export default GraphicsLayer.createSubclass({
         const mapWidgetModel = this._mapWidgetModel;
         // Create new FeatureServerRequester to clear cache
         this._serverRequester = new FeatureServerRequester(
-            this.sublayers, {wkid: this.wkid}, this._returnLimit, mapWidgetModel);
-        this._reCluster({forceReinit: true});
+            this.sublayers, { wkid: this.wkid }, this._returnLimit, mapWidgetModel);
+        this._reCluster({ forceReinit: true });
     },
 
     setMapWidgetModel(mapWidgetModel) {
@@ -186,10 +186,10 @@ export default GraphicsLayer.createSubclass({
         if (!this._mapWidgetModel) {
             return;
         }
-        const view = this._mapWidgetModel.get("view");
-        const mapExtent = view && view.get("extent");
+        const view = this._mapWidgetModel.view;
+        const mapExtent = view && view.extent;
         if (mapExtent) {
-            const scale = this._mapWidgetModel.get("scale");
+            const scale = this._mapWidgetModel.scale;
             if (scale) {
                 if (scale <= this._maxClusterScale) {
                     this._clusterTolerance = 0;
@@ -265,8 +265,8 @@ export default GraphicsLayer.createSubclass({
                             requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
                                 that._addFeaturesToClusterCache(featuresResult,
                                     result.layerId, result.layerTitle).then(() => {
-                                    resolve();
-                                });
+                                        resolve();
+                                    });
                             }, (error) => {
                                 console.error(error);
                             });
@@ -505,7 +505,7 @@ export default GraphicsLayer.createSubclass({
 
     _handleClick(event) {
         const that = this;
-        const view = this._mapWidgetModel.get("view");
+        const view = this._mapWidgetModel.view;
         view.hitTest(event).then((response) => {
             // find first clusterfeaturelayer graphic
             const graphic = that._findFirstClusterGraphicInView(response.results, that);
@@ -536,7 +536,7 @@ export default GraphicsLayer.createSubclass({
                     const extent = attributes.extent;
                     const clusterExtent = new Extent(extent[0], extent[1], extent[2], extent[3],
                         view.spatialReference).expand(1.5);
-                    view.goTo({target: clusterExtent}, {
+                    view.goTo({ target: clusterExtent }, {
                         "animate": true,
                         "duration": 1000,
                         "easing": "ease-in-out"
@@ -549,7 +549,7 @@ export default GraphicsLayer.createSubclass({
     _clusterMouseOver(event) {
         const that = this;
         if (this._showClusterArea) {
-            const view = this._mapWidgetModel.get("view");
+            const view = this._mapWidgetModel.view;
             view.hitTest(event).then((response) => {
                 const graphic = that._findFirstClusterGraphicInView(response.results, that);
                 if (!graphic) {
@@ -626,9 +626,9 @@ export default GraphicsLayer.createSubclass({
      * @private
      */
     _getNormalizedExtentsPolygon() {
-        const view = this._mapWidgetModel.get("view");
-        const spatialReference = this._mapWidgetModel.get("spatialReference");
-        const normalizedExtents = view.get("extent").normalize();
+        const view = this._mapWidgetModel.view;
+        const spatialReference = this._mapWidgetModel.spatialReference;
+        const normalizedExtents = view.extent.normalize();
         const normalizedExtentPolygons = normalizedExtents.map((extent) => Polygon.fromExtent(extent));
         const masterPolygon = new Polygon(spatialReference);
         normalizedExtentPolygons.forEach((polygon) => {

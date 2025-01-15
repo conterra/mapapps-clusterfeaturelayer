@@ -74,9 +74,9 @@ export default class FeatureServerRequester {
             const layerTitle = layer.title || layerId;
             const singleQueryDeferred = new Deferred();
             const query = that._getQueryForLayer(layerId);
-            const view = that.mapWidgetModel.get("view");
+            const view = that.mapWidgetModel.view;
             query.objectIds = null;
-            query.geometry = view && view.get("extent");
+            query.geometry = view && view.extent;
             query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
 
             if (whereExpression) {

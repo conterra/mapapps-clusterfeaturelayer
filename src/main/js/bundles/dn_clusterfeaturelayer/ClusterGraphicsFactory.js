@@ -228,7 +228,7 @@ export default class ClusterGraphicsFactory {
     }
 
     offsetToDistance(value) {
-        const clusterResolution = this.mapWidgetModel.get("view").resolution || 1;
+        const clusterResolution = this.mapWidgetModel.view.resolution || 1;
         return value * clusterResolution;
     }
 
@@ -413,12 +413,12 @@ export default class ClusterGraphicsFactory {
 
     _getRotation() {
         let rotation = 0;
-        const viewmode = this.mapWidgetModel.get("viewmode");
+        const viewmode = this.mapWidgetModel.viewmode;
         if (viewmode === "2D") {
-            rotation = this.mapWidgetModel.get("rotation") * -1;
+            rotation = this.mapWidgetModel.rotation * -1;
         } else {
-            const camera = this.mapWidgetModel.get("camera");
-            rotation = camera && camera.get("heading");
+            const camera = this.mapWidgetModel.camera;
+            rotation = camera && camera.heading;
         }
         return rotation;
     }
