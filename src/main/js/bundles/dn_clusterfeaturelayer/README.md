@@ -93,24 +93,24 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 }
 ```
 
-| Property                       | Type    | Possible Values               | Default        | Description                                                                              |
-|--------------------------------|---------|-------------------------------|----------------|------------------------------------------------------------------------------------------|
-| objectIdField                  | String  |                               | ```objectid``` | Object id field                                                                          |
-| clusterDistance                | number  |                               | ```100```      | Cluster distance in pixels                                                               |
-| spiderfyingDistance            | number  |                               | ```1```        | Spiderfying distance in pixels                                                           |
-| returnLimit                    | number  |                               | ```1000```     | Service return limit                                                                     |
-| maxClusterScale                | number  |                               | ```0```        | Max cluster scale                                                                        |
-| symbolBaseSize                 | number  |                               | ```30```       | Symbol base size                                                                         |
-| showClusterGrid                | boolean | ```true``` &#124; ```false``` | ```true```     | Use the cluster grid style                                                               |
-| showClusterGridCounts          | boolean | ```true``` &#124; ```false``` | ```true```     | Show cluster grid counts (This property is currently not supported in 3D SceneViews)     |
-| showClusterGridBackground      | boolean | ```true``` &#124; ```false``` | ```false```    | Show cluster grid background (This property is currently not supported in 3D SceneViews) |
-| showClusterArea                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the area of a cluster                                                               |
-| showClusterSize                | boolean | ```true``` &#124; ```false``` | ```false```    | Show the size of a cluster                                                               |
-| showClusterPopup               | boolean | ```true``` &#124; ```false``` | ```false```    | Show a popup instead of zooming in when clicking on a cluster                            |
-| showSpiderfying                | boolean | ```true``` &#124; ```false``` | ```true```     | Show the spiderfying                                                                     |
-| zoomOnClusterClick             | boolean | ```true``` &#124; ```false``` | ```true```     | Zoom in to the extent of the cluster features on click                                   |
-| useDefaultSymbolForFeatures    | boolean | ```true``` &#124; ```false``` | ```false```    | Use default symbols for features                                                         |
-| clusterLabelOffset             | number  |                               | ```-10```      | Size of the label offset                                                                 |
+| Property                    | Type    | Possible Values               | Default        | Description                                                                                                |
+| --------------------------- | ------- | ----------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------- |
+| objectIdField               | String  |                               | ```objectid``` | Object id field                                                                                            |
+| clusterDistance             | number  |                               | ```100```      | Cluster distance in pixels                                                                                 |
+| spiderfyingDistance         | number  |                               | ```1```        | Spiderfying distance in pixels                                                                             |
+| returnLimit                 | number  |                               | ```1000```     | Service return limit                                                                                       |
+| maxClusterScale             | number  |                               | ```0```        | Max cluster scale                                                                                          |
+| symbolBaseSize              | number  |                               | ```30```       | Symbol base size                                                                                           |
+| showClusterGrid             | boolean | ```true``` &#124; ```false``` | ```true```     | Use the cluster grid style                                                                                 |
+| showClusterGridCounts       | boolean | ```true``` &#124; ```false``` | ```true```     | Show cluster grid counts (This property is currently not supported in 3D SceneViews)                       |
+| showClusterGridBackground   | boolean | ```true``` &#124; ```false``` | ```false```    | Show cluster grid background (This property is currently not supported in 3D SceneViews and map.apps 4.19) |
+| showClusterArea             | boolean | ```true``` &#124; ```false``` | ```true```     | Show the area of a cluster                                                                                 |
+| showClusterSize             | boolean | ```true``` &#124; ```false``` | ```false```    | Show the size of a cluster                                                                                 |
+| showClusterPopup            | boolean | ```true``` &#124; ```false``` | ```false```    | Show a popup instead of zooming in when clicking on a cluster                                              |
+| showSpiderfying             | boolean | ```true``` &#124; ```false``` | ```true```     | Show the spiderfying                                                                                       |
+| zoomOnClusterClick          | boolean | ```true``` &#124; ```false``` | ```true```     | Zoom in to the extent of the cluster features on click                                                     |
+| useDefaultSymbolForFeatures | boolean | ```true``` &#124; ```false``` | ```false```    | Use default symbols for features                                                                           |
+| clusterLabelOffset          | number  |                               | ```-10```      | Size of the label offset                                                                                   |
 
 ## Configurable Components of dn_clusterfeaturelayer:
 
@@ -189,23 +189,23 @@ Based on the Esri Cluster Layer JS provides here: https://github.com/Esri/cluste
 }
 ```
 
-| Property                       | Type    | Possible Values                 | Default    | Description                          |
-|--------------------------------|---------|---------------------------------|------------|--------------------------------------|
-| clusterBackgroundSymbolColor   | Array   |                                 |            | Cluster grid background color        |
-| clusterBackgroundBorderColor   | Array   |                                 |            | Cluster grid background border color |
-| clusterBackgroundBorderSize    | number  |                                 | ```0.5```  | Cluster grid background border size  |
-| clusterAreaSymbolColor         | Array   |                                 |            | Cluster area symbol color            |
-| clusterAreaSymbolBorderColor   | Array   |                                 |            | Cluster area symbol border color     |
-| clusterAreaSymbolBorderSize    | number  |                                 | ```0.5```  | Cluster area symbol border size      |
-| clusterSingleSymbolColor       | Array   |                                 |            | Single cluster symbol color          |
-| clusterSingleSymbolBorderColor | Array   |                                 |            | Single cluster border color          |
-| clusterSingleSymbolBorderSize  | number  |                                 | ```20```   | Single cluster border size           |
-| spiderfyingLineColor           | Array   |                                 |            | Spiderfying line color               |
-| spiderfyingLineSize            | number  |                                 | ```0.5```  | Spiderfying line size                |
-| spiderfyingCenterColor         | Array   |                                 |            | Spiderfying center color             |
-| spiderfyingCenterSize          | number  |                                 | ```5```    | Spiderfying center size              |
-| labelColor                     | Array   |                                 |            | Label color                          |
-| labelHaloColor                 | Array   |                                 |            | Label halo color                     |
-| labelHaloSize                  | number  |                                 | ```1```    | Label halo size                      |
-| labelFontSize                  | String  |                                 | ```10pt``` | label font size                      |
-| labelFontFamily                | String  |                                 | ```Arial```| Label font family                    |
+| Property                       | Type   | Possible Values | Default     | Description                          |
+| ------------------------------ | ------ | --------------- | ----------- | ------------------------------------ |
+| clusterBackgroundSymbolColor   | Array  |                 |             | Cluster grid background color        |
+| clusterBackgroundBorderColor   | Array  |                 |             | Cluster grid background border color |
+| clusterBackgroundBorderSize    | number |                 | ```0.5```   | Cluster grid background border size  |
+| clusterAreaSymbolColor         | Array  |                 |             | Cluster area symbol color            |
+| clusterAreaSymbolBorderColor   | Array  |                 |             | Cluster area symbol border color     |
+| clusterAreaSymbolBorderSize    | number |                 | ```0.5```   | Cluster area symbol border size      |
+| clusterSingleSymbolColor       | Array  |                 |             | Single cluster symbol color          |
+| clusterSingleSymbolBorderColor | Array  |                 |             | Single cluster border color          |
+| clusterSingleSymbolBorderSize  | number |                 | ```20```    | Single cluster border size           |
+| spiderfyingLineColor           | Array  |                 |             | Spiderfying line color               |
+| spiderfyingLineSize            | number |                 | ```0.5```   | Spiderfying line size                |
+| spiderfyingCenterColor         | Array  |                 |             | Spiderfying center color             |
+| spiderfyingCenterSize          | number |                 | ```5```     | Spiderfying center size              |
+| labelColor                     | Array  |                 |             | Label color                          |
+| labelHaloColor                 | Array  |                 |             | Label halo color                     |
+| labelHaloSize                  | number |                 | ```1```     | Label halo size                      |
+| labelFontSize                  | String |                 | ```10pt```  | label font size                      |
+| labelFontFamily                | String |                 | ```Arial``` | Label font family                    |
