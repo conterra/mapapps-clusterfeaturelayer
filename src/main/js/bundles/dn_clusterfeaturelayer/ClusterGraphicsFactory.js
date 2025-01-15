@@ -125,22 +125,24 @@ export default class ClusterGraphicsFactory {
         // calculate grid
         // 1 feature -> gridSize = 1; 2-4 features -> gridSize = 2; >4 features -> gridSize= 3
         const gridSize = Math.ceil(Math.sqrt(pointsCount));
-        const columnsCount = gridSize;
-        const rowsCount = Math.ceil(pointsCount / gridSize);
 
-        const maxClusterSize = 3 * baseSize;
-        const clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(
-            columnsCount, rowsCount, baseSize, !this.showClusterGridBackground);
-        clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * baseSize)));
-        //clusterSymbolsBackground.set("angle", this._getRotation());
-        returnGraphics.push(new Graphic(
-            {
-                geometry: point,
-                symbol: clusterSymbolsBackground,
-                attributes: clusterAttributes,
-                popupTemplate: this.showClusterPopup ? clusterPopupTemplate : null
-            }
-        ));
+        if (this.showClusterGridBackground) {
+            const columnsCount = gridSize;
+            const rowsCount = Math.ceil(pointsCount / gridSize);
+            const maxClusterSize = 3 * baseSize;
+            const clusterSymbolsBackground = this.clusterSymbolProvider.getClusterSymbolsBackground(
+                columnsCount, rowsCount, baseSize, !this.showClusterGridBackground);
+            clusterSymbolsBackground.set("size", (Math.min(maxClusterSize, gridSize * baseSize)));
+            //clusterSymbolsBackground.set("angle", this._getRotation());
+            returnGraphics.push(new Graphic(
+                {
+                    geometry: point,
+                    symbol: clusterSymbolsBackground,
+                    attributes: clusterAttributes,
+                    popupTemplate: this.showClusterPopup ? clusterPopupTemplate : null
+                }
+            ));
+        }
 
         // add symbols
         const differentSymbolPoints = mostFeatures.map(() => point.clone());
