@@ -550,7 +550,9 @@ export default GraphicsLayer.createSubclass({
         const that = this;
         if (this._showClusterArea) {
             const view = this._mapWidgetModel.view;
-            view.hitTest(event).then((response) => {
+            view.hitTest(event, {
+                include: this
+            }).then((response) => {
                 const graphic = that._findFirstClusterGraphicInView(response.results, that);
                 if (!graphic) {
                     return;
