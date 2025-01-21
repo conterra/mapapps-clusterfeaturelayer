@@ -265,8 +265,8 @@ export default GraphicsLayer.createSubclass({
                             requester.getFeaturesByIds(result.objectIds, result.layerId).then((featuresResult) => {
                                 that._addFeaturesToClusterCache(featuresResult,
                                     result.layerId, result.layerTitle).then(() => {
-                                        resolve();
-                                    });
+                                    resolve();
+                                });
                             }, (error) => {
                                 console.error(error);
                             });
