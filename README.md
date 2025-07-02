@@ -4,7 +4,7 @@ The ClusterFeatureLayer bundle allows you to cluster features for any point feat
 ## Build Status
 [![devnet-bundle-snapshot](https://github.com/conterra/mapapps-clusterfeaturelayer/actions/workflows/devnet-bundle-snapshot.yml/badge.svg)](https://github.com/conterra/mapapps-clusterfeaturelayer/actions/workflows/devnet-bundle-snapshot.yml)
 
-![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/main/screenshot.JPG)
+![Screenshot ClusterFeature Sample App](https://github.com/conterra/mapapps-clusterfeaturelayer/blob/main/screenshot.png)
 
 [dn_clusterfeaturelayer Documentation](https://github.com/conterra/mapapps-clusterfeaturelayer/tree/master/src/main/js/bundles/dn_clusterfeaturelayer)
 
