@@ -23,12 +23,12 @@
  *  |_ClusterFeatureLayer
  */
 import ct_lang from "ct/_lang";
-import { convexHull } from "esri/geometry/geometryEngine";
-import Point from "esri/geometry/Point";
-import Polygon from "esri/geometry/Polygon";
-import Extent from "esri/geometry/Extent";
-import GraphicsLayer from "esri/layers/GraphicsLayer";
-import * as reactiveUtils from "esri/core/reactiveUtils";
+import { convexHull } from "@arcgis/core/geometry/geometryEngine";
+import Point from "@arcgis/core/geometry/Point";
+import Polygon from "@arcgis/core/geometry/Polygon";
+import Extent from "@arcgis/core/geometry/Extent";
+import GraphicsLayer from "@arcgis/core/layers/GraphicsLayer";
+import * as reactiveUtils from "@arcgis/core/core/reactiveUtils";
 import * as ClusterGeometryFunctions from "./ClusterGeometryFunctions";
 import FeatureServerRequester from "./FeatureServerRequester";
 import ServiceMetadataProvider from "./ServiceMetadataProvider";

@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Point from "esri/geometry/Point";
-import Polyline from "esri/geometry/Polyline";
-import Graphic from "esri/Graphic";
-import * as jsonUtils from "esri/renderers/support/jsonUtils";
-import CustomContent from "esri/popup/content/CustomContent";
+import Point from "@arcgis/core/geometry/Point";
+import Polyline from "@arcgis/core/geometry/Polyline";
+import Graphic from "@arcgis/core/Graphic";
+import * as jsonUtils from "@arcgis/core/renderers/support/jsonUtils";
+import CustomContent from "@arcgis/core/popup/content/CustomContent";
 
 export default class ClusterGraphicsFactory {
     constructor(clusterSymbolProvider, featureSymbolProvider, rendererProvider,

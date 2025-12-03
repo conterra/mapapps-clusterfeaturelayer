@@ -15,11 +15,11 @@
  */
 import d_string from "dojo/string";
 import Color from "dojo/_base/Color";
-import SimpleMarkerSymbol from "esri/symbols/SimpleMarkerSymbol";
-import SimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
-import SimpleFillSymbol from "esri/symbols/SimpleFillSymbol";
-import Font from "esri/symbols/Font";
-import TextSymbol from "esri/symbols/TextSymbol";
+import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
+import SimpleFillSymbol from "@arcgis/core/symbols/SimpleFillSymbol";
+import Font from "@arcgis/core/symbols/Font";
+import TextSymbol from "@arcgis/core/symbols/TextSymbol";
 
 export default class ClusterSymbolProvider {
     constructor(options) {

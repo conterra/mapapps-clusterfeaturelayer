@@ -17,10 +17,10 @@ import Deferred from "dojo/_base/Deferred";
 import all from "dojo/promise/all";
 import DeferredList from "dojo/DeferredList";
 import { apprtFetchJson } from "apprt-fetch";
-import Query from "esri/rest/support/Query";
-import { executeForIds, executeQueryJSON } from "esri/rest/query";
+import Query from "@arcgis/core/rest/support/Query";
+import { executeForIds, executeQueryJSON } from "@arcgis/core/rest/query";
 import ObjectIdCache from "./ObjectIdCache";
-import * as esri_lang from "esri/core/lang";
+import * as esri_lang from "@arcgis/core/core/lang";
 
 export default class FeatureServerRequester {
     constructor(sublayers, spatialReference, returnLimit, mapWidgetModel) {

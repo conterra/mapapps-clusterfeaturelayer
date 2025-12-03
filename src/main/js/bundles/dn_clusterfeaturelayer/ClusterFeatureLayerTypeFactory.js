@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import ClusterFeatureLayer from "./ClusterFeatureLayer";
-import Collection from "esri/core/Collection";
-import Sublayer from "esri/layers/support/Sublayer";
+import Collection from "@arcgis/core/core/Collection";
+import Sublayer from "@arcgis/core/layers/support/Sublayer";
 
 export default class ClusterFeatureLayerTypeFactory {
 
