@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 import Color from "dojo/_base/Color";
-import SimpleMarkerSymbol from "esri/symbols/SimpleMarkerSymbol";
-import SimpleLineSymbol from "esri/symbols/SimpleLineSymbol";
+import SimpleMarkerSymbol from "@arcgis/core/symbols/SimpleMarkerSymbol";
+import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 
 export default class FeatureSymbolProvider {
     constructor(options) {
