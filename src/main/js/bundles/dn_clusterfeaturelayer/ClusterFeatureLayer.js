@@ -109,6 +109,7 @@ export default GraphicsLayer.createSubclass({
             const metadataProvider = this._getServiceMetadataProvider(serviceDetails);
             this._clusterGraphicsFactory = this._getClusterGraphicsFactory(this._clusterSymbolProvider, this._featureSymbolProvider,
                 metadataProvider, mapWidgetModel, this.popupTemplate, this._clusterPopupWidgetFactory, this._options, this._popupTemplates);
+            this.popupTemplate = undefined; // un-setting popupTemplate so that it doesn't get added automatically to every graphic (e.g. lines and clusters)
             const view = mapWidgetModel.view;
             const map = mapWidgetModel.map;
             this.events.push(map.allLayers.on("change", () => {
